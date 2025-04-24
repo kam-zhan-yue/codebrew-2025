@@ -15,11 +15,16 @@ export interface InteractionState {
   gameboy: Interaction;
 }
 
+export interface DebugState {
+  raycastData: THREE.Intersection<THREE.Object3D<THREE.Object3DEventMap>>;
+}
+
 export interface GameState {
   playerOne: PlayerState;
   playerTwo: PlayerState;
   interactions: InteractionState;
   time: number;
+  debug: DebugState | null;
 }
 
 export const defaultGameState: GameState = {
@@ -37,4 +42,5 @@ export const defaultGameState: GameState = {
     gameboy: { active: true },
   },
   time: 0,
+  debug: null,
 };

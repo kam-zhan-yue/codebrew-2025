@@ -1,8 +1,5 @@
 import { useRef, useState } from "react";
-import {
-  AstronautAnimation,
-  AstronautModel,
-} from "../../components/astronaut-model";
+import { AstronautAnimation, AstronautModel } from "../models/astronaut-model";
 import { PlayerState } from "../types/game-state";
 import { Mesh, Vector3 } from "three";
 import { useFrame } from "@react-three/fiber";
