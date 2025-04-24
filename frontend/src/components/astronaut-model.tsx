@@ -8,6 +8,7 @@ import React, { useEffect } from "react";
 import { useGraph } from "@react-three/fiber";
 import { useGLTF, useAnimations } from "@react-three/drei";
 import { GLTF, SkeletonUtils } from "three-stdlib";
+import usePrevious from "./utils";
 
 type ActionName = "idle" | "tpose" | "walk";
 
@@ -44,16 +45,18 @@ export function AstronautModel({
   const clone = React.useMemo(() => SkeletonUtils.clone(scene), [scene]);
   const { nodes, materials } = useGraph(clone) as GLTFResult;
   const { actions } = useAnimations(animations, group);
+  const previousAnimation = usePrevious(animation);
 
   useEffect(() => {
     if (!actions) return;
-
-    const action = actions[animation];
-    if (action) {
-      Object.values(actions).forEach((a) => a.stop());
-      action.reset().fadeIn(0.2).play();
+    if (previousAnimation && actions[previousAnimation]) {
+      actions[previousAnimation].stop();
+      actions[previousAnimation].fadeOut(0.2);
     }
-  }, [actions, animation]);
+    if (animation && actions[animation]) {
+      actions[animation].reset().fadeIn(0.2).play();
+    }
+  }, [actions, animation, previousAnimation]);
   return (
     <group
       ref={group}
