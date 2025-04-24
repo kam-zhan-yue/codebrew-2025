@@ -145,9 +145,6 @@ function Game() {
         </group>
         <OrbitControls enableZoom={false} />
       </Canvas>
-      <Overlay>
-        Test
-      </Overlay>
     </>
   );
 }
