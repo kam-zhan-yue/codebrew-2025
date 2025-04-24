@@ -4,28 +4,54 @@ Command: npx gltfjsx@6.5.3 ./public/models/astronaut.glb -t
 */
 
 import * as THREE from "three";
-import React from "react";
-import { useGLTF } from "@react-three/drei";
-import { GLTF } from "three-stdlib";
+import React, { useEffect } from "react";
+import { useGraph } from "@react-three/fiber";
+import { useGLTF, useAnimations } from "@react-three/drei";
+import { GLTF, SkeletonUtils } from "three-stdlib";
+
+type ActionName = "idle" | "tpose" | "walk";
+
+interface GLTFAction extends THREE.AnimationClip {
+  name: ActionName;
+}
 
 type GLTFResult = GLTF & {
   nodes: {
-    Astronaut_mesh: THREE.Mesh;
+    Astronaut_mesh: THREE.SkinnedMesh;
+    mixamorigHips: THREE.Bone;
   };
   materials: {
-    Astronaut_mat: THREE.MeshStandardMaterial;
+    Astronaut_matmat: THREE.MeshStandardMaterial;
   };
   animations: GLTFAction[];
 };
 
 export function AstronautModel(props: JSX.IntrinsicElements["group"]) {
-  const { nodes, materials } = useGLTF("/models/astronaut.glb") as GLTFResult;
+  const group = React.useRef<THREE.Group>();
+  const { scene, animations } = useGLTF("/models/astronaut.glb");
+  const clone = React.useMemo(() => SkeletonUtils.clone(scene), [scene]);
+  const { nodes, materials } = useGraph(clone) as GLTFResult;
+  const { actions } = useAnimations(animations, group);
+
+  useEffect(() => {
+    if (actions && actions.walk) {
+      actions.walk.play();
+    }
+  }, [actions]);
   return (
-    <group {...props} dispose={null}>
-      <mesh
-        geometry={nodes.Astronaut_mesh.geometry}
-        material={materials.Astronaut_mat}
-      />
+    <group ref={group} {...props} dispose={null}>
+      <group name="Scene">
+        <group name="default" rotation={[Math.PI / 2, 0, 0]} scale={0.01} />
+        <group name="Armature" rotation={[Math.PI / 2, 0, 0]}>
+          <primitive object={nodes.mixamorigHips} />
+          <skinnedMesh
+            name="Astronaut_mesh"
+            geometry={nodes.Astronaut_mesh.geometry}
+            material={materials.Astronaut_matmat}
+            skeleton={nodes.Astronaut_mesh.skeleton}
+          />
+        </group>
+      </group>
     </group>
   );
 }
