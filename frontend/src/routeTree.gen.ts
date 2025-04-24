@@ -12,6 +12,7 @@
 
 import { Route as rootRoute } from './routes/__root'
 import { Route as GameImport } from './routes/game'
+import { Route as RootComponentImport } from './routes/RootComponent'
 import { Route as IndexImport } from './routes/index'
 
 // Create/Update Routes
@@ -19,6 +20,12 @@ import { Route as IndexImport } from './routes/index'
 const GameRoute = GameImport.update({
   id: '/game',
   path: '/game',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const RootComponentRoute = RootComponentImport.update({
+  id: '/RootComponent',
+  path: '/RootComponent',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -39,6 +46,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexImport
       parentRoute: typeof rootRoute
     }
+    '/RootComponent': {
+      id: '/RootComponent'
+      path: '/RootComponent'
+      fullPath: '/RootComponent'
+      preLoaderRoute: typeof RootComponentImport
+      parentRoute: typeof rootRoute
+    }
     '/game': {
       id: '/game'
       path: '/game'
@@ -53,36 +67,41 @@ declare module '@tanstack/react-router' {
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/RootComponent': typeof RootComponentRoute
   '/game': typeof GameRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/RootComponent': typeof RootComponentRoute
   '/game': typeof GameRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
+  '/RootComponent': typeof RootComponentRoute
   '/game': typeof GameRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/game'
+  fullPaths: '/' | '/RootComponent' | '/game'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/game'
-  id: '__root__' | '/' | '/game'
+  to: '/' | '/RootComponent' | '/game'
+  id: '__root__' | '/' | '/RootComponent' | '/game'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  RootComponentRoute: typeof RootComponentRoute
   GameRoute: typeof GameRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  RootComponentRoute: RootComponentRoute,
   GameRoute: GameRoute,
 }
 
@@ -97,11 +116,15 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
+        "/RootComponent",
         "/game"
       ]
     },
     "/": {
       "filePath": "index.tsx"
+    },
+    "/RootComponent": {
+      "filePath": "RootComponent.tsx"
     },
     "/game": {
       "filePath": "game.tsx"

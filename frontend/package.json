@@ -12,10 +12,12 @@
   "dependencies": {
     "@react-three/drei": "^10.0.6",
     "@react-three/fiber": "^9.1.2",
+    "@tailwindcss/vite": "^4.1.4",
     "@tanstack/react-router": "^1.117.0",
     "@types/three": "^0.175.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "tailwindcss": "^4.1.4",
     "three": "^0.175.0"
   },
   "devDependencies": {

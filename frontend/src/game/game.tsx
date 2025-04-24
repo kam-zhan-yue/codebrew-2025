@@ -5,10 +5,11 @@ import {
   useFrame,
   Vector3,
 } from "@react-three/fiber";
-import "./App.css";
+import "./game.css";
 import { useRef, useState } from "react";
 import { Mesh } from "three";
 import { OrbitControls } from "@react-three/drei";
+import Overlay from "../components/overlay";
 
 interface CubeProps {
   position: Vector3;
@@ -117,7 +118,7 @@ const Torus = ({
   );
 };
 
-function App() {
+function Game() {
   return (
     <>
       <Canvas>
@@ -144,8 +145,11 @@ function App() {
         </group>
         <OrbitControls enableZoom={false} />
       </Canvas>
+      <Overlay>
+        Test
+      </Overlay>
     </>
   );
 }
 
-export default App;
+export default Game;
