@@ -1,25 +1,16 @@
 import { Canvas } from "@react-three/fiber";
 import "./game.css";
 import { Suspense, useEffect, useMemo, useRef } from "react";
-import { Cylinder, KeyboardControls } from "@react-three/drei";
-import { CylinderCollider, Physics, RigidBody } from "@react-three/rapier";
+import { KeyboardControls } from "@react-three/drei";
 import FirstPersonController from "./components/first-person-controller";
-import Astronaut from "./components/astronaut";
 import * as THREE from "three";
 import useWebSocket from "react-use-websocket";
 import { WS_URL } from "../api/constants";
 import { useGameStore } from "../store";
 import { GameState } from "./types/game-state";
 import Gameboy from "./components/gameboy";
-import {
-  EffectComposer,
-  Outline,
-  Select,
-  Selection,
-} from "@react-three/postprocessing";
-import { BlendFunction } from "postprocessing";
+import { EffectComposer, Select, Selection } from "@react-three/postprocessing";
 import OutlineEffect from "./components/outline-effect";
-import Example from "./components/example";
 
 export const Controls = {
   forward: "forward",
@@ -103,12 +94,7 @@ function Game() {
   );
 
   const playerOne = useGameStore((s) => s.gameState.playerOne);
-  const playerTwo = useGameStore((s) => s.gameState.playerTwo);
   const gameboy = useGameStore((s) => s.gameState.interactions.gameboy);
-
-  // console.info("Player One is ", playerOne.position);
-  // console.info("Player Two is ", playerTwo.position);
-  const gameboyRef = useRef<THREE.Group>(null);
 
   return (
     <>
@@ -123,24 +109,16 @@ function Game() {
             color={"#9e69da"}
           />
           <Suspense>
-            <Physics debug>
-              <Gameboy ref={gameboyRef} interaction={gameboy} />
-              <Astronaut player={playerTwo} />
-              <RigidBody colliders={false} type="fixed" position-y={-0.5}>
-                <CylinderCollider args={[0.5, 5]} />
-                <Cylinder scale={[5, 1, 5]} receiveShadow>
-                  <meshStandardMaterial color="white" />
-                </Cylinder>
-              </RigidBody>
-            </Physics>
+            <FirstPersonController player={playerOne} />
+            <Selection>
+              <EffectComposer>
+                <OutlineEffect />
+              </EffectComposer>
+              <Select enabled>
+                <Gameboy interaction={gameboy} />
+              </Select>
+            </Selection>
           </Suspense>
-          <FirstPersonController player={playerOne} />
-          <Selection>
-            <EffectComposer>
-              <OutlineEffect />
-            </EffectComposer>
-            <Select enabled></Select>
-          </Selection>
         </Canvas>
       </KeyboardControls>
     </>
