@@ -6,7 +6,7 @@ WORKDIR /app
 # ---- Development Stage ----
 FROM base AS install
 COPY package.json bun.lock ./
-RUN bun install --frozen-lockfile
+RUN bun install
 COPY . .
 
 # EXPOSE 5173
