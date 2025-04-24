@@ -10,6 +10,7 @@ import useWebSocket from "react-use-websocket";
 import { WS_URL } from "../api/constants";
 import { useGameStore } from "../store";
 import { GameState } from "./types/game-state";
+import Gameboy from "./components/gameboy";
 
 export const Controls = {
   forward: "forward",
@@ -41,6 +42,9 @@ function Game() {
           id: "player2",
           position: [0, 0, playerTwoZ.current],
         },
+        interactions: {
+          gameboy: { active: false },
+        },
         time: Date.now(),
       });
 
@@ -55,10 +59,12 @@ function Game() {
           id: parsed.playerTwo.id,
           position: new THREE.Vector3(...parsed.playerTwo.position),
         },
+        interactions: {
+          gameboy: { active: parsed.interactions.gameboy.active },
+        },
         time: parsed.time,
       } as GameState;
 
-      console.info("Setting game state as ", rawState);
       setGameState(rawState);
     }, 100);
 
@@ -85,6 +91,7 @@ function Game() {
 
   const playerOne = useGameStore((s) => s.gameState.playerOne);
   const playerTwo = useGameStore((s) => s.gameState.playerTwo);
+  const gameboy = useGameStore((s) => s.gameState.interactions.gameboy);
 
   // console.info("Player One is ", playerOne.position);
   // console.info("Player Two is ", playerTwo.position);
@@ -104,6 +111,7 @@ function Game() {
           <Suspense>
             <Physics debug>
               <FirstPersonController player={playerOne} />
+              <Gameboy interaction={gameboy} />
               <Astronaut player={playerTwo} />
               <RigidBody colliders={false} type="fixed" position-y={-0.5}>
                 <CylinderCollider args={[0.5, 5]} />

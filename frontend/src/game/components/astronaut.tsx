@@ -7,6 +7,7 @@ import { useFrame } from "@react-three/fiber";
 interface AstronautProps {
   player: PlayerState;
 }
+
 const Astronaut = ({ player }: AstronautProps) => {
   const mesh = useRef<Mesh>(null!);
   const currentPos = useRef(new Vector3());

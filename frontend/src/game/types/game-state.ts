@@ -5,9 +5,18 @@ export interface PlayerState {
   position: THREE.Vector3;
 }
 
+export interface Interaction {
+  active: boolean;
+}
+
+export interface InteractionState {
+  gameboy: Interaction;
+}
+
 export interface GameState {
   playerOne: PlayerState;
   playerTwo: PlayerState;
+  interactions: InteractionState;
   time: number;
 }
 
@@ -19,6 +28,9 @@ export const defaultGameState: GameState = {
   playerTwo: {
     id: "player2",
     position: new THREE.Vector3(2, 0, 0),
+  },
+  interactions: {
+    gameboy: { active: true },
   },
   time: 0,
 };
