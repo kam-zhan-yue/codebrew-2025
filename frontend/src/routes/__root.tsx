@@ -2,6 +2,9 @@ import * as React from 'react'
 import { Outlet, createRootRoute } from '@tanstack/react-router'
 import Game from '../game/game'
 import '../index.css'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+
+const queryClient = new QueryClient();
 
 export const Route = createRootRoute({
   component: RootComponent,
@@ -10,10 +13,12 @@ export const Route = createRootRoute({
 function RootComponent() {
   return (
     <React.Fragment>
-      <div id="app">
-        <Game />
-        <Outlet />
-      </div>
+      <QueryClientProvider client={queryClient}>
+        <div id="app">
+          <Game />
+          <Outlet />
+        </div>
+      </QueryClientProvider>
     </React.Fragment>
   )
 }
