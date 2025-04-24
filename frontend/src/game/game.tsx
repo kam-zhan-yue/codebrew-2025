@@ -31,7 +31,7 @@ function Game() {
   const playerTwoZ = useRef(0);
   useEffect(() => {
     const interval = setInterval(() => {
-      playerTwoZ.current += 1;
+      playerTwoZ.current += 0.01;
       const rawJson = JSON.stringify({
         playerOne: {
           id: "player1",
@@ -52,14 +52,14 @@ function Game() {
           position: new THREE.Vector3(...parsed.playerOne.position),
         },
         playerTwo: {
-          id: parsed.playerOne.id,
+          id: parsed.playerTwo.id,
           position: new THREE.Vector3(...parsed.playerTwo.position),
         },
         time: parsed.time,
       } as GameState;
 
+      console.info("Setting game state as ", rawState);
       setGameState(rawState);
-      console.info("Setting game state");
     }, 100);
 
     return () => clearInterval(interval);

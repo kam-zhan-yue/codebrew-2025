@@ -1,6 +1,6 @@
 import { useFrame, useThree } from "@react-three/fiber";
 import { PointerLockControls, useKeyboardControls } from "@react-three/drei";
-import { useRef, useEffect } from "react";
+import { useRef } from "react";
 import * as THREE from "three";
 import { Controls } from "../game";
 import { PlayerState } from "../types/game-state";
