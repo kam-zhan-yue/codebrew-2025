@@ -1,10 +1,4 @@
-import {
-  Color,
-  ThreeEvent,
-  useFrame,
-  Vector3,
-} from "@react-three/fiber";
-import "./game.css";
+import { Color, ThreeEvent, useFrame, Vector3 } from "@react-three/fiber";
 import { useRef, useState } from "react";
 import { Mesh } from "three";
 import { OrbitControls } from "@react-three/drei";
@@ -139,9 +133,8 @@ const Example = () => {
           colour="blue"
         />
       </group>
-      <OrbitControls enableZoom={false} />
     </>
-  )
-}
+  );
+};
 
-export default Example
+export default Example;

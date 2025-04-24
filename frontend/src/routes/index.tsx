@@ -1,22 +1,22 @@
-import { createFileRoute } from '@tanstack/react-router'
-import { useHelloWorld } from '../api/hooks/use-hello-world'
-import Overlay from '../components/overlay';
+import { createFileRoute } from "@tanstack/react-router";
+import { useHelloWorld } from "../api/hooks/use-hello-world";
+import Overlay from "../components/overlay";
 
-export const Route = createFileRoute('/')({
+export const Route = createFileRoute("/")({
   component: RouteComponent,
-})
+});
 
 function RouteComponent() {
-  const { isPending, isError, data, error } = useHelloWorld();
+  const { isPending, isError, data } = useHelloWorld();
 
   if (isPending) {
-    return <span>Loading...</span>;
+    return <></>;
   }
 
   if (isError) {
-    return <span>Error: {error.message}</span>;
+    return <></>;
   }
 
-  const helloWorldData = data.data
-  return <Overlay>{helloWorldData}</Overlay>
+  const helloWorldData = data.data;
+  return <Overlay>{helloWorldData}</Overlay>;
 }

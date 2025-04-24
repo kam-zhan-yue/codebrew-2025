@@ -11,9 +11,15 @@ import { WS_URL } from "../api/constants";
 import { useGameStore } from "../store";
 import { GameState } from "./types/game-state";
 import Gameboy from "./components/gameboy";
-import { EffectComposer, Outline } from "@react-three/postprocessing";
+import {
+  EffectComposer,
+  Outline,
+  Select,
+  Selection,
+} from "@react-three/postprocessing";
 import { BlendFunction } from "postprocessing";
 import OutlineEffect from "./components/outline-effect";
+import Example from "./components/example";
 
 export const Controls = {
   forward: "forward",
@@ -118,7 +124,6 @@ function Game() {
           />
           <Suspense>
             <Physics debug>
-              <FirstPersonController player={playerOne} />
               <Gameboy ref={gameboyRef} interaction={gameboy} />
               <Astronaut player={playerTwo} />
               <RigidBody colliders={false} type="fixed" position-y={-0.5}>
@@ -129,9 +134,13 @@ function Game() {
               </RigidBody>
             </Physics>
           </Suspense>
-          <EffectComposer>
-            <OutlineEffect />
-          </EffectComposer>
+          <FirstPersonController player={playerOne} />
+          <Selection>
+            <EffectComposer>
+              <OutlineEffect />
+            </EffectComposer>
+            <Select enabled></Select>
+          </Selection>
         </Canvas>
       </KeyboardControls>
     </>
