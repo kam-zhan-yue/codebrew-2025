@@ -9,7 +9,6 @@ import "./game.css";
 import { useRef, useState } from "react";
 import { Mesh } from "three";
 import { OrbitControls } from "@react-three/drei";
-import Overlay from "../components/overlay";
 
 interface CubeProps {
   position: Vector3;
