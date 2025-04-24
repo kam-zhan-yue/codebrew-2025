@@ -4,7 +4,6 @@ FROM oven/bun:1.0 AS base
 WORKDIR /app
 
 # ---- Development Stage ----
-FROM base AS install
 COPY package.json bun.lock ./
 RUN bun install
 COPY . .
