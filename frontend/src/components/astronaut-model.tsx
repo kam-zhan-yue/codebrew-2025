@@ -54,7 +54,11 @@ export function AstronautModel({
       actions[previousAnimation].fadeOut(0.2);
     }
     if (actions[animation]) {
-      actions[animation].reset().fadeIn(0.2).play();
+      actions[animation]
+        .reset()
+        .fadeIn(0.2)
+        .setLoop(THREE.LoopRepeat, Infinity)
+        .play();
     }
   }, [actions, animation, previousAnimation]);
   return (

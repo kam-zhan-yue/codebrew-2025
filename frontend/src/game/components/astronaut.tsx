@@ -26,7 +26,6 @@ const Astronaut = ({ player }: AstronautProps) => {
       setAnimation("idle");
     } else if (player.animationState == "walking") {
       setAnimation("walk");
-      console.info("walking");
     }
   });
 
