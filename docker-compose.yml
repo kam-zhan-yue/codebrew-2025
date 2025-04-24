@@ -1,0 +1,27 @@
+version: '3.9'
+services:
+  backend-dev:
+    build: ./backend
+    container_name: backend
+    volumes:
+      - ./backend:/app
+      - /app/target
+    ports:
+      - "8000:8000"
+    command: sh -c "cargo watch -x run"
+    develop:
+      watch:
+        - action: sync
+          path: ./backend
+          target: /app
+  frontend-dev:
+    build: ./frontend
+    container_name: frontend
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    ports:
+      - "5173:5173"
+    restart: unless-stopped
+    command: bun run dev
+

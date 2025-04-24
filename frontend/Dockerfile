@@ -3,26 +3,26 @@ FROM oven/bun:1.0 AS base
 
 WORKDIR /app
 
-# Copy package files and install dependencies
-COPY bun.lock package.json vite.config.ts tsconfig.json ./
-COPY src ./src
-COPY public ./public
+# ---- Development Stage ----
+FROM base AS install
+COPY package.json bun.lockb ./
+RUN bun install --frozen-lockfile
+COPY . .
 
-# Install dependencies with Bun
-RUN bun install
+# EXPOSE 5173
 
 # Build the app with Vite
-RUN bun run build
+# RUN bun run build
 
 # ---- Production Stage ----
-FROM nginx:alpine
+# FROM nginx:alpine
 
-# Copy build output to Nginx's public directory
-COPY --from=base /app/dist /usr/share/nginx/html
+# # Copy build output to Nginx's public directory
+# COPY --from=base /app/dist /usr/share/nginx/html
 
-# Optional: Copy custom nginx config
-# COPY nginx.conf /etc/nginx/nginx.conf
+# # Optional: Copy custom nginx config
+# # COPY nginx.conf /etc/nginx/nginx.conf
 
-EXPOSE 80
+# EXPOSE 80
 
-CMD ["nginx", "-g", "daemon off;"]
+# CMD ["nginx", "-g", "daemon off;"]
