@@ -7,7 +7,7 @@ export const Route = createFileRoute('/login')({
 
 function RouteComponent() {
   return (
-  <Overlay>
+  <Overlay className="bg-black/20">
     Test
   </Overlay>
   )
