@@ -6,9 +6,10 @@ import {
   Vector3,
 } from "@react-three/fiber";
 import "./game.css";
-import { useRef, useState } from "react";
+import { Suspense, useRef, useState } from "react";
 import { Mesh } from "three";
 import { OrbitControls } from "@react-three/drei";
+import { Physics } from "@react-three/rapier";
 
 interface CubeProps {
   position: Vector3;
@@ -27,7 +28,8 @@ const Cube = ({ position, size, colour }: CubeProps) => {
   return (
     <mesh ref={ref} position={position}>
       <boxGeometry args={size} />
-      <meshStandardMaterial color={colour} />
+      <meshToonMaterial color={colour} />
+      {/* <meshStandardMaterial color={colour} /> */}
     </mesh>
   );
 };
@@ -121,28 +123,32 @@ function Game() {
   return (
     <>
       <Canvas>
-        <ambientLight />
-        <directionalLight position={[0, 0, 2]} />
-        <group position={[0, 0, 0]}>
-          <Cube position={[2, 0, 0]} size={[2, 2, 2]} colour="orange" />
-          <Sphere
-            position={[0, 0, 0]}
-            radius={1}
-            widthSegments={30}
-            heightSegments={30}
-            colour="pink"
-          />
-          <Torus
-            position={[-2, 0, 0]}
-            radius={0.5}
-            tube={0.1}
-            radialSegments={30}
-            tubularSegments={30}
-            arc={3.14}
-            colour="blue"
-          />
-        </group>
-        <OrbitControls enableZoom={false} />
+        <Suspense>
+          <Physics debug>
+            <ambientLight />
+            <directionalLight position={[0, 0, 2]} />
+            <group position={[0, 0, 0]}>
+              <Cube position={[2, 0, 0]} size={[2, 2, 2]} colour="orange" />
+              <Sphere
+                position={[0, 0, 0]}
+                radius={1}
+                widthSegments={30}
+                heightSegments={30}
+                colour="pink"
+              />
+              <Torus
+                position={[-2, 0, 0]}
+                radius={0.5}
+                tube={0.1}
+                radialSegments={30}
+                tubularSegments={30}
+                arc={3.14}
+                colour="blue"
+              />
+            </group>
+            <OrbitControls enableZoom={false} />
+          </Physics>
+        </Suspense>
       </Canvas>
     </>
   );
