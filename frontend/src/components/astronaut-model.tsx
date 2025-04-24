@@ -26,7 +26,19 @@ type GLTFResult = GLTF & {
   animations: GLTFAction[];
 };
 
-export function AstronautModel(props: JSX.IntrinsicElements["group"]) {
+interface AstronautModelProps {
+  animation?: ActionName;
+  position?: [number, number, number];
+  rotation?: [number, number, number];
+  scale?: number | [number, number, number];
+}
+
+export function AstronautModel({
+  animation = "tpose",
+  position = [0, 0, 0],
+  rotation = [0, 0, 0],
+  scale = 1,
+}: AstronautModelProps) {
   const group = React.useRef<THREE.Group>();
   const { scene, animations } = useGLTF("/models/astronaut.glb");
   const clone = React.useMemo(() => SkeletonUtils.clone(scene), [scene]);
@@ -34,12 +46,22 @@ export function AstronautModel(props: JSX.IntrinsicElements["group"]) {
   const { actions } = useAnimations(animations, group);
 
   useEffect(() => {
-    if (actions && actions.walk) {
-      actions.walk.play();
+    if (!actions) return;
+
+    const action = actions[animation];
+    if (action) {
+      Object.values(actions).forEach((a) => a.stop());
+      action.reset().fadeIn(0.2).play();
     }
-  }, [actions]);
+  }, [actions, animation]);
   return (
-    <group ref={group} {...props} dispose={null}>
+    <group
+      ref={group}
+      position={position}
+      rotation={rotation}
+      scale={scale}
+      dispose={null}
+    >
       <group name="Scene">
         <group name="default" rotation={[Math.PI / 2, 0, 0]} scale={0.01} />
         <group name="Armature" rotation={[Math.PI / 2, 0, 0]}>
