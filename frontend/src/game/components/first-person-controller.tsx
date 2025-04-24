@@ -73,12 +73,6 @@ export default function FirstPersonController({
     const intersects = raycaster.current.intersectObjects(scene.children, true);
     if (intersects.length > 0) {
       setDebug({ raycastData: intersects[0] });
-      const firstHit = intersects[0].object;
-      // Will have to check the parent
-      console.log(firstHit.name);
-      if (firstHit.name.toLowerCase().includes("gameboy")) {
-        console.info("🎮 Player is looking at the Gameboy!");
-      }
     }
   };
 
