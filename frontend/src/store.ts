@@ -1,7 +1,12 @@
-import { create } from 'zustand'
-import { GameState } from './game/types/game-state'
+import { create } from "zustand";
+import { GameState } from "./game/types/game-state";
 
-export const useGameStore = create<GameState>()((set) => ({
-  time: 0,
-  tick: (deltaTime) => set((state) => ({ time: state.time + deltaTime}))
-}))
+interface GameStore {
+  gameState: GameState | null;
+  setGameState: (newState: GameState) => void;
+}
+
+export const useGameStore = create<GameStore>()((set) => ({
+  gameState: null,
+  setGameState: (newState) => set({ gameState: newState }),
+}));

@@ -3,10 +3,12 @@ import { PointerLockControls, useKeyboardControls } from "@react-three/drei";
 import { useRef, useEffect } from "react";
 import * as THREE from "three";
 import { Controls } from "../game";
+import { PlayerState } from "../types/game-state";
 
 const SPEED = 5;
 
 interface FirstPersonControllerProps {
+  player: PlayerState;
   startPosition: THREE.Vector3;
 }
 

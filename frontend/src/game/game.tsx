@@ -1,11 +1,15 @@
 import { Canvas } from "@react-three/fiber";
 import "./game.css";
-import { Suspense, useMemo } from "react";
+import { Suspense, useEffect, useMemo } from "react";
 import { Cylinder, KeyboardControls } from "@react-three/drei";
 import { CylinderCollider, Physics, RigidBody } from "@react-three/rapier";
 import FirstPersonController from "./components/first-person-controller";
 import Astronaut from "./components/astronaut";
 import * as THREE from "three";
+import useWebSocket from "react-use-websocket";
+import { WS_URL } from "../api/constants";
+import { useGameStore } from "../store";
+import { GameState } from "./types/game-state";
 
 export const Controls = {
   forward: "forward",
@@ -16,7 +20,20 @@ export const Controls = {
 } as const;
 
 function Game() {
+  const setGameState = useGameStore((state) => state.setGameState);
+  const wsProtocol = window.location.protocol === "https:" ? "wss://" : "ws://";
+  const wsUrl = `${wsProtocol}${WS_URL}`;
+  const { lastJsonMessage } = useWebSocket(wsUrl, {
+    share: true,
+  });
   const startPosition = new THREE.Vector3(0, 3.3, 5); // Define start position
+
+  useEffect(() => {
+    if (lastJsonMessage) {
+      const rawState = lastJsonMessage as unknown as GameState;
+      setGameState(rawState);
+    }
+  }, [setGameState, lastJsonMessage]);
 
   const map = useMemo(
     () => [
@@ -28,6 +45,10 @@ function Game() {
     ],
     [],
   );
+
+  const playerOne = useGameStore((s) => s.gameState?.playerOne);
+  const playerTwo = useGameStore((s) => s.gameState?.playerTwo);
+
   return (
     <>
       <KeyboardControls map={map}>
@@ -42,8 +63,11 @@ function Game() {
           />
           <Suspense>
             <Physics debug>
-              <FirstPersonController startPosition={startPosition} />
-              <Astronaut />
+              <FirstPersonController
+                player={playerOne}
+                startPosition={startPosition}
+              />
+              <Astronaut player={playerTwo} />
               <RigidBody colliders={false} type="fixed" position-y={-0.5}>
                 <CylinderCollider args={[0.5, 5]} />
                 <Cylinder scale={[5, 1, 5]} receiveShadow>
