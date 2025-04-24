@@ -1,155 +1,55 @@
-import {
-  Canvas,
-  Color,
-  ThreeEvent,
-  useFrame,
-  Vector3,
-} from "@react-three/fiber";
+import { Canvas } from "@react-three/fiber";
 import "./game.css";
-import { Suspense, useRef, useState } from "react";
-import { Mesh } from "three";
-import { OrbitControls } from "@react-three/drei";
-import { Physics } from "@react-three/rapier";
+import { Suspense, useMemo } from "react";
+import { Cylinder, KeyboardControls, OrbitControls } from "@react-three/drei";
+import { CylinderCollider, Physics, RigidBody } from "@react-three/rapier";
+import { Player } from "./components/player";
 
-interface CubeProps {
-  position: Vector3;
-  size?: [number, number, number];
-  colour: Color;
-}
-
-const Cube = ({ position, size, colour }: CubeProps) => {
-  const ref = useRef<Mesh>(null!);
-
-  useFrame((_state, delta) => {
-    ref.current.rotation.x += delta;
-    ref.current.rotation.y += delta * 2.0;
-  });
-
-  return (
-    <mesh ref={ref} position={position}>
-      <boxGeometry args={size} />
-      <meshToonMaterial color={colour} />
-      {/* <meshStandardMaterial color={colour} /> */}
-    </mesh>
-  );
-};
-
-interface SphereProps {
-  position: Vector3;
-  radius: number;
-  heightSegments: number;
-  widthSegments: number;
-  colour: Color;
-}
-
-const Sphere = ({
-  position,
-  radius,
-  heightSegments,
-  widthSegments,
-  colour,
-}: SphereProps) => {
-  const [isHovered, setIsHovered] = useState(false);
-  const [isClicked, setIsClicked] = useState(false);
-  const ref = useRef<Mesh>(null!);
-
-  useFrame((_state, delta) => {
-    const speed = isHovered ? 5 : 0.2;
-    ref.current.rotation.x += delta;
-    ref.current.rotation.y += delta * speed;
-  });
-
-  const handlePointerEnter = (event: ThreeEvent<PointerEvent>) => {
-    event.stopPropagation();
-    setIsHovered(true);
-  };
-
-  const handlePointerLeave = (event: ThreeEvent<PointerEvent>) => {
-    event.stopPropagation();
-    setIsHovered(false);
-  };
-
-  const handlePointerDown = (event: ThreeEvent<PointerEvent>) => {
-    event.stopPropagation();
-    setIsClicked((prev) => !prev);
-  };
-
-  return (
-    <mesh
-      ref={ref}
-      position={position}
-      onPointerEnter={handlePointerEnter}
-      onPointerLeave={handlePointerLeave}
-      onPointerDown={handlePointerDown}
-      scale={isClicked ? 3 : 1}
-    >
-      <sphereGeometry args={[radius, heightSegments, widthSegments]} />
-      <meshStandardMaterial color={colour} wireframe />
-    </mesh>
-  );
-};
-
-interface TorusProps {
-  position: Vector3;
-  radius: number;
-  tube: number;
-  radialSegments: number;
-  tubularSegments: number;
-  arc: number;
-  colour: Color;
-}
-
-const Torus = ({
-  position,
-  radius,
-  tube,
-  radialSegments,
-  tubularSegments,
-  arc,
-  colour,
-}: TorusProps) => {
-  const ref = useRef<Mesh>(null!);
-  return (
-    <mesh ref={ref} position={position}>
-      <torusGeometry
-        args={[radius, tube, radialSegments, tubularSegments, arc]}
-      />
-      <meshStandardMaterial color={colour} />
-    </mesh>
-  );
-};
+export const Controls = {
+  forward: "forward",
+  back: "back",
+  left: "left",
+  right: "right",
+  jump: "jump",
+} as const;
 
 function Game() {
+  const map = useMemo(
+    () => [
+      { name: Controls.forward, keys: ["ArrowUp", "KeyW"] },
+      { name: Controls.back, keys: ["ArrowDown", "KeyS"] },
+      { name: Controls.left, keys: ["ArrowLeft", "KeyA"] },
+      { name: Controls.right, keys: ["ArrowRight", "KeyD"] },
+      { name: Controls.jump, keys: ["Space"] },
+    ],
+    [],
+  );
   return (
     <>
-      <Canvas>
-        <Suspense>
-          <Physics debug>
-            <ambientLight />
-            <directionalLight position={[0, 0, 2]} />
-            <group position={[0, 0, 0]}>
-              <Cube position={[2, 0, 0]} size={[2, 2, 2]} colour="orange" />
-              <Sphere
-                position={[0, 0, 0]}
-                radius={1}
-                widthSegments={30}
-                heightSegments={30}
-                colour="pink"
-              />
-              <Torus
-                position={[-2, 0, 0]}
-                radius={0.5}
-                tube={0.1}
-                radialSegments={30}
-                tubularSegments={30}
-                arc={3.14}
-                colour="blue"
-              />
-            </group>
-            <OrbitControls enableZoom={false} />
-          </Physics>
-        </Suspense>
-      </Canvas>
+      <KeyboardControls map={map}>
+        <Canvas shadows camera={{ position: [0, 6, 14], fov: 42 }}>
+          <color attach="background" args={["#ececec"]} />
+          <OrbitControls />
+          <ambientLight intensity={1} />
+          <directionalLight
+            position={[5, 5, 5]}
+            intensity={0.8}
+            castShadow
+            color={"#9e69da"}
+          />
+          <Suspense>
+            <Physics debug>
+              <Player />
+              <RigidBody colliders={false} type="fixed" position-y={-0.5}>
+                <CylinderCollider args={[0.5, 5]} />
+                <Cylinder scale={[5, 1, 5]} receiveShadow>
+                  <meshStandardMaterial color="white" />
+                </Cylinder>
+              </RigidBody>
+            </Physics>
+          </Suspense>
+        </Canvas>
+      </KeyboardControls>
     </>
   );
 }
