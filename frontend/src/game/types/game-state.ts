@@ -10,3 +10,15 @@ export interface GameState {
   playerTwo: PlayerState;
   time: number;
 }
+
+export const defaultGameState: GameState = {
+  playerOne: {
+    id: "player1",
+    position: new THREE.Vector3(0, 0, 0),
+  },
+  playerTwo: {
+    id: "player2",
+    position: new THREE.Vector3(2, 0, 0),
+  },
+  time: 0,
+};

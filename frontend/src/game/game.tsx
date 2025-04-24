@@ -1,6 +1,6 @@
 import { Canvas } from "@react-three/fiber";
 import "./game.css";
-import { Suspense, useEffect, useMemo } from "react";
+import { Suspense, useEffect, useMemo, useRef } from "react";
 import { Cylinder, KeyboardControls } from "@react-three/drei";
 import { CylinderCollider, Physics, RigidBody } from "@react-three/rapier";
 import FirstPersonController from "./components/first-person-controller";
@@ -26,7 +26,44 @@ function Game() {
   const { lastJsonMessage } = useWebSocket(wsUrl, {
     share: true,
   });
-  const startPosition = new THREE.Vector3(0, 3.3, 5); // Define start position
+
+  // Proxy websocket before the backend is setup
+  const playerTwoZ = useRef(0);
+  useEffect(() => {
+    const interval = setInterval(() => {
+      playerTwoZ.current += 1;
+      const rawJson = JSON.stringify({
+        playerOne: {
+          id: "player1",
+          position: [2, 0, 0],
+        },
+        playerTwo: {
+          id: "player2",
+          position: [0, 0, playerTwoZ.current],
+        },
+        time: Date.now(),
+      });
+
+      const parsed = JSON.parse(rawJson);
+
+      const rawState = {
+        playerOne: {
+          id: parsed.playerOne.id,
+          position: new THREE.Vector3(...parsed.playerOne.position),
+        },
+        playerTwo: {
+          id: parsed.playerOne.id,
+          position: new THREE.Vector3(...parsed.playerTwo.position),
+        },
+        time: parsed.time,
+      } as GameState;
+
+      setGameState(rawState);
+      console.info("Setting game state");
+    }, 100);
+
+    return () => clearInterval(interval);
+  }, [setGameState]);
 
   useEffect(() => {
     if (lastJsonMessage) {
@@ -46,8 +83,11 @@ function Game() {
     [],
   );
 
-  const playerOne = useGameStore((s) => s.gameState?.playerOne);
-  const playerTwo = useGameStore((s) => s.gameState?.playerTwo);
+  const playerOne = useGameStore((s) => s.gameState.playerOne);
+  const playerTwo = useGameStore((s) => s.gameState.playerTwo);
+
+  // console.info("Player One is ", playerOne.position);
+  // console.info("Player Two is ", playerTwo.position);
 
   return (
     <>
@@ -63,10 +103,7 @@ function Game() {
           />
           <Suspense>
             <Physics debug>
-              <FirstPersonController
-                player={playerOne}
-                startPosition={startPosition}
-              />
+              <FirstPersonController player={playerOne} />
               <Astronaut player={playerTwo} />
               <RigidBody colliders={false} type="fixed" position-y={-0.5}>
                 <CylinderCollider args={[0.5, 5]} />

@@ -1,12 +1,12 @@
 import { create } from "zustand";
-import { GameState } from "./game/types/game-state";
+import { defaultGameState, GameState } from "./game/types/game-state";
 
 interface GameStore {
-  gameState: GameState | null;
+  gameState: GameState;
   setGameState: (newState: GameState) => void;
 }
 
 export const useGameStore = create<GameStore>()((set) => ({
-  gameState: null,
+  gameState: defaultGameState,
   setGameState: (newState) => set({ gameState: newState }),
 }));
