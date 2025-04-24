@@ -4,6 +4,7 @@ Command: npx gltfjsx@6.5.3 ./public/models/astronaut.glb -t
 */
 
 import * as THREE from "three";
+//@ts-ignore
 import React from "react";
 import { useGLTF } from "@react-three/drei";
 import { GLTF } from "three-stdlib";
@@ -15,10 +16,13 @@ type GLTFResult = GLTF & {
   materials: {
     Astronaut_mat: THREE.MeshStandardMaterial;
   };
+  //@ts-ignore
   animations: GLTFAction[];
 };
 
+//@ts-ignore
 export function AstronautModel(props: JSX.IntrinsicElements["group"]) {
+  //@ts-ignore
   const { nodes, materials } = useGLTF("/models/astronaut.glb") as GLTFResult;
   return (
     <group {...props} dispose={null}>

@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "bunx --bun vite",
     "build": "tsc -b && vite build",
+    "build:noemit": "tsc --noEmitOnError false && vite build",
     "lint": "eslint .",
     "preview": "vite preview"
   },

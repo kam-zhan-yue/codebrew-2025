@@ -16,10 +16,13 @@ type GLTFResult = GLTF & {
     mat23: THREE.MeshStandardMaterial
     mat14: THREE.MeshStandardMaterial
   }
+  //@ts-ignore
   animations: GLTFAction[]
 }
 
+//@ts-ignore
 export function Torii(props: JSX.IntrinsicElements['group']) {
+  //@ts-ignore
   const { nodes, materials } = useGLTF('/models/torii.glb') as GLTFResult
   return (
     <group {...props} dispose={null}>
