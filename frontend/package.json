@@ -16,6 +16,7 @@
     "@tanstack/react-query": "^5.74.4",
     "@tanstack/react-router": "^1.117.0",
     "@types/three": "^0.175.0",
+    "axios": "^1.8.4",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "tailwindcss": "^4.1.4",
