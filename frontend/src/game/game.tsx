@@ -11,6 +11,9 @@ import { WS_URL } from "../api/constants";
 import { useGameStore } from "../store";
 import { GameState } from "./types/game-state";
 import Gameboy from "./components/gameboy";
+import { EffectComposer, Outline } from "@react-three/postprocessing";
+import { BlendFunction } from "postprocessing";
+import OutlineEffect from "./components/outline-effect";
 
 export const Controls = {
   forward: "forward",
@@ -99,6 +102,7 @@ function Game() {
 
   // console.info("Player One is ", playerOne.position);
   // console.info("Player Two is ", playerTwo.position);
+  const gameboyRef = useRef<THREE.Group>(null);
 
   return (
     <>
@@ -115,7 +119,7 @@ function Game() {
           <Suspense>
             <Physics debug>
               <FirstPersonController player={playerOne} />
-              <Gameboy interaction={gameboy} />
+              <Gameboy ref={gameboyRef} interaction={gameboy} />
               <Astronaut player={playerTwo} />
               <RigidBody colliders={false} type="fixed" position-y={-0.5}>
                 <CylinderCollider args={[0.5, 5]} />
@@ -125,6 +129,9 @@ function Game() {
               </RigidBody>
             </Physics>
           </Suspense>
+          <EffectComposer>
+            <OutlineEffect />
+          </EffectComposer>
         </Canvas>
       </KeyboardControls>
     </>
