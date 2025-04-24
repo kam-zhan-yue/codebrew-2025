@@ -37,10 +37,12 @@ function Game() {
         playerOne: {
           id: "player1",
           position: [2, 0, 0],
+          animationState: "idle",
         },
         playerTwo: {
           id: "player2",
           position: [0, 0, playerTwoZ.current],
+          animationState: "walking",
         },
         interactions: {
           gameboy: { active: false },
@@ -54,10 +56,12 @@ function Game() {
         playerOne: {
           id: parsed.playerOne.id,
           position: new THREE.Vector3(...parsed.playerOne.position),
+          animationState: parsed.playerOne.animationState,
         },
         playerTwo: {
           id: parsed.playerTwo.id,
           position: new THREE.Vector3(...parsed.playerTwo.position),
+          animationState: parsed.playerTwo.animationState,
         },
         interactions: {
           gameboy: { active: parsed.interactions.gameboy.active },

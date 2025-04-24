@@ -10,10 +10,10 @@ import { useGLTF, useAnimations } from "@react-three/drei";
 import { GLTF, SkeletonUtils } from "three-stdlib";
 import usePrevious from "./utils";
 
-type ActionName = "idle" | "tpose" | "walk";
+export type AstronautAnimation = "idle" | "tpose" | "walk";
 
 interface GLTFAction extends THREE.AnimationClip {
-  name: ActionName;
+  name: AstronautAnimation;
 }
 
 type GLTFResult = GLTF & {
@@ -28,7 +28,7 @@ type GLTFResult = GLTF & {
 };
 
 interface AstronautModelProps {
-  animation?: ActionName;
+  animation: AstronautAnimation;
   position?: [number, number, number];
   rotation?: [number, number, number];
   scale?: number | [number, number, number];
@@ -53,7 +53,7 @@ export function AstronautModel({
       actions[previousAnimation].stop();
       actions[previousAnimation].fadeOut(0.2);
     }
-    if (animation && actions[animation]) {
+    if (actions[animation]) {
       actions[animation].reset().fadeIn(0.2).play();
     }
   }, [actions, animation, previousAnimation]);
