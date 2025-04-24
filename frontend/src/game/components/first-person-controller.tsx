@@ -1,14 +1,19 @@
 import { useFrame, useThree } from "@react-three/fiber";
 import { PointerLockControls, useKeyboardControls } from "@react-three/drei";
-import { useEffect, useRef } from "react";
+import { useRef, useEffect } from "react";
 import * as THREE from "three";
 import { Controls } from "../game";
 
 const SPEED = 5;
 
-export default function FirstPersonController() {
-  const { camera, gl } = useThree();
-  const velocity = useRef<THREE.Vector3>(new THREE.Vector3());
+interface FirstPersonControllerProps {
+  startPosition: THREE.Vector3;
+}
+
+export default function FirstPersonController({
+  startPosition,
+}: FirstPersonControllerProps) {
+  const { camera } = useThree();
   const direction = useRef<THREE.Vector3>(new THREE.Vector3());
   const leftPressed = useKeyboardControls((state) => state[Controls.left]);
   const rightPressed = useKeyboardControls((state) => state[Controls.right]);
@@ -16,6 +21,10 @@ export default function FirstPersonController() {
   const forwardPressed = useKeyboardControls(
     (state) => state[Controls.forward],
   );
+
+  useEffect(() => {
+    camera.position.copy(startPosition);
+  }, [camera, startPosition]);
 
   useFrame((_, delta) => {
     direction.current.set(0, 0, 0);
@@ -40,5 +49,5 @@ export default function FirstPersonController() {
     }
   });
 
-  return <PointerLockControls args={[camera, gl.domElement]} />;
+  return <PointerLockControls />;
 }

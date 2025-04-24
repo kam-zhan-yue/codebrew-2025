@@ -1,12 +1,12 @@
-import { Vector2 } from "@react-three/fiber";
+import { Vector3 } from "@react-three/fiber";
 
 export interface PlayerState {
-  position: Vector2
+  position: Vector3;
 }
 
 export interface GameState {
   // playerOne: PlayerState,
   // playerTwo: PlayerState,
-  time: number,
-  tick: (deltaTime: number) => void,
+  time: number;
+  tick: (deltaTime: number) => void;
 }

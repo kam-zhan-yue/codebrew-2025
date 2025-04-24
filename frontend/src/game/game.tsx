@@ -3,8 +3,9 @@ import "./game.css";
 import { Suspense, useMemo } from "react";
 import { Cylinder, KeyboardControls } from "@react-three/drei";
 import { CylinderCollider, Physics, RigidBody } from "@react-three/rapier";
-import { Player } from "./components/player";
 import FirstPersonController from "./components/first-person-controller";
+import Astronaut from "./components/astronaut";
+import * as THREE from "three";
 
 export const Controls = {
   forward: "forward",
@@ -15,6 +16,8 @@ export const Controls = {
 } as const;
 
 function Game() {
+  const startPosition = new THREE.Vector3(0, 3.3, 5); // Define start position
+
   const map = useMemo(
     () => [
       { name: Controls.forward, keys: ["ArrowUp", "KeyW"] },
@@ -39,7 +42,8 @@ function Game() {
           />
           <Suspense>
             <Physics debug>
-              <FirstPersonController />
+              <FirstPersonController startPosition={startPosition} />
+              <Astronaut />
               <RigidBody colliders={false} type="fixed" position-y={-0.5}>
                 <CylinderCollider args={[0.5, 5]} />
                 <Cylinder scale={[5, 1, 5]} receiveShadow>
