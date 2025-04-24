@@ -8,6 +8,7 @@ import { useKeyboardControls } from "@react-three/drei";
 import { Controls } from "../game";
 import { useRef } from "react";
 import { useFrame } from "@react-three/fiber";
+import { FirstPersonCamera } from "./first-person-camera";
 
 const MOVEMENT_SPEED = 0.1;
 
@@ -50,11 +51,11 @@ export const Player = () => {
         colliders={false}
         scale={[0.5, 0.5, 0.5]}
         enabledRotations={[false, false, false]}
-        friction={2}
       >
         <CapsuleCollider args={[1, 1]} position={[0, 1.2, 0]} />
         <Torii />
       </RigidBody>
+      <FirstPersonCamera targetRef={rigidbody} />
     </group>
   );
 };
