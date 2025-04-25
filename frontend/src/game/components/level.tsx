@@ -6,7 +6,7 @@ const Level = () => {
   const playerTwo = useGameStore((s) => s.gameState.playerTwo);
   return (
     <>
-      {/* <EnvironmentModel /> */}
+      <EnvironmentModel />
       <Astronaut player={playerTwo} />
     </>
   );

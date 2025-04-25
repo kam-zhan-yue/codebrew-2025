@@ -1,6 +1,6 @@
 use rocket::serde::{Deserialize, Serialize};
 
-pub const TICKS_PER_SECOND: f64 = 1_f64;
+pub const TICKS_PER_SECOND: f64 = 120_f64;
 
 #[derive(Serialize, Clone)]
 #[serde(crate = "rocket::serde")]

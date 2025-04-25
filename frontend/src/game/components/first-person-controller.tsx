@@ -1,4 +1,4 @@
-import { useFrame, useThree } from "@react-three/fiber";
+import { useFrame, useThree, Vector3 } from "@react-three/fiber";
 import { PointerLockControls, useKeyboardControls } from "@react-three/drei";
 import { useRef } from "react";
 import * as THREE from "three";
@@ -12,6 +12,9 @@ import {
 } from "@react-three/rapier";
 import { InteractionType } from "../types/interactions";
 import { findFirstInteractionHit } from "../utils";
+import useWebSocket from "react-use-websocket";
+import { WS_URL } from "../../api/constants";
+import { SendJsonMessage } from "react-use-websocket/dist/lib/types";
 
 const SPEED = 150;
 const DISTANCE_THRESHOLD = 0.01;
@@ -19,10 +22,12 @@ const CAMERA_OFFSET = new THREE.Vector3(0, 1.5, 0);
 
 interface FirstPersonControllerProps {
   player: PlayerState;
+  sendJsonMessage: SendJsonMessage;
 }
 
 export default function FirstPersonController({
   player,
+  sendJsonMessage,
 }: FirstPersonControllerProps) {
   const { camera, scene } = useThree();
   const arrowRef = useRef<THREE.ArrowHelper | null>(null);
@@ -52,7 +57,6 @@ export default function FirstPersonController({
     interpolate();
     raycast();
     handleInputs(delta);
-    validate();
   });
 
   const interpolate = () => {
@@ -79,12 +83,9 @@ export default function FirstPersonController({
 
     direction.current.normalize();
 
+    const move = new THREE.Vector3(direction.current.x, 0, direction.current.z);
+
     if (direction.current.length() > 0) {
-      const move = new THREE.Vector3(
-        direction.current.x,
-        0,
-        direction.current.z,
-      );
       move.applyQuaternion(camera.quaternion);
       move.y = 0;
       move.normalize().multiplyScalar(SPEED * delta);
@@ -93,9 +94,10 @@ export default function FirstPersonController({
     } else {
       rigidbodyRef.current.setLinvel({ x: 0, y: 0, z: 0 }, true);
     }
+    validate(move);
   };
 
-  const validate = () => {
+  const validate = (velocity: THREE.Vector3) => {
     if (!rigidbodyRef.current) return;
 
     const currentRaw = rigidbodyRef.current.translation();
@@ -105,11 +107,27 @@ export default function FirstPersonController({
       const distance = lastValidPosition.current.distanceTo(current);
 
       if (distance > DISTANCE_THRESHOLD) {
-        console.info("✅ Move successful");
+        send(velocity);
+      } else {
+        send(new THREE.Vector3(0, 0, 0));
       }
+    } else {
+      send(new THREE.Vector3(0, 0, 0));
     }
 
     lastValidPosition.current.copy(current);
+  };
+
+  const send = (velocity: THREE.Vector3) => {
+    console.info("Moving with ", velocity);
+    sendJsonMessage({
+      player_id: "1",
+      velocity: {
+        x: velocity.x,
+        y: velocity.y,
+        z: velocity.z,
+      },
+    });
   };
 
   const select = () => {

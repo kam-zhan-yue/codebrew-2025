@@ -30,65 +30,91 @@ export const Controls = {
 
 const Game = () => {
   const setGameState = useGameStore((state) => state.setGameState);
-  const wsProtocol = window.location.protocol === "https:" ? "wss://" : "ws://";
-  const wsUrl = `${wsProtocol}${WS_URL}`;
-  const { lastJsonMessage } = useWebSocket(wsUrl, {
+  const { sendJsonMessage, lastJsonMessage } = useWebSocket(WS_URL, {
     share: true,
   });
 
-  // Proxy websocket before the backend is setup
-  const playerTwoZ = useRef(0);
+  // // Proxy websocket before the backend is setup
+  // const playerTwoZ = useRef(0);
+  // useEffect(() => {
+  //   const interval = setInterval(() => {
+  //     playerTwoZ.current += 0.01;
+  //     const rawJson = JSON.stringify({
+  //       playerOne: {
+  //         id: "player1",
+  //         position: [2, 0, 0],
+  //         animationState: "idle",
+  //       },
+  //       playerTwo: {
+  //         id: "player2",
+  //         position: [0, 0, playerTwoZ.current],
+  //         animationState: "walking",
+  //       },
+  //       interactions: {
+  //         gameboy: { type: "gameboy", active: false },
+  //       },
+  //       time: Date.now(),
+  //     });
+
+  //     const parsed = JSON.parse(rawJson);
+
+  //     const rawState = {
+  //       playerOne: {
+  //         id: parsed.playerOne.id,
+  //         position: new THREE.Vector3(...parsed.playerOne.position),
+  //         animationState: parsed.playerOne.animationState,
+  //       },
+  //       playerTwo: {
+  //         id: parsed.playerTwo.id,
+  //         position: new THREE.Vector3(...parsed.playerTwo.position),
+  //         animationState: parsed.playerTwo.animationState,
+  //       },
+  //       interactions: {
+  //         gameboy: {
+  //           type: parsed.interactions.gameboy.type,
+  //           active: parsed.interactions.gameboy.active,
+  //         },
+  //       },
+  //       time: parsed.time,
+  //     } as GameState;
+
+  //     setGameState(rawState);
+  //   }, 100);
+
+  //   return () => clearInterval(interval);
+  // }, [setGameState]);
+
   useEffect(() => {
-    const interval = setInterval(() => {
-      playerTwoZ.current += 0.01;
-      const rawJson = JSON.stringify({
-        playerOne: {
-          id: "player1",
-          position: [2, 0, 0],
-          animationState: "idle",
-        },
-        playerTwo: {
-          id: "player2",
-          position: [0, 0, playerTwoZ.current],
-          animationState: "walking",
-        },
-        interactions: {
-          gameboy: { type: "gameboy", active: false },
-        },
-        time: Date.now(),
-      });
-
-      const parsed = JSON.parse(rawJson);
-
+    //@ts-expect-error
+    const json = lastJsonMessage as any;
+    if (json) {
       const rawState = {
         playerOne: {
-          id: parsed.playerOne.id,
-          position: new THREE.Vector3(...parsed.playerOne.position),
-          animationState: parsed.playerOne.animationState,
+          id: json.player_one.id,
+          position: new THREE.Vector3(
+            json.player_one.position.x,
+            json.player_one.position.y,
+            json.player_one.position.z,
+          ),
+          animationState: json.player_one.animationState,
         },
         playerTwo: {
-          id: parsed.playerTwo.id,
-          position: new THREE.Vector3(...parsed.playerTwo.position),
-          animationState: parsed.playerTwo.animationState,
+          id: json.player_two.id,
+          position: new THREE.Vector3(
+            json.player_two.position.x,
+            json.player_two.position.y,
+            json.player_two.position.z,
+          ),
+          animationState: json.player_two.animationState,
         },
         interactions: {
           gameboy: {
-            type: parsed.interactions.gameboy.type,
-            active: parsed.interactions.gameboy.active,
+            type: "gameboy",
+            active: true,
           },
         },
-        time: parsed.time,
       } as GameState;
-
-      setGameState(rawState);
-    }, 100);
-
-    return () => clearInterval(interval);
-  }, [setGameState]);
-
-  useEffect(() => {
-    if (lastJsonMessage) {
-      const rawState = lastJsonMessage as unknown as GameState;
+      console.info(rawState);
       setGameState(rawState);
     }
   }, [setGameState, lastJsonMessage]);
@@ -106,7 +132,7 @@ const Game = () => {
   );
 
   const playerOne = useGameStore((s) => s.gameState.playerOne);
-  const gameboy = useGameStore((s) => s.gameState.interactions.gameboy);
+  // const gameboy = useGameStore((s) => s.gameState.interactions.gameboy);
 
   return (
     <>
@@ -118,7 +144,10 @@ const Game = () => {
           <Suspense>
             <Physics debug>
               <Level />
-              <FirstPersonController player={playerOne} />
+              <FirstPersonController
+                player={playerOne}
+                sendJsonMessage={sendJsonMessage}
+              />
               <Selection>
                 <EffectComposer multisampling={8} autoClear={false}>
                   <Outline
@@ -128,12 +157,12 @@ const Game = () => {
                     width={500}
                   />
                 </EffectComposer>
-                <InteractionObject
+                {/* <InteractionObject
                   interaction={gameboy}
                   textPosition={[0, 1.5, 0]}
                 >
                   <GameboyModel position={[0, 1, 0]} rotation={[0, -90, 0]} />
-                </InteractionObject>
+                </InteractionObject> */}
               </Selection>
             </Physics>
           </Suspense>
