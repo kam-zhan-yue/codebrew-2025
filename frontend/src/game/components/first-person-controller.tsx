@@ -63,6 +63,7 @@ export default function FirstPersonController({
   const handleInputs = (delta: number) => {
     move(delta);
     select();
+    // validate();
   };
 
   const move = (delta: number) => {
