@@ -1,13 +1,12 @@
 import { Canvas } from "@react-three/fiber";
 import "./game.css";
-import { Suspense, useEffect, useMemo, useRef } from "react";
+import { Suspense, useEffect, useMemo } from "react";
 import { KeyboardControls } from "@react-three/drei";
 import * as THREE from "three";
 import useWebSocket from "react-use-websocket";
 import { WS_URL } from "../api/constants";
 import { useGameStore } from "../store";
 import { GameState } from "./types/game-state";
-import Gameboy from "./components/gameboy";
 import {
   EffectComposer,
   Outline,
@@ -34,58 +33,8 @@ const Game = () => {
     share: true,
   });
 
-  // // Proxy websocket before the backend is setup
-  // const playerTwoZ = useRef(0);
-  // useEffect(() => {
-  //   const interval = setInterval(() => {
-  //     playerTwoZ.current += 0.01;
-  //     const rawJson = JSON.stringify({
-  //       playerOne: {
-  //         id: "player1",
-  //         position: [2, 0, 0],
-  //         animationState: "idle",
-  //       },
-  //       playerTwo: {
-  //         id: "player2",
-  //         position: [0, 0, playerTwoZ.current],
-  //         animationState: "walking",
-  //       },
-  //       interactions: {
-  //         gameboy: { type: "gameboy", active: false },
-  //       },
-  //       time: Date.now(),
-  //     });
-
-  //     const parsed = JSON.parse(rawJson);
-
-  //     const rawState = {
-  //       playerOne: {
-  //         id: parsed.playerOne.id,
-  //         position: new THREE.Vector3(...parsed.playerOne.position),
-  //         animationState: parsed.playerOne.animationState,
-  //       },
-  //       playerTwo: {
-  //         id: parsed.playerTwo.id,
-  //         position: new THREE.Vector3(...parsed.playerTwo.position),
-  //         animationState: parsed.playerTwo.animationState,
-  //       },
-  //       interactions: {
-  //         gameboy: {
-  //           type: parsed.interactions.gameboy.type,
-  //           active: parsed.interactions.gameboy.active,
-  //         },
-  //       },
-  //       time: parsed.time,
-  //     } as GameState;
-
-  //     setGameState(rawState);
-  //   }, 100);
-
-  //   return () => clearInterval(interval);
-  // }, [setGameState]);
-
   useEffect(() => {
-    //@ts-expect-error
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const json = lastJsonMessage as any;
     if (json) {
       const rawState = {
@@ -96,6 +45,11 @@ const Game = () => {
             json.player_one.position.y,
             json.player_one.position.z,
           ),
+          rotation: new THREE.Quaternion(
+            json.player_one.rotation.y,
+            json.player_one.rotation.y,
+            json.player_one.rotation.z,
+          ),
           animationState: json.player_one.animationState,
         },
         playerTwo: {
@@ -104,6 +58,11 @@ const Game = () => {
             json.player_two.position.x,
             json.player_two.position.y,
             json.player_two.position.z,
+          ),
+          rotation: new THREE.Quaternion(
+            json.player_two.rotation.y,
+            json.player_two.rotation.y,
+            json.player_two.rotation.z,
           ),
           animationState: json.player_two.animationState,
         },
@@ -114,7 +73,6 @@ const Game = () => {
           },
         },
       } as GameState;
-      console.info(rawState);
       setGameState(rawState);
     }
   }, [setGameState, lastJsonMessage]);
@@ -132,7 +90,11 @@ const Game = () => {
   );
 
   const playerOne = useGameStore((s) => s.gameState.playerOne);
-  // const gameboy = useGameStore((s) => s.gameState.interactions.gameboy);
+  const playerTwo = useGameStore((s) => s.gameState.playerTwo);
+  const playerId = useGameStore((s) => s.playerId);
+  const gameboy = useGameStore((s) => s.gameState.interactions.gameboy);
+
+  const mainPlayer = playerId === playerOne.id ? playerOne : playerTwo;
 
   return (
     <>
@@ -145,7 +107,7 @@ const Game = () => {
             <Physics debug>
               <Level />
               <FirstPersonController
-                player={playerOne}
+                player={mainPlayer}
                 sendJsonMessage={sendJsonMessage}
               />
               <Selection>
@@ -157,12 +119,12 @@ const Game = () => {
                     width={500}
                   />
                 </EffectComposer>
-                {/* <InteractionObject
+                <InteractionObject
                   interaction={gameboy}
                   textPosition={[0, 1.5, 0]}
                 >
                   <GameboyModel position={[0, 1, 0]} rotation={[0, -90, 0]} />
-                </InteractionObject> */}
+                </InteractionObject>
               </Selection>
             </Physics>
           </Suspense>

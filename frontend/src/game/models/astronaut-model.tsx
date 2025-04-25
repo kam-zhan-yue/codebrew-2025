@@ -40,10 +40,10 @@ export function AstronautModel({
   rotation = [0, 0, 0],
   scale = 1,
 }: AstronautModelProps) {
-  const group = React.useRef<THREE.Group>();
+  const group = React.useRef<THREE.Group>(null!);
   const { scene, animations } = useGLTF("/models/astronaut.glb");
   const clone = React.useMemo(() => SkeletonUtils.clone(scene), [scene]);
-  const { nodes, materials } = useGraph(clone) as GLTFResult;
+  const { nodes, materials } = useGraph(clone) as unknown as GLTFResult;
   const { actions } = useAnimations(animations, group);
   const previousAnimation = usePrevious(animation);
 

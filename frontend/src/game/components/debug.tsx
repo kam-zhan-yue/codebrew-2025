@@ -5,7 +5,7 @@ import * as THREE from "three";
 const Debug = () => {
   const debugState = useGameStore((s) => s.uiState.debug);
   const raycastHit = debugState?.raycastData?.object;
-
+  const playerId = useGameStore((s) => s.playerId);
   const getObjectHierarchy = (obj: THREE.Object3D | null | undefined) => {
     const names = [];
     let current = obj;
@@ -20,6 +20,10 @@ const Debug = () => {
     <Overlay>
       <div style={{ fontFamily: "monospace", lineHeight: "1.5" }}>
         <h1>Debug Data</h1>
+        <div>
+          <strong>Player ID</strong>
+          {playerId}
+        </div>
         {raycastHit ? (
           <>
             <div>

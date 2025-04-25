@@ -1,4 +1,4 @@
-import { useFrame, useThree, Vector3 } from "@react-three/fiber";
+import { useFrame, useThree } from "@react-three/fiber";
 import { PointerLockControls, useKeyboardControls } from "@react-three/drei";
 import { useRef } from "react";
 import * as THREE from "three";
@@ -10,10 +10,7 @@ import {
   RapierRigidBody,
   RigidBody,
 } from "@react-three/rapier";
-import { InteractionType } from "../types/interactions";
 import { findFirstInteractionHit } from "../utils";
-import useWebSocket from "react-use-websocket";
-import { WS_URL } from "../../api/constants";
 import { SendJsonMessage } from "react-use-websocket/dist/lib/types";
 
 const SPEED = 150;
@@ -45,15 +42,18 @@ export default function FirstPersonController({
   );
   const currentPos = useRef(new THREE.Vector3());
 
-  const setDebug = useGameStore((s) => s.setDebug);
+  // const setDebug = useGameStore((s) => s.setDebug);
+  const playerId = useGameStore((s) => s.playerId);
   const setActiveSelection = useGameStore((s) => s.setActiveSelection);
   const activeSelection = useGameStore(
     (s) => s.uiState.selection.activeSelection,
   );
 
   const lastValidPosition = useRef(new THREE.Vector3());
+  const started = useGameStore((s) => s.started);
 
   useFrame((_, delta) => {
+    if (!started) return;
     interpolate();
     raycast();
     handleInputs(delta);
@@ -107,31 +107,30 @@ export default function FirstPersonController({
       const distance = lastValidPosition.current.distanceTo(current);
 
       if (distance > DISTANCE_THRESHOLD) {
-        send(current, camera.quaternion);
+        send(current, camera.rotation);
       } else {
-        send(current, camera.quaternion);
+        send(current, camera.rotation);
       }
     } else {
-      send(current, camera.quaternion);
+      send(current, camera.rotation);
     }
 
     lastValidPosition.current.copy(current);
   };
 
-  const send = (position: THREE.Vector3, angle: THREE.Quaternion) => {
+  const send = (position: THREE.Vector3, rotation: THREE.Euler) => {
     sendJsonMessage({
-      player_id: "1",
+      player_id: playerId,
       position: {
         x: position.x,
         y: position.y,
         z: position.z,
       },
-      angle: {
-        x: angle.x,
-        y: angle.y,
-        z: angle.z,
-        w: angle.w,
-      }
+      rotation: {
+        x: rotation.x,
+        y: rotation.y,
+        z: rotation.z,
+      },
     });
   };
 
@@ -195,7 +194,7 @@ export default function FirstPersonController({
           <meshStandardMaterial color="white" />
         </CylinderCollider>
       </RigidBody>
-      <PointerLockControls />
+      <PointerLockControls enabled={started} />
     </>
   );
 }

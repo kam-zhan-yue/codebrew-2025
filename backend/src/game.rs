@@ -14,10 +14,10 @@ impl Game {
     pub fn client_update(&mut self, payload: UpdatePayload) {
         if payload.player_id == "1" {
             self.player_one.position = payload.position;
-            self.player_one.angle = payload.angle;
+            self.player_one.rotation = payload.rotation;
         } else if payload.player_id == "2" {
             self.player_two.position = payload.position;
-            self.player_two.angle = payload.angle;
+            self.player_two.rotation = payload.rotation;
         }
     }
 }
@@ -28,12 +28,12 @@ impl Default for Game {
             player_one: PlayerState {
                 id: String::from("1"),
                 position: Vector3::default(),
-                angle: Quaternion::default(),
+                rotation: Euler::default(),
             },
             player_two: PlayerState {
                 id: String::from("2"),
                 position: Vector3::default(),
-                angle: Quaternion::default(),
+                rotation: Euler::default(),
             },
         }
     }
@@ -44,7 +44,7 @@ impl Default for Game {
 struct PlayerState {
     id: String,
     position: Vector3,
-    angle: Quaternion,
+    rotation: Euler,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug)]
@@ -67,20 +67,18 @@ impl Default for Vector3 {
 
 #[derive(Serialize, Deserialize, Clone, Debug)]
 #[serde(crate = "rocket::serde")]
-struct Quaternion {
+struct Euler {
     x: f64,
     y: f64,
     z: f64,
-    w: f64,
 }
 
-impl Default for Quaternion {
+impl Default for Euler {
     fn default() -> Self {
         Self {
             x: 0_f64,
             y: 0_f64,
             z: 0_f64,
-            w: 0_f64,
         }
     }
 }
@@ -90,5 +88,5 @@ impl Default for Quaternion {
 pub struct UpdatePayload {
     player_id: String,
     position: Vector3,
-    angle: Quaternion,
+    rotation: Euler,
 }

@@ -4,13 +4,11 @@ Command: npx gltfjsx@6.5.3 ./public/models/environment.glb -t
 */
 
 import * as THREE from "three";
-import React from "react";
+import React, { JSX } from "react";
 import { useGraph } from "@react-three/fiber";
 import { useGLTF } from "@react-three/drei";
 import { GLTF, SkeletonUtils } from "three-stdlib";
 import { CuboidCollider, RigidBody } from "@react-three/rapier";
-import InteractionObject from "../components/interaction-object";
-import { useGameStore } from "../../store";
 
 type GLTFResult = GLTF & {
   nodes: {
@@ -90,14 +88,15 @@ type GLTFResult = GLTF & {
     ["039BE5"]: THREE.MeshStandardMaterial;
     mat18: THREE.MeshStandardMaterial;
   };
+  // @ts-expect-error Cannot find name
   animations: GLTFAction[];
 };
 
 export function EnvironmentModel(props: JSX.IntrinsicElements["group"]) {
   const { scene } = useGLTF("/models/environment.glb");
   const clone = React.useMemo(() => SkeletonUtils.clone(scene), [scene]);
-  const { nodes, materials } = useGraph(clone) as GLTFResult;
-  const gameboy = useGameStore((s) => s.gameState.interactions.gameboy);
+  const { nodes, materials } = useGraph(clone) as unknown as GLTFResult;
+  // const gameboy = useGameStore((s) => s.gameState.interactions.gameboy);
   return (
     <group {...props} dispose={null}>
       <group

@@ -1,22 +1,43 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useHelloWorld } from "../api/hooks/use-hello-world";
 import Overlay from "../components/overlay";
+import { useGameStore } from "../store";
 
 export const Route = createFileRoute("/")({
   component: RouteComponent,
 });
 
 function RouteComponent() {
-  const { isPending, isError, data } = useHelloWorld();
+  const setPlayerId = useGameStore((s) => s.setPlayerId);
+  const started = useGameStore((s) => s.started);
 
-  if (isPending) {
-    return <></>;
-  }
+  const handlePlayerOne = () => {
+    setPlayerId("1");
+  };
 
-  if (isError) {
-    return <></>;
-  }
+  const handlePlayerTwo = () => {
+    setPlayerId("2");
+  };
 
-  const helloWorldData = data.data;
-  return <Overlay>{helloWorldData}</Overlay>;
+  return (
+    <Overlay>
+      {!started && (
+        <div className="flex justify-center items-center w-full h-full">
+          <div className="flex justify-between w-64">
+            <button
+              onClick={handlePlayerOne}
+              className="px-6 py-3 text-white text-lg bg-blue-500 rounded-md"
+            >
+              Player One
+            </button>
+            <button
+              onClick={handlePlayerTwo}
+              className="px-6 py-3 text-white text-lg bg-green-500 rounded-md"
+            >
+              Player Two
+            </button>
+          </div>
+        </div>
+      )}
+    </Overlay>
+  );
 }

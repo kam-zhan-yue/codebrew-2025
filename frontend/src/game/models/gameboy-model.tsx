@@ -4,7 +4,7 @@ Command: npx gltfjsx@6.5.3 ./public/models/game-boy.glb -t
 */
 
 import * as THREE from "three";
-import React from "react";
+import { JSX } from "react";
 import { useGLTF } from "@react-three/drei";
 import { GLTF } from "three-stdlib";
 
@@ -25,11 +25,14 @@ type GLTFResult = GLTF & {
     mat12: THREE.MeshStandardMaterial;
     mat17: THREE.MeshStandardMaterial;
   };
+  // @ts-expect-error Cannot find name
   animations: GLTFAction[];
 };
 
 export function GameboyModel(props: JSX.IntrinsicElements["group"]) {
-  const { nodes, materials } = useGLTF("/models/gameboy.glb") as GLTFResult;
+  const { nodes, materials } = useGLTF(
+    "/models/gameboy.glb",
+  ) as unknown as GLTFResult;
   return (
     <group {...props} dispose={null}>
       <mesh geometry={nodes["Node-Mesh"].geometry} material={materials.mat21} />

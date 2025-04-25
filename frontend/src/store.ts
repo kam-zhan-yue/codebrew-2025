@@ -4,19 +4,24 @@ import {
   defaultGameState,
   defaultUIState,
   GameState,
-  InteractionType,
   UIState,
 } from "./game/types/game-state";
+import { InteractionType } from "./game/types/interactions";
 
 interface GameStore {
+  playerId: string;
+  started: boolean;
   gameState: GameState;
   uiState: UIState;
   setGameState: (newState: GameState) => void;
   setDebug: (newState: DebugState) => void;
   setActiveSelection: (newSelection: InteractionType) => void;
+  setPlayerId: (newPlayerId: string) => void;
 }
 
 export const useGameStore = create<GameStore>()((set) => ({
+  playerId: "1",
+  started: false,
   gameState: defaultGameState,
   uiState: defaultUIState,
   setGameState: (newState) => set({ gameState: newState }),
@@ -36,5 +41,10 @@ export const useGameStore = create<GameStore>()((set) => ({
           activeSelection: newSelection,
         },
       },
+    })),
+  setPlayerId: (id) =>
+    set(() => ({
+      playerId: id,
+      started: true,
     })),
 }));
