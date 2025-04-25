@@ -1,6 +1,6 @@
 import { Canvas } from "@react-three/fiber";
 import "./game.css";
-import { Suspense, useEffect, useMemo } from "react";
+import { Suspense, useEffect, useMemo, useState } from "react";
 import { KeyboardControls } from "@react-three/drei";
 import useWebSocket from "react-use-websocket";
 import { WS_URL } from "../api/constants";
@@ -26,16 +26,29 @@ export const Controls = {
 
 const Game = () => {
   const setGameState = useGameStore((state) => state.setGameState);
-  const { sendJsonMessage, lastJsonMessage } = useWebSocket(WS_URL, {
-    share: true,
-  });
+  const playerId = useGameStore((s) => s.playerId);
+  const [socketUrl, setSocketUrl] = useState("wss://echo.websocket.org");
+
+  const { sendJsonMessage, lastJsonMessage } = useWebSocket(
+    socketUrl,
+    {},
+    true,
+  );
 
   useEffect(() => {
+    if (playerId !== "0") {
+      setSocketUrl(WS_URL + "/" + playerId);
+    }
+  }, [playerId]);
+
+  useEffect(() => {
+    // Ignore messages from the echo site, as it is for setup only
+    if (socketUrl === "wss://echo.websocket.org") return;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const json = lastJsonMessage as any;
     if (json) {
+      console.info("Response is ", json);
       const parsed = GameStateSchema.safeParse(json);
-
       if (!parsed.success) {
         console.error("Invalid game state:", parsed.error);
         return;
@@ -43,7 +56,7 @@ const Game = () => {
       const gameState = parsed.data as GameState;
       setGameState(gameState);
     }
-  }, [setGameState, lastJsonMessage]);
+  }, [setGameState, lastJsonMessage, socketUrl]);
 
   const map = useMemo(
     () => [
@@ -59,7 +72,6 @@ const Game = () => {
 
   const playerOne = useGameStore((s) => s.gameState.playerOne);
   const playerTwo = useGameStore((s) => s.gameState.playerTwo);
-  const playerId = useGameStore((s) => s.playerId);
 
   const mainPlayer = playerId === playerOne?.id ? playerOne : playerTwo;
 

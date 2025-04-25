@@ -31,7 +31,7 @@ impl Game {
         if player_id == "1" {
             self.player_one_connected = true;
             self.game_state.player_one = Some(PlayerState {
-                id: String::from("2"),
+                id: String::from(player_id),
                 position: Vector3::default(),
                 rotation: Euler::default(),
                 animation_state: AnimationState::Idle,
@@ -39,7 +39,7 @@ impl Game {
         } else {
             self.player_two_connected = true;
             self.game_state.player_two = Some(PlayerState {
-                id: String::from("2"),
+                id: String::from(player_id),
                 position: Vector3::default(),
                 rotation: Euler::default(),
                 animation_state: AnimationState::Idle,

@@ -15,14 +15,14 @@ export interface GameState {
 
 export const GameStateSchema = z
   .object({
-    player_one: RawPlayerSchema,
-    player_two: RawPlayerSchema,
+    player_one: RawPlayerSchema.optional(),
+    player_two: RawPlayerSchema.optional(),
     interactions: InteractionsSchema,
     time: z.number(),
   })
   .transform((raw) => ({
-    playerOne: PlayerSchema.parse(raw.player_one),
-    playerTwo: PlayerSchema.parse(raw.player_two),
+    playerOne: raw.player_one ? PlayerSchema.parse(raw.player_one) : undefined,
+    playerTwo: raw.player_two ? PlayerSchema.parse(raw.player_two) : undefined,
     interactions: raw.interactions,
     time: raw.time,
   }));
