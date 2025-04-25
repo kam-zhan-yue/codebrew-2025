@@ -32,7 +32,6 @@ const Game = () => {
   const { sendJsonMessage, lastJsonMessage } = useWebSocket(WS_URL, {
     share: true,
   });
-  console.log("socket url:", WS_URL);
 
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
