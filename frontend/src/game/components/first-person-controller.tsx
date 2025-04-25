@@ -120,12 +120,8 @@ export default function FirstPersonController({
 
   const send = (position: THREE.Vector3) => {
     // Always send the rotation. Need to do some weird world rotation here.
-    const worldQuaternion = new THREE.Quaternion();
-    camera.getWorldQuaternion(worldQuaternion);
-    const rotation = new THREE.Euler().setFromQuaternion(
-      worldQuaternion,
-      "YXZ",
-    );
+    camera.rotation.order = "YXZ";
+    const rotation = camera.rotation;
     sendJsonMessage({
       player_id: playerId,
       position: {
