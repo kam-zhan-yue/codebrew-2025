@@ -45,7 +45,7 @@ const Game = () => {
             json.player_one.position.y,
             json.player_one.position.z,
           ),
-          rotation: new THREE.Quaternion(
+          rotation: new THREE.Euler(
             json.player_one.rotation.y,
             json.player_one.rotation.y,
             json.player_one.rotation.z,
@@ -59,7 +59,7 @@ const Game = () => {
             json.player_two.position.y,
             json.player_two.position.z,
           ),
-          rotation: new THREE.Quaternion(
+          rotation: new THREE.Euler(
             json.player_two.rotation.y,
             json.player_two.rotation.y,
             json.player_two.rotation.z,

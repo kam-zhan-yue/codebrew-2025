@@ -107,18 +107,25 @@ export default function FirstPersonController({
       const distance = lastValidPosition.current.distanceTo(current);
 
       if (distance > DISTANCE_THRESHOLD) {
-        send(current, camera.rotation);
+        send(current);
       } else {
-        send(current, camera.rotation);
+        send(current);
       }
     } else {
-      send(current, camera.rotation);
+      send(current);
     }
 
     lastValidPosition.current.copy(current);
   };
 
-  const send = (position: THREE.Vector3, rotation: THREE.Euler) => {
+  const send = (position: THREE.Vector3) => {
+    // Always send the rotation. Need to do some weird world rotation here.
+    const worldQuaternion = new THREE.Quaternion();
+    camera.getWorldQuaternion(worldQuaternion);
+    const rotation = new THREE.Euler().setFromQuaternion(
+      worldQuaternion,
+      "YXZ",
+    );
     sendJsonMessage({
       player_id: playerId,
       position: {

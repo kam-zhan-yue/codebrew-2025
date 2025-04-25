@@ -6,7 +6,7 @@ export type AnimState = "idle" | "walking";
 export interface PlayerState {
   id: string;
   position: THREE.Vector3;
-  rotation: THREE.Quaternion;
+  rotation: THREE.Euler;
   animationState: AnimState;
 }
 
@@ -50,13 +50,13 @@ export const defaultGameState: GameState = {
   playerOne: {
     id: "player1",
     position: new THREE.Vector3(0, 0, 0),
-    rotation: new THREE.Quaternion(0, 0, 0, 0),
+    rotation: new THREE.Euler(0, 0, 0),
     animationState: "idle",
   },
   playerTwo: {
     id: "player2",
     position: new THREE.Vector3(2, 0, 0),
-    rotation: new THREE.Quaternion(0, 0, 0, 0),
+    rotation: new THREE.Euler(0, 0, 0),
     animationState: "idle",
   },
   interactions: {
