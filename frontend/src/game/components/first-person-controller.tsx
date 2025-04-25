@@ -94,10 +94,10 @@ export default function FirstPersonController({
     } else {
       rigidbodyRef.current.setLinvel({ x: 0, y: 0, z: 0 }, true);
     }
-    validate(move);
+    validate();
   };
 
-  const validate = (velocity: THREE.Vector3) => {
+  const validate = () => {
     if (!rigidbodyRef.current) return;
 
     const currentRaw = rigidbodyRef.current.translation();
@@ -107,26 +107,31 @@ export default function FirstPersonController({
       const distance = lastValidPosition.current.distanceTo(current);
 
       if (distance > DISTANCE_THRESHOLD) {
-        send(velocity);
+        send(current, camera.quaternion);
       } else {
-        send(new THREE.Vector3(0, 0, 0));
+        send(current, camera.quaternion);
       }
     } else {
-      send(new THREE.Vector3(0, 0, 0));
+      send(current, camera.quaternion);
     }
 
     lastValidPosition.current.copy(current);
   };
 
-  const send = (velocity: THREE.Vector3) => {
-    console.info("Moving with ", velocity);
+  const send = (position: THREE.Vector3, angle: THREE.Quaternion) => {
     sendJsonMessage({
       player_id: "1",
-      velocity: {
-        x: velocity.x,
-        y: velocity.y,
-        z: velocity.z,
+      position: {
+        x: position.x,
+        y: position.y,
+        z: position.z,
       },
+      angle: {
+        x: angle.x,
+        y: angle.y,
+        z: angle.z,
+        w: angle.w,
+      }
     });
   };
 
