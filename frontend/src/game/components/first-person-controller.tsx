@@ -5,9 +5,15 @@ import * as THREE from "three";
 import { Controls } from "../game";
 import { InteractionType, PlayerState } from "../types/game-state";
 import { useGameStore } from "../../store";
+import {
+  CylinderCollider,
+  RapierRigidBody,
+  RigidBody,
+} from "@react-three/rapier";
 
-const SPEED = 5;
-const CAMERA_OFFSET = new THREE.Vector3(0, 3.3, 0);
+const SPEED = 150;
+const DISTANCE_THRESHOLD = 0.01;
+const CAMERA_OFFSET = new THREE.Vector3(0, 1.5, 0);
 
 interface FirstPersonControllerProps {
   player: PlayerState;
@@ -17,11 +23,15 @@ export default function FirstPersonController({
   player,
 }: FirstPersonControllerProps) {
   const { camera, scene } = useThree();
+  const rigidbodyRef = useRef<RapierRigidBody>(null!);
   const direction = useRef<THREE.Vector3>(new THREE.Vector3());
   const raycaster = useRef<THREE.Raycaster>(new THREE.Raycaster());
   const leftPressed = useKeyboardControls((state) => state[Controls.left]);
   const rightPressed = useKeyboardControls((state) => state[Controls.right]);
   const backPressed = useKeyboardControls((state) => state[Controls.back]);
+  const interactPressed = useKeyboardControls(
+    (state) => state[Controls.interact],
+  );
   const forwardPressed = useKeyboardControls(
     (state) => state[Controls.forward],
   );
@@ -29,11 +39,17 @@ export default function FirstPersonController({
 
   const setDebug = useGameStore((s) => s.setDebug);
   const setActiveSelection = useGameStore((s) => s.setActiveSelection);
+  const activeSelection = useGameStore(
+    (s) => s.uiState.selection.activeSelection,
+  );
+
+  const lastValidPosition = useRef(new THREE.Vector3());
 
   useFrame((_, delta) => {
     interpolate();
-    move(delta);
     raycast();
+    handleInputs(delta);
+    validate();
   });
 
   const interpolate = () => {
@@ -44,8 +60,12 @@ export default function FirstPersonController({
     camera.position.copy(currentPos.current);
   };
 
+  const handleInputs = (delta: number) => {
+    move(delta);
+    select();
+  };
+
   const move = (delta: number) => {
-    // Send movement input
     direction.current.set(0, 0, 0);
 
     if (forwardPressed) direction.current.z -= 1;
@@ -64,7 +84,36 @@ export default function FirstPersonController({
       move.applyQuaternion(camera.quaternion);
       move.y = 0;
       move.normalize().multiplyScalar(SPEED * delta);
-      console.info("Moving to ", move);
+      // console.info("Moving to ", move);
+      rigidbodyRef.current.setLinvel(move, true);
+    } else {
+      rigidbodyRef.current.setLinvel({ x: 0, y: 0, z: 0 }, true);
+    }
+  };
+
+  const validate = () => {
+    if (!rigidbodyRef.current) return;
+
+    const currentRaw = rigidbodyRef.current.translation();
+    const current = new THREE.Vector3(currentRaw.x, currentRaw.y, currentRaw.z);
+
+    if (lastValidPosition.current) {
+      const distance = lastValidPosition.current.distanceTo(current);
+
+      if (distance > DISTANCE_THRESHOLD) {
+        console.info("✅ Move successful");
+      }
+    }
+
+    lastValidPosition.current.copy(current);
+  };
+
+  const select = () => {
+    if (!interactPressed) return;
+    switch (activeSelection) {
+      case "gameboy":
+        console.info("Send Interact Information");
+        break;
     }
   };
 
@@ -88,5 +137,22 @@ export default function FirstPersonController({
     }
   };
 
-  return <PointerLockControls />;
+  return (
+    <>
+      <RigidBody
+        ref={rigidbodyRef}
+        colliders={false}
+        type="dynamic" // important
+        position={[0, 1, 0]}
+        gravityScale={0}
+        enabledRotations={[false, false, false]}
+        friction={2}
+      >
+        <CylinderCollider args={[0.9, 0.5]}>
+          <meshStandardMaterial color="white" />
+        </CylinderCollider>
+      </RigidBody>
+      <PointerLockControls />
+    </>
+  );
 }
