@@ -30,12 +30,10 @@ const CAMERA_OFFSET = new THREE.Vector3(0, 0.5, 0);
 
 interface FirstPersonControllerProps {
   sendJsonMessage: SendJsonMessage;
-  setCrosshairSelected: (selected: boolean) => void;
 }
 
 export default function FirstPersonController({
   sendJsonMessage,
-  setCrosshairSelected,
 }: FirstPersonControllerProps) {
   const { camera, scene } = useThree();
   const arrowRef = useRef<THREE.ArrowHelper | null>(null);
