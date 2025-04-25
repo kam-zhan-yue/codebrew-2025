@@ -4,10 +4,10 @@ import {
   PointerLockControls,
   useKeyboardControls,
 } from "@react-three/drei";
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import * as THREE from "three";
 import { Controls } from "../game";
-import { useGameStore } from "../../store";
+import { GameFlow, useGameStore } from "../../store";
 import {
   CylinderCollider,
   RapierRigidBody,
@@ -15,7 +15,7 @@ import {
 } from "@react-three/rapier";
 import { findFirstInteractionHit, toThreeVector3 } from "../utils";
 import { SendJsonMessage } from "react-use-websocket/dist/lib/types";
-import { AnimState, PlayerState } from "../types/player";
+import { AnimState } from "../types/player";
 import {
   InteractionMessageSchema,
   MessageType,
@@ -59,7 +59,8 @@ export default function FirstPersonController({
   );
 
   const lastValidPosition = useRef(new THREE.Vector3());
-  const started = useGameStore((s) => s.started);
+  const flow = useGameStore((s) => s.flow);
+  const started = flow !== GameFlow.Selection;
   const interactions = useGameStore((s) => s.gameState.interactions);
 
   const getPlayer = useGameStore((s) => s.getPlayer);

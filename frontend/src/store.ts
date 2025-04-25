@@ -4,12 +4,21 @@ import { InteractionType } from "./game/types/interactions";
 import { DebugState, defaultUIState, UIState } from "./game/types/ui-state";
 import { PlayerState } from "./game/types/player";
 
+export enum GameFlow {
+  Selection,
+  Lobby,
+  Countdown,
+  Game,
+  GameOver,
+}
+
 interface GameStore {
+  flow: GameFlow;
   playerId: string;
-  started: boolean;
   gameState: GameState;
   uiState: UIState;
   setGameState: (newState: GameState) => void;
+  setFlow: (newFlow: GameFlow) => void;
   setDebug: (newState: DebugState) => void;
   setActiveSelection: (newSelection: InteractionType) => void;
   setPlayerId: (newPlayerId: string) => void;
@@ -18,11 +27,12 @@ interface GameStore {
 }
 
 export const useGameStore = create<GameStore>()((set, get) => ({
+  flow: GameFlow.Selection,
   playerId: "0",
-  started: false,
   gameState: defaultGameState,
   uiState: defaultUIState,
   setGameState: (newState) => set({ gameState: newState }),
+  setFlow: (newFlow) => set({ flow: newFlow }),
 
   setDebug: (newDebugState) =>
     set((state) => ({
@@ -46,7 +56,7 @@ export const useGameStore = create<GameStore>()((set, get) => ({
   setPlayerId: (id) =>
     set(() => ({
       playerId: id,
-      started: true,
+      flow: GameFlow.Lobby,
     })),
 
   getPlayer: () => {

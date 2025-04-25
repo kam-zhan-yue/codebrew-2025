@@ -1,43 +1,23 @@
 import { createFileRoute } from "@tanstack/react-router";
 import Overlay from "../components/overlay";
-import { useGameStore } from "../store";
+import { GameFlow, useGameStore } from "../store";
+import PlayerSelection from "../game/components/player-selection";
+import Countdown from "../game/components/countdown";
+import GameUI from "../game/components/game-ui";
+import GameOver from "../game/components/game-over";
 
 export const Route = createFileRoute("/")({
   component: RouteComponent,
 });
 
 function RouteComponent() {
-  const setPlayerId = useGameStore((s) => s.setPlayerId);
-  const started = useGameStore((s) => s.started);
-
-  const handlePlayerOne = () => {
-    setPlayerId("1");
-  };
-
-  const handlePlayerTwo = () => {
-    setPlayerId("2");
-  };
-
+  const flow = useGameStore((s) => s.flow);
   return (
     <Overlay>
-      {!started && (
-        <div className="flex justify-center items-center w-full h-full">
-          <div className="flex justify-between w-64">
-            <button
-              onClick={handlePlayerOne}
-              className="px-6 py-3 text-white text-lg bg-blue-500 rounded-md"
-            >
-              Player One
-            </button>
-            <button
-              onClick={handlePlayerTwo}
-              className="px-6 py-3 text-white text-lg bg-green-500 rounded-md"
-            >
-              Player Two
-            </button>
-          </div>
-        </div>
-      )}
+      {flow === GameFlow.Selection && <PlayerSelection />}
+      {flow === GameFlow.Countdown && <Countdown />}
+      {flow === GameFlow.Game && <GameUI />}
+      {flow === GameFlow.GameOver && <GameOver />}
     </Overlay>
   );
 }
