@@ -139,7 +139,7 @@ export default function FirstPersonController({
 
   return (
     <>
-      <RigidBody
+      {/* <RigidBody
         ref={rigidbodyRef}
         colliders={false}
         type="dynamic" // important
@@ -151,7 +151,7 @@ export default function FirstPersonController({
         <CylinderCollider args={[0.9, 0.5]}>
           <meshStandardMaterial color="white" />
         </CylinderCollider>
-      </RigidBody>
+      </RigidBody> */}
       <PointerLockControls />
     </>
   );
