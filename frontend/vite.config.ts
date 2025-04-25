@@ -14,12 +14,5 @@ export default defineConfig({
       usePolling: true,
       interval: 100
     }
-  },
-  build: {
-    rollupOptions: {
-      input: {
-        main: './src/main.tsx'
-      }
-    }
   }
 })
