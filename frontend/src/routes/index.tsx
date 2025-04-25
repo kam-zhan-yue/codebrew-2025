@@ -5,6 +5,7 @@ import PlayerSelection from "../game/components/player-selection";
 import Countdown from "../game/components/countdown";
 import GameUI from "../game/components/game-ui";
 import GameOver from "../game/components/game-over";
+import Lobby from "../game/components/lobby";
 
 export const Route = createFileRoute("/")({
   component: RouteComponent,
@@ -15,6 +16,7 @@ function RouteComponent() {
   return (
     <Overlay>
       {flow === GameFlow.Selection && <PlayerSelection />}
+      {flow === GameFlow.Lobby && <Lobby />}
       {flow === GameFlow.Countdown && <Countdown />}
       {flow === GameFlow.Game && <GameUI />}
       {flow === GameFlow.GameOver && <GameOver />}
