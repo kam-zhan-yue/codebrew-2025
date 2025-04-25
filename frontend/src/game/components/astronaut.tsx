@@ -28,7 +28,7 @@ const Astronaut = ({ player }: AstronautProps) => {
 
   return (
     <mesh ref={mesh}>
-      <AstronautModel animation={animation} />
+      <AstronautModel scale={0.3} animation={animation} />
     </mesh>
   );
 };
