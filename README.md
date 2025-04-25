@@ -1,5 +1,7 @@
 ## Deployments
 
+Frontend: https://codebrew-2025-frontend.onrender.com/
+
 Backend: https://codebrew-2025-backend.onrender.com/
 
 ## Docker Setup
@@ -13,4 +15,3 @@ If you get errors saying modules can't be resolved, it's likely a caching proble
 `docker compose down --rmi all --volumes --remove-orphans`
 
 Then `docker compose up`
-
