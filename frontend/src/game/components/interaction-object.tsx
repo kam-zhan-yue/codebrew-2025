@@ -22,7 +22,7 @@ const InteractionObject = ({
   const enabled = activeSelection === interaction.id;
   const data = Interactions[interaction.id];
   const message = interaction.active
-    ? data.desactivateMessage
+    ? data.deactivateMessage
     : data.activateMessage;
 
   return (

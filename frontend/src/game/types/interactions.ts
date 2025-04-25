@@ -4,7 +4,7 @@ type InteractionData = {
   label: string;
   description: string;
   activateMessage: string;
-  desactivateMessage: string;
+  deactivateMessage: string;
 };
 
 export const Interactions: Record<string, InteractionData> = {
@@ -12,19 +12,19 @@ export const Interactions: Record<string, InteractionData> = {
     label: "",
     description: "",
     activateMessage: "",
-    desactivateMessage: "",
+    deactivateMessage: "",
   },
   gameboy: {
     label: "Gameboy",
     description: "An old school handheld console.",
     activateMessage: "Press E to turn on",
-    desactivateMessage: "Press E to turn off",
+    deactivateMessage: "Press E to turn off",
   },
   television: {
-    label: "Gameboy",
+    label: "Television",
     description: "An old school handheld console.",
     activateMessage: "Press E to turn on",
-    desactivateMessage: "Press E to turn off",
+    deactivateMessage: "Press E to turn off",
   },
 } as const;
 
