@@ -1,6 +1,8 @@
 on:
   pull_request:
   push:
+    branches:
+      - main
 
 jobs:
   ci:
@@ -10,4 +12,8 @@ jobs:
         env:
           backend_deploy_url: ${{ secrets.BACKEND_DEPLOY_HOOK_URL }}
           frontend_deploy_url: ${{ secrets.FRONTEND_DEPLOY_HOOK_URL }}
-        run: curl "$backend_deploy_url" && curl "$frontend_deploy_url"
+        run: |
+          echo "Deploying backend..."
+          curl -s "$backend_deploy_url"
+          echo "Deploying frontend..."
+          curl -s "$frontend_deploy_url"
