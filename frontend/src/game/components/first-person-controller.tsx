@@ -30,10 +30,12 @@ const CAMERA_OFFSET = new THREE.Vector3(0, 0.5, 0);
 
 interface FirstPersonControllerProps {
   sendJsonMessage: SendJsonMessage;
+  setCrosshairSelected: (selected: boolean) => void;
 }
 
 export default function FirstPersonController({
   sendJsonMessage,
+  setCrosshairSelected,
 }: FirstPersonControllerProps) {
   const { camera, scene } = useThree();
   const arrowRef = useRef<THREE.ArrowHelper | null>(null);
@@ -208,22 +210,25 @@ export default function FirstPersonController({
       if (distance <= INTERACT_THRESHOLD) {
         setActiveSelection(result.interaction);
         hasSelection = true;
+        // change crosshair colour to green
+        setCrosshairSelected(true);
       }
     }
     if (!hasSelection) {
       setActiveSelection("none");
+      setCrosshairSelected(false);
     }
-    visualiseRay();
+    // visualiseRay();
   };
 
-  const visualiseRay = () => {
-    if (!arrowRef.current || !raycaster.current) return;
+  // const visualiseRay = () => {
+  //   if (!arrowRef.current || !raycaster.current) return;
 
-    const origin = raycaster.current.ray.origin;
-    const direction = raycaster.current.ray.direction.clone().normalize();
-    arrowRef.current.position.copy(origin);
-    arrowRef.current.setDirection(direction);
-  };
+  //   const origin = raycaster.current.ray.origin;
+  //   const direction = raycaster.current.ray.direction.clone().normalize();
+  //   arrowRef.current.position.copy(origin);
+  //   arrowRef.current.setDirection(direction);
+  // };
 
   return (
     <>

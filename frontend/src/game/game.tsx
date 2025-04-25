@@ -26,6 +26,7 @@ export const Controls = {
 
 const Game = () => {
   const setGameState = useGameStore((state) => state.setGameState);
+  const [crosshairSelected, setCrosshairSelected] = useState(false);
   const playerId = useGameStore((s) => s.playerId);
   const [socketUrl, setSocketUrl] = useState("wss://echo.websocket.org");
 
@@ -79,7 +80,10 @@ const Game = () => {
           <directionalLight position={[5, 5, 5]} intensity={0.8} castShadow />
           <Suspense>
             <Physics debug>
-              <FirstPersonController sendJsonMessage={sendJsonMessage} />
+              <FirstPersonController
+                sendJsonMessage={sendJsonMessage}
+                setCrosshairSelected={setCrosshairSelected}
+              />
               <Selection>
                 <EffectComposer multisampling={8} autoClear={false}>
                   <Outline
@@ -94,6 +98,17 @@ const Game = () => {
             </Physics>
           </Suspense>
         </Canvas>
+        <div style={{         // TODO: make invisible before game starts, after game ends
+          position: "absolute",
+          top: "50%",
+          left: "50%",
+          width: "10px",
+          height: "10px",
+          borderRadius: "50%",
+          transform: "translate(-50%, -50%)",
+          border: "2px solid",
+          borderColor: crosshairSelected ? "red" : "white",
+        }}/>
       </KeyboardControls>
     </>
   );
