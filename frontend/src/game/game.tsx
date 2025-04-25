@@ -70,11 +70,6 @@ const Game = () => {
     [],
   );
 
-  const playerOne = useGameStore((s) => s.gameState.playerOne);
-  const playerTwo = useGameStore((s) => s.gameState.playerTwo);
-
-  const mainPlayer = playerId === playerOne?.id ? playerOne : playerTwo;
-
   return (
     <>
       <KeyboardControls map={map}>
@@ -84,10 +79,7 @@ const Game = () => {
           <directionalLight position={[5, 5, 5]} intensity={0.8} castShadow />
           <Suspense>
             <Physics debug>
-              <FirstPersonController
-                player={mainPlayer}
-                sendJsonMessage={sendJsonMessage}
-              />
+              <FirstPersonController sendJsonMessage={sendJsonMessage} />
               <Selection>
                 <EffectComposer multisampling={8} autoClear={false}>
                   <Outline

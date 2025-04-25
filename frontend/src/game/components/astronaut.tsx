@@ -2,18 +2,16 @@ import { useRef, useState } from "react";
 import { AstronautAnimation, AstronautModel } from "../models/astronaut-model";
 import { Mesh, Vector3 } from "three";
 import { useFrame } from "@react-three/fiber";
-import { PlayerState } from "../types/player";
-
-interface AstronautProps {
-  player: PlayerState | null;
-}
+import { useGameStore } from "../../store";
 
 const MODEL_ROTATE_OFFSET = Math.PI;
 
-const Astronaut = ({ player }: AstronautProps) => {
+const Astronaut = () => {
   const mesh = useRef<Mesh>(null!);
   const currentPos = useRef(new Vector3());
   const [animation, setAnimation] = useState<AstronautAnimation>("idle");
+  const getOtherPlayer = useGameStore((s) => s.getOtherPlayer);
+  const player = getOtherPlayer();
 
   useFrame(() => {
     if (!mesh.current) return;

@@ -23,17 +23,16 @@ import {
 } from "../types/messages";
 
 const INTERACT_THRESHOLD = 2;
-const SPEED = 300;
+const SPEED = 3;
+const INTERPOLATION_SPEED = 10;
 const DISTANCE_THRESHOLD = 0.01;
 const CAMERA_OFFSET = new THREE.Vector3(0, 0.5, 0);
 
 interface FirstPersonControllerProps {
-  player: PlayerState | null;
   sendJsonMessage: SendJsonMessage;
 }
 
 export default function FirstPersonController({
-  player,
   sendJsonMessage,
 }: FirstPersonControllerProps) {
   const { camera, scene } = useThree();
@@ -63,63 +62,30 @@ export default function FirstPersonController({
   const started = useGameStore((s) => s.started);
   const interactions = useGameStore((s) => s.gameState.interactions);
 
-  /*
-  NOTE(Alex): Every time we get a server update, we store data that is required
-  for interpolation. Last Server Update will allow us to track how much time was
-  spend between each update. Then, we lerp this using a constant value.
-  The interpolation duration needs to be at the same tick as the server.
-  Then, it is a matter of lerping between the previous position captured with the
-  position of the current server call.
-  */
-  const lastServerUpdate = useRef<number>(performance.now());
-  const interpolationStart = useRef<THREE.Vector3>(new THREE.Vector3());
-  const interpolationEnd = useRef<THREE.Vector3>(new THREE.Vector3());
-  const interpolationDuration = 1000 / 120;
   const getPlayer = useGameStore((s) => s.getPlayer);
-  const playerState = getPlayer();
-
-  useEffect(() => {
-    if (!playerState) return;
-
-    const newTarget = new THREE.Vector3(
-      playerState.position.x + CAMERA_OFFSET.x,
-      playerState.position.y + CAMERA_OFFSET.y,
-      playerState.position.z + CAMERA_OFFSET.z,
-    );
-
-    interpolationStart.current.copy(currentPos.current);
-    interpolationEnd.current.copy(newTarget);
-    lastServerUpdate.current = performance.now();
-  }, [playerState]);
+  const player = getPlayer();
 
   useFrame((_, delta) => {
     if (!started) return;
     if (!player) return;
-    interpolate();
+    interpolate(delta);
     raycast();
-    handleInputs(delta);
+    handleInputs();
   });
 
-  const interpolate = () => {
-    const now = performance.now();
-    const elapsed = now - lastServerUpdate.current;
-    const t = Math.min(elapsed / interpolationDuration, 1);
-
-    currentPos.current.lerpVectors(
-      interpolationStart.current,
-      interpolationEnd.current,
-      t,
-    );
-
+  const interpolate = (delta: number) => {
+    if (!player) return;
+    const targetPosition = player.position.clone().add(CAMERA_OFFSET);
+    currentPos.current.lerp(targetPosition, INTERPOLATION_SPEED * delta);
     camera.position.copy(currentPos.current);
   };
 
-  const handleInputs = (delta: number) => {
-    move(delta);
+  const handleInputs = () => {
+    move();
     select();
   };
 
-  const move = (delta: number) => {
+  const move = () => {
     if (!rigidbodyRef.current) return;
     direction.current.set(0, 0, 0);
 
@@ -135,7 +101,7 @@ export default function FirstPersonController({
     if (direction.current.length() > 0) {
       move.applyQuaternion(camera.quaternion);
       move.y = 0;
-      move.normalize().multiplyScalar(SPEED * delta);
+      move.normalize().multiplyScalar(SPEED);
       rigidbodyRef.current.setLinvel(move, true);
     } else {
       rigidbodyRef.current.setLinvel({ x: 0, y: 0, z: 0 }, true);
