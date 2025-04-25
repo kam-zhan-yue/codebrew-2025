@@ -5,7 +5,6 @@ import * as THREE from "three";
 import { Controls } from "../game";
 import { InteractionType, PlayerState } from "../types/game-state";
 import { useGameStore } from "../../store";
-import Astronaut from "./astronaut";
 import {
   CylinderCollider,
   RapierRigidBody,
@@ -43,6 +42,8 @@ export default function FirstPersonController({
     (s) => s.uiState.selection.activeSelection,
   );
 
+  const lastValidPosition = useRef(new THREE.Vector3());
+
   useFrame((_, delta) => {
     interpolate();
     raycast();
@@ -60,6 +61,7 @@ export default function FirstPersonController({
   const handleInputs = (delta: number) => {
     move(delta);
     select();
+    // validate();
   };
 
   const move = (delta: number) => {
@@ -84,15 +86,36 @@ export default function FirstPersonController({
       console.info("Moving to ", move);
 
       const current = rigidbodyRef.current.translation();
+
+      lastValidPosition.current.copy(current);
       const newPos = new THREE.Vector3(current.x, current.y, current.z).add(
         move,
       );
 
-      rigidbodyRef.current.setNextKinematicTranslation({
-        x: newPos.x,
-        y: newPos.y,
-        z: newPos.z,
-      });
+      rigidbodyRef.current.setTranslation(
+        {
+          x: newPos.x,
+          y: newPos.y,
+          z: newPos.z,
+        },
+        true,
+      );
+    }
+  };
+
+  const validate = () => {
+    if (!rigidbodyRef.current) return;
+
+    const actual = rigidbodyRef.current.translation();
+    const expected = lastValidPosition.current;
+    const distance = expected.distanceTo(
+      new THREE.Vector3(actual.x, actual.y, actual.z),
+    );
+
+    if (distance < 0.01) {
+      console.info("Move Successful");
+    } else {
+      console.warn("Move blocked");
     }
   };
 
@@ -130,7 +153,7 @@ export default function FirstPersonController({
       <RigidBody
         ref={rigidbodyRef}
         colliders={false}
-        type="kinematicPosition" // important
+        type="dynamic" // important
         position={[0, 1, 0]}
       >
         <CylinderCollider args={[1, 0.5]}>
