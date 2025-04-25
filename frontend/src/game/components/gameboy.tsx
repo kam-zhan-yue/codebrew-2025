@@ -6,6 +6,7 @@ import { useFrame, Vector3 } from "@react-three/fiber";
 import { GameboyModel } from "../models/gameboy-model";
 import * as THREE from "three";
 import { useRef } from "react";
+import Tooltip from "./tooltip";
 
 interface GameboyProps {
   position: Vector3;
@@ -45,24 +46,7 @@ const Gameboy = ({ position, rotation }: GameboyProps) => {
           <Box ref={mesh} />
           <GameboyModel />
         </group>
-        {isHovering && (
-          <Html
-            position={[0, 1, 0]}
-            center
-            distanceFactor={10}
-            style={{
-              background: "white",
-              padding: "6px 12px",
-              borderRadius: "8px",
-              fontSize: "6px",
-              fontWeight: "bold",
-              color: "black",
-              whiteSpace: "nowrap",
-            }}
-          >
-            {message}
-          </Html>
-        )}
+        {isHovering && <Tooltip position={[0, 0.5, 0]}>{message}</Tooltip>}
       </group>
     </Select>
   );

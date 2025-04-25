@@ -16,7 +16,7 @@ import { AnimState, PlayerState } from "../types/player";
 const INTERACT_THRESHOLD = 2;
 const SPEED = 150;
 const DISTANCE_THRESHOLD = 0.01;
-const CAMERA_OFFSET = new THREE.Vector3(0, 1.5, 0);
+const CAMERA_OFFSET = new THREE.Vector3(0, 0.5, 0);
 
 interface FirstPersonControllerProps {
   player: PlayerState;
