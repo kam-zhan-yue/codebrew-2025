@@ -25,7 +25,6 @@ async fn main() -> Result<(), rocket::Error> {
         "http://0.0.0.0:8000",
         "https://codebrew-2025-frontend.onrender.com/",
     ]);
-    // add deployed frontend URL later
 
     let cors = CorsOptions {
         allowed_origins,
