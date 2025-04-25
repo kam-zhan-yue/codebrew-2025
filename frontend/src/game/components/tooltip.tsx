@@ -8,20 +8,7 @@ interface TooltipProps {
 
 const Tooltip = ({ children, position }: TooltipProps) => {
   return (
-    <Html
-      position={position}
-      center
-      distanceFactor={10}
-      style={{
-        background: "white",
-        padding: "6px 12px",
-        borderRadius: "8px",
-        fontSize: "6px",
-        fontWeight: "bold",
-        color: "black",
-        whiteSpace: "nowrap",
-      }}
-    >
+    <Html position={position} center distanceFactor={10} className="tooltip">
       {children}
     </Html>
   );
