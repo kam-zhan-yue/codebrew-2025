@@ -1,17 +1,11 @@
 import { useFrame, useThree } from "@react-three/fiber";
-import {
-  Box,
-  Cylinder,
-  PointerLockControls,
-  useKeyboardControls,
-} from "@react-three/drei";
+import { PointerLockControls, useKeyboardControls } from "@react-three/drei";
 import { useRef } from "react";
 import * as THREE from "three";
 import { Controls } from "../game";
 import { InteractionType, PlayerState } from "../types/game-state";
 import { useGameStore } from "../../store";
 import {
-  CuboidCollider,
   CylinderCollider,
   RapierRigidBody,
   RigidBody,
@@ -69,7 +63,6 @@ export default function FirstPersonController({
   const handleInputs = (delta: number) => {
     move(delta);
     select();
-    // validate();
   };
 
   const move = (delta: number) => {
