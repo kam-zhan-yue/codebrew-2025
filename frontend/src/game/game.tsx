@@ -47,7 +47,6 @@ const Game = () => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const json = lastJsonMessage as any;
     if (json) {
-      console.info("Response is ", json);
       const parsed = GameStateSchema.safeParse(json);
       if (!parsed.success) {
         console.error("Invalid game state:", parsed.error);
