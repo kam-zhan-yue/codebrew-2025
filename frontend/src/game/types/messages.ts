@@ -12,6 +12,7 @@ export const InteractionMessageSchema = z.object({
   ]),
   player_id: z.string(),
   interaction_id: z.string().min(1),
+  active: z.boolean(),
 });
 
 export const PlayerMessageSchema = z.object({

@@ -61,6 +61,7 @@ export default function FirstPersonController({
 
   const lastValidPosition = useRef(new THREE.Vector3());
   const started = useGameStore((s) => s.started);
+  const interactions = useGameStore((s) => s.gameState.interactions);
 
   useFrame((_, delta) => {
     if (!started) return;
@@ -161,10 +162,15 @@ export default function FirstPersonController({
     if (!interactPressed) return;
     if (activeSelection === "none") return;
 
+    const interaction = interactions.find((i) => i.id === activeSelection);
+    if (!interaction) return;
+
     const data = {
       message_id: MessageType.interaction,
       player_id: playerId,
-      interaction_id: activeSelection,
+      interaction_id: interaction.id,
+      // NOTE(Alex): This is where we try to toggle off the interaction
+      active: !interaction.active,
     };
 
     try {
