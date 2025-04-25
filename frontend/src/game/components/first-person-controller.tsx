@@ -16,7 +16,11 @@ import {
 import { findFirstInteractionHit, toThreeVector3 } from "../utils";
 import { SendJsonMessage } from "react-use-websocket/dist/lib/types";
 import { AnimState, PlayerState } from "../types/player";
-import { MessageType } from "../types/messages";
+import {
+  InteractionMessageSchema,
+  MessageType,
+  PlayerMessageSchema,
+} from "../types/messages";
 
 const INTERACT_THRESHOLD = 2;
 const SPEED = 150;
@@ -129,7 +133,9 @@ export default function FirstPersonController({
     // Always send the rotation. Need to do some weird world rotation here.
     camera.rotation.order = "YXZ";
     const rotation = camera.rotation;
-    sendJsonMessage({
+
+    const data = {
+      message_id: MessageType.player,
       player_id: playerId,
       position: {
         x: position.x,
@@ -142,17 +148,31 @@ export default function FirstPersonController({
         z: rotation.z,
       },
       animation_state: animation,
-    });
+    };
+    try {
+      PlayerMessageSchema.parse(data);
+      sendJsonMessage(data);
+    } catch (error) {
+      console.error("Validation failed for player message: ", error);
+    }
   };
 
   const select = () => {
     if (!interactPressed) return;
     if (activeSelection === "none") return;
-    sendJsonMessage({
+
+    const data = {
       message_id: MessageType.interaction,
       player_id: playerId,
       interaction_id: activeSelection,
-    });
+    };
+
+    try {
+      InteractionMessageSchema.parse(data);
+      sendJsonMessage(data);
+    } catch (error) {
+      console.error("Validation failed for interaction message:", error);
+    }
   };
 
   const raycast = () => {
