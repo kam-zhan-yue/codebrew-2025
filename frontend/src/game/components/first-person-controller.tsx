@@ -67,6 +67,7 @@ export default function FirstPersonController({
   };
 
   const move = (delta: number) => {
+    if (!rigidbodyRef.current) return;
     direction.current.set(0, 0, 0);
 
     if (forwardPressed) direction.current.z -= 1;
