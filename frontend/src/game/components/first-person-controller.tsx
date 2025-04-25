@@ -1,11 +1,17 @@
 import { useFrame, useThree } from "@react-three/fiber";
-import { PointerLockControls, useKeyboardControls } from "@react-three/drei";
+import {
+  Box,
+  Cylinder,
+  PointerLockControls,
+  useKeyboardControls,
+} from "@react-three/drei";
 import { useRef } from "react";
 import * as THREE from "three";
 import { Controls } from "../game";
 import { InteractionType, PlayerState } from "../types/game-state";
 import { useGameStore } from "../../store";
 import {
+  CuboidCollider,
   CylinderCollider,
   RapierRigidBody,
   RigidBody,
@@ -48,6 +54,7 @@ export default function FirstPersonController({
     interpolate();
     raycast();
     handleInputs(delta);
+    console.info("Position ", rigidbodyRef.current.translation());
   });
 
   const interpolate = () => {
@@ -148,8 +155,9 @@ export default function FirstPersonController({
         type="dynamic" // important
         position={[0, 1, 0]}
         gravityScale={0}
+        enabledRotations={[false, false, false]}
       >
-        <CylinderCollider args={[1, 0.5]}>
+        <CylinderCollider args={[0.9, 0.5]}>
           <meshStandardMaterial color="white" />
         </CylinderCollider>
       </RigidBody>
