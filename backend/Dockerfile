@@ -4,8 +4,9 @@ RUN cargo install cargo-watch
 ENV PATH="/usr/local/cargo/bin:${PATH}"
 
 WORKDIR /app
-COPY Cargo.toml Cargo.lock Rocket.toml ./
-COPY src ./src
+COPY . .
 RUN cargo build
 
 EXPOSE 8000
+
+CMD ["cargo", "run"]
