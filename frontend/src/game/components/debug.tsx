@@ -3,7 +3,7 @@ import { useGameStore } from "../../store";
 import * as THREE from "three";
 
 const Debug = () => {
-  const debugState = useGameStore((s) => s.gameState.debug);
+  const debugState = useGameStore((s) => s.uiState.debug);
   const raycastHit = debugState?.raycastData?.object;
 
   const getObjectHierarchy = (obj: THREE.Object3D | null | undefined) => {
