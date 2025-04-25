@@ -11,7 +11,7 @@ import {
   RigidBody,
 } from "@react-three/rapier";
 
-const SPEED = 5;
+const SPEED = 100;
 const CAMERA_OFFSET = new THREE.Vector3(0, 1.5, 0);
 
 interface FirstPersonControllerProps {
@@ -88,18 +88,10 @@ export default function FirstPersonController({
       const current = rigidbodyRef.current.translation();
 
       lastValidPosition.current.copy(current);
-      const newPos = new THREE.Vector3(current.x, current.y, current.z).add(
-        move,
-      );
 
-      rigidbodyRef.current.setTranslation(
-        {
-          x: newPos.x,
-          y: newPos.y,
-          z: newPos.z,
-        },
-        true,
-      );
+      rigidbodyRef.current.setLinvel(move, true);
+    } else {
+      rigidbodyRef.current.setLinvel({ x: 0, y: 0, z: 0 }, true);
     }
   };
 
