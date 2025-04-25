@@ -3,13 +3,15 @@ import { PointerLockControls, useKeyboardControls } from "@react-three/drei";
 import { useRef } from "react";
 import * as THREE from "three";
 import { Controls } from "../game";
-import { InteractionType, PlayerState } from "../types/game-state";
+import { PlayerState } from "../types/game-state";
 import { useGameStore } from "../../store";
 import {
   CylinderCollider,
   RapierRigidBody,
   RigidBody,
 } from "@react-three/rapier";
+import { InteractionType } from "../types/interactions";
+import { findFirstInteractionHit } from "../utils";
 
 const SPEED = 150;
 const DISTANCE_THRESHOLD = 0.01;
@@ -23,6 +25,7 @@ export default function FirstPersonController({
   player,
 }: FirstPersonControllerProps) {
   const { camera, scene } = useThree();
+  const arrowRef = useRef<THREE.ArrowHelper | null>(null);
   const rigidbodyRef = useRef<RapierRigidBody>(null!);
   const direction = useRef<THREE.Vector3>(new THREE.Vector3());
   const raycaster = useRef<THREE.Raycaster>(new THREE.Raycaster());
@@ -119,23 +122,39 @@ export default function FirstPersonController({
   };
 
   const raycast = () => {
-    const coords = new THREE.Vector2(0, 0); // center of the screen
+    const coords = new THREE.Vector2(0, 0); // center of screen
     raycaster.current.setFromCamera(coords, camera);
-    const intersects = raycaster.current.intersectObjects(scene.children, true);
-    let hasSelection = false;
-    if (intersects.length > 0) {
-      setDebug({ raycastData: intersects[0] });
-      const firstHit = intersects[0]?.object;
-      if (firstHit && firstHit.parent && firstHit.parent.parent) {
-        const interaction = firstHit.parent.parent.name;
-        hasSelection = true;
-        setActiveSelection(interaction as InteractionType);
-      }
+
+    // Only create the arrow once
+    if (!arrowRef.current) {
+      const origin = raycaster.current.ray.origin;
+      const direction = raycaster.current.ray.direction.clone().normalize();
+      const arrow = new THREE.ArrowHelper(direction, origin, 3, 0xff0000);
+      arrowRef.current = arrow;
+      scene.add(arrow);
     }
 
+    const intersects = raycaster.current.intersectObjects(scene.children, true);
+    let hasSelection = false;
+
+    const result = findFirstInteractionHit(intersects);
+    if (result) {
+      setActiveSelection(result.interaction);
+      hasSelection = true;
+    }
     if (!hasSelection) {
       setActiveSelection("none");
     }
+    visualiseRay();
+  };
+
+  const visualiseRay = () => {
+    if (!arrowRef.current || !raycaster.current) return;
+
+    const origin = raycaster.current.ray.origin;
+    const direction = raycaster.current.ray.direction.clone().normalize();
+    arrowRef.current.position.copy(origin);
+    arrowRef.current.setDirection(direction);
   };
 
   return (
