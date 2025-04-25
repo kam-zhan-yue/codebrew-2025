@@ -1,4 +1,4 @@
-import { Canvas, Vector3 } from "@react-three/fiber";
+import { Canvas } from "@react-three/fiber";
 import "./game.css";
 import { Suspense, useEffect, useMemo, useRef } from "react";
 import { KeyboardControls } from "@react-three/drei";
@@ -11,7 +11,6 @@ import Gameboy from "./components/gameboy";
 import {
   EffectComposer,
   Outline,
-  Select,
   Selection,
 } from "@react-three/postprocessing";
 import FirstPersonController from "./components/first-person-controller";
@@ -24,18 +23,6 @@ export const Controls = {
   right: "right",
   jump: "jump",
 } as const;
-
-interface BoxProps {
-  position: Vector3;
-}
-const Box = ({ position }: BoxProps) => {
-  return (
-    <mesh position={position}>
-      <boxGeometry />
-      <meshStandardMaterial color="orange" />
-    </mesh>
-  );
-};
 
 const Game = () => {
   const setGameState = useGameStore((state) => state.setGameState);
@@ -62,7 +49,7 @@ const Game = () => {
           animationState: "walking",
         },
         interactions: {
-          gameboy: { active: false },
+          gameboy: { type: "gameboy", active: false },
         },
         time: Date.now(),
       });
@@ -81,7 +68,10 @@ const Game = () => {
           animationState: parsed.playerTwo.animationState,
         },
         interactions: {
-          gameboy: { active: parsed.interactions.gameboy.active },
+          gameboy: {
+            type: parsed.interactions.gameboy.type,
+            active: parsed.interactions.gameboy.active,
+          },
         },
         time: parsed.time,
       } as GameState;
@@ -132,13 +122,7 @@ const Game = () => {
                   width={500}
                 />
               </EffectComposer>
-              <Select enabled>
-                <mesh position={[-2, 0, 0]}>
-                  <boxGeometry />
-                  <meshStandardMaterial color="orange" />
-                </mesh>
-                <Gameboy interaction={gameboy} />
-              </Select>
+              <Gameboy interaction={gameboy} />
             </Selection>
           </Suspense>
         </Canvas>

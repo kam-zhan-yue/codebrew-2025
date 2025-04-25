@@ -1,6 +1,9 @@
 import * as THREE from "three";
 
 export type AnimState = "idle" | "walking";
+
+export type InteractionType = "none" | "gameboy";
+
 export interface PlayerState {
   id: string;
   position: THREE.Vector3;
@@ -8,6 +11,7 @@ export interface PlayerState {
 }
 
 export interface Interaction {
+  type: InteractionType;
   active: boolean;
 }
 
@@ -19,12 +23,17 @@ export interface DebugState {
   raycastData: THREE.Intersection<THREE.Object3D<THREE.Object3DEventMap>>;
 }
 
+export interface SelectionState {
+  activeSelection: InteractionType;
+}
+
 export interface GameState {
   playerOne: PlayerState;
   playerTwo: PlayerState;
   interactions: InteractionState;
   time: number;
   debug: DebugState | null;
+  selection: SelectionState;
 }
 
 export const defaultGameState: GameState = {
@@ -39,8 +48,11 @@ export const defaultGameState: GameState = {
     animationState: "idle",
   },
   interactions: {
-    gameboy: { active: true },
+    gameboy: { type: "gameboy", active: true },
   },
   time: 0,
   debug: null,
+  selection: {
+    activeSelection: "none",
+  },
 };

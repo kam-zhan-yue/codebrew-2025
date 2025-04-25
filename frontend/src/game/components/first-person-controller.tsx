@@ -3,7 +3,7 @@ import { PointerLockControls, useKeyboardControls } from "@react-three/drei";
 import { useRef } from "react";
 import * as THREE from "three";
 import { Controls } from "../game";
-import { PlayerState } from "../types/game-state";
+import { InteractionType, PlayerState } from "../types/game-state";
 import { useGameStore } from "../../store";
 
 const SPEED = 5;
@@ -28,6 +28,7 @@ export default function FirstPersonController({
   const currentPos = useRef(new THREE.Vector3());
 
   const setDebug = useGameStore((s) => s.setDebug);
+  const setActiveSelection = useGameStore((s) => s.setActiveSelection);
 
   useFrame((_, delta) => {
     interpolate();
@@ -73,6 +74,11 @@ export default function FirstPersonController({
     const intersects = raycaster.current.intersectObjects(scene.children, true);
     if (intersects.length > 0) {
       setDebug({ raycastData: intersects[0] });
+      const firstHit = intersects[0]?.object;
+      if (firstHit && firstHit.parent && firstHit.parent.parent) {
+        const interaction = firstHit.parent.parent.name;
+        setActiveSelection(interaction as InteractionType);
+      }
     }
   };
 
