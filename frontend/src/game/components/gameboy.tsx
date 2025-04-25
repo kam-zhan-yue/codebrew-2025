@@ -29,6 +29,9 @@ const Gameboy = ({ position, rotation }: GameboyProps) => {
     }
   });
 
+  console.info("Gameboy", gameboy);
+  console.info("Active selection", activeSelection);
+
   if (!gameboy) {
     return <></>;
   }
