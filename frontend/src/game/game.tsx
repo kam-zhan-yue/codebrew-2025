@@ -61,7 +61,7 @@ const Game = () => {
   const playerTwo = useGameStore((s) => s.gameState.playerTwo);
   const playerId = useGameStore((s) => s.playerId);
 
-  const mainPlayer = playerId === playerOne.id ? playerOne : playerTwo;
+  const mainPlayer = playerId === playerOne?.id ? playerOne : playerTwo;
 
   return (
     <>

@@ -15,7 +15,7 @@ interface GameStore {
 }
 
 export const useGameStore = create<GameStore>()((set) => ({
-  playerId: "1",
+  playerId: "0",
   started: false,
   gameState: defaultGameState,
   uiState: defaultUIState,

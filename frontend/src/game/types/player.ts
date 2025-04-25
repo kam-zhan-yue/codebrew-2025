@@ -9,24 +9,31 @@ export interface PlayerState {
   animationState: AnimState;
 }
 
-export const RawPlayerSchema = z.object({
-  id: z.string(),
-  position: z.object({
-    x: z.number(),
-    y: z.number(),
-    z: z.number(),
-  }),
-  rotation: z.object({
-    x: z.number(),
-    y: z.number(),
-    z: z.number(),
-  }),
-  animation_state: z.string(),
-});
+export const RawPlayerSchema = z
+  .object({
+    id: z.string(),
+    position: z.object({
+      x: z.number(),
+      y: z.number(),
+      z: z.number(),
+    }),
+    rotation: z.object({
+      x: z.number(),
+      y: z.number(),
+      z: z.number(),
+    }),
+    animation_state: z.string(),
+  })
+  .nullable();
 
-export const PlayerSchema = RawPlayerSchema.transform((raw) => ({
-  id: raw.id,
-  position: new THREE.Vector3(raw.position.x, raw.position.y, raw.position.z),
-  rotation: new THREE.Euler(raw.rotation.x, raw.rotation.y, raw.rotation.z),
-  animationState: raw.animation_state,
-}));
+export const PlayerSchema = RawPlayerSchema.transform((raw) => {
+  if (raw === null) {
+    return null;
+  }
+  return {
+    id: raw.id,
+    position: new THREE.Vector3(raw.position.x, raw.position.y, raw.position.z),
+    rotation: new THREE.Euler(raw.rotation.x, raw.rotation.y, raw.rotation.z),
+    animationState: raw.animation_state,
+  };
+});

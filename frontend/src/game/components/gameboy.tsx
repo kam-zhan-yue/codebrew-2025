@@ -1,6 +1,6 @@
 import { Select } from "@react-three/postprocessing";
 import { useGameStore } from "../../store";
-import { Box, Html } from "@react-three/drei";
+import { Box } from "@react-three/drei";
 import { Interactions } from "../types/interactions";
 import { useFrame, Vector3 } from "@react-three/fiber";
 import { GameboyModel } from "../models/gameboy-model";

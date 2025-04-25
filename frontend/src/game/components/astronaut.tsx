@@ -5,7 +5,7 @@ import { useFrame } from "@react-three/fiber";
 import { PlayerState } from "../types/player";
 
 interface AstronautProps {
-  player: PlayerState;
+  player: PlayerState | null;
 }
 
 const MODEL_ROTATE_OFFSET = Math.PI;
@@ -32,9 +32,13 @@ const Astronaut = ({ player }: AstronautProps) => {
   });
 
   return (
-    <mesh ref={mesh}>
-      <AstronautModel scale={0.3} animation={animation} />
-    </mesh>
+    <>
+      {player && (
+        <mesh ref={mesh}>
+          <AstronautModel scale={0.3} animation={animation} />
+        </mesh>
+      )}
+    </>
   );
 };
 

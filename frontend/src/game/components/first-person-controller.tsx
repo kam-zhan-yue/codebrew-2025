@@ -1,5 +1,9 @@
 import { useFrame, useThree } from "@react-three/fiber";
-import { PointerLockControls, useKeyboardControls } from "@react-three/drei";
+import {
+  OrbitControls,
+  PointerLockControls,
+  useKeyboardControls,
+} from "@react-three/drei";
 import { useRef } from "react";
 import * as THREE from "three";
 import { Controls } from "../game";
@@ -12,6 +16,7 @@ import {
 import { findFirstInteractionHit, toThreeVector3 } from "../utils";
 import { SendJsonMessage } from "react-use-websocket/dist/lib/types";
 import { AnimState, PlayerState } from "../types/player";
+import { MessageType } from "../types/messages";
 
 const INTERACT_THRESHOLD = 2;
 const SPEED = 150;
@@ -19,7 +24,7 @@ const DISTANCE_THRESHOLD = 0.01;
 const CAMERA_OFFSET = new THREE.Vector3(0, 0.5, 0);
 
 interface FirstPersonControllerProps {
-  player: PlayerState;
+  player: PlayerState | null;
   sendJsonMessage: SendJsonMessage;
 }
 
@@ -55,6 +60,7 @@ export default function FirstPersonController({
 
   useFrame((_, delta) => {
     if (!started) return;
+    if (!player) return;
     interpolate();
     raycast();
     handleInputs(delta);
@@ -141,11 +147,12 @@ export default function FirstPersonController({
 
   const select = () => {
     if (!interactPressed) return;
-    switch (activeSelection) {
-      case "gameboy":
-        console.info("Send Interact Information");
-        break;
-    }
+    if (activeSelection === "none") return;
+    sendJsonMessage({
+      message_id: MessageType.interaction,
+      player_id: playerId,
+      interaction_id: activeSelection,
+    });
   };
 
   const raycast = () => {
@@ -193,20 +200,25 @@ export default function FirstPersonController({
 
   return (
     <>
-      <RigidBody
-        ref={rigidbodyRef}
-        colliders={false}
-        type="dynamic"
-        position={[0, 1, 0]}
-        gravityScale={0}
-        enabledRotations={[false, false, false]}
-        friction={2}
-      >
-        <CylinderCollider args={[0.9, 0.5]}>
-          <meshStandardMaterial color="white" />
-        </CylinderCollider>
-      </RigidBody>
-      <PointerLockControls enabled={started} />
+      {player && (
+        <>
+          <RigidBody
+            ref={rigidbodyRef}
+            colliders={false}
+            type="dynamic"
+            position={[0, 1, 0]}
+            gravityScale={0}
+            enabledRotations={[false, false, false]}
+            friction={2}
+          >
+            <CylinderCollider args={[0.9, 0.5]}>
+              <meshStandardMaterial color="white" />
+            </CylinderCollider>
+          </RigidBody>
+          <PointerLockControls enabled={started} />
+        </>
+      )}
+      {!player && <OrbitControls />}
     </>
   );
 }
