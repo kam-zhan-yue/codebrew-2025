@@ -155,6 +155,7 @@ export default function FirstPersonController({
         colliders={false}
         type="dynamic" // important
         position={[0, 1, 0]}
+        gravityScale={0}
       >
         <CylinderCollider args={[1, 0.5]}>
           <meshStandardMaterial color="white" />
