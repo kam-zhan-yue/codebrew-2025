@@ -8,7 +8,7 @@ import React, { useEffect } from "react";
 import { useGraph } from "@react-three/fiber";
 import { useGLTF, useAnimations } from "@react-three/drei";
 import { GLTF, SkeletonUtils } from "three-stdlib";
-import usePrevious from "../../components/utils";
+import usePrevious from "../utils";
 
 export type AstronautAnimation = "idle" | "tpose" | "walk";
 

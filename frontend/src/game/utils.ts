@@ -1,6 +1,17 @@
 import { Object3D, Intersection } from "three";
 import { Interactions, InteractionType } from "./types/interactions";
 import * as THREE from "three";
+import { useEffect, useRef } from "react";
+
+function usePrevious<T>(value: T): T | undefined {
+  const ref = useRef<T>(null!);
+  useEffect(() => {
+    ref.current = value;
+  }, [value]);
+  return ref.current;
+}
+
+export default usePrevious;
 
 const isInteractionType = (name: string): name is InteractionType => {
   return name in Interactions;

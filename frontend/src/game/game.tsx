@@ -14,8 +14,6 @@ import {
 import FirstPersonController from "./components/first-person-controller";
 import Level from "./components/level";
 import { Physics } from "@react-three/rapier";
-import InteractionObject from "./components/interaction-object";
-import { GameboyModel } from "./models/gameboy-model";
 
 export const Controls = {
   forward: "forward",
@@ -62,10 +60,6 @@ const Game = () => {
   const playerOne = useGameStore((s) => s.gameState.playerOne);
   const playerTwo = useGameStore((s) => s.gameState.playerTwo);
   const playerId = useGameStore((s) => s.playerId);
-  const interactions = useGameStore((s) => s.gameState.interactions);
-  const gameboy = interactions.find(
-    (interaction) => interaction.id === "gameboy",
-  )!;
 
   const mainPlayer = playerId === playerOne.id ? playerOne : playerTwo;
 
@@ -78,7 +72,6 @@ const Game = () => {
           <directionalLight position={[5, 5, 5]} intensity={0.8} castShadow />
           <Suspense>
             <Physics debug>
-              <Level />
               <FirstPersonController
                 player={mainPlayer}
                 sendJsonMessage={sendJsonMessage}
@@ -92,12 +85,7 @@ const Game = () => {
                     width={500}
                   />
                 </EffectComposer>
-                <InteractionObject
-                  interaction={gameboy}
-                  textPosition={[0, 1.5, 0]}
-                >
-                  <GameboyModel position={[0, 1, 0]} rotation={[0, -90, 0]} />
-                </InteractionObject>
+                <Level />
               </Selection>
             </Physics>
           </Suspense>
