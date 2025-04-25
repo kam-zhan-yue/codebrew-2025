@@ -3,7 +3,6 @@ import { Outlet, createRootRoute } from "@tanstack/react-router";
 import Game from "../game/game";
 import "../index.css";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import Debug from "../game/components/debug";
 
 const queryClient = new QueryClient();
 
@@ -17,7 +16,6 @@ function RootComponent() {
       <QueryClientProvider client={queryClient}>
         <div id="app">
           <Game />
-          <Debug />
           <Outlet />
         </div>
       </QueryClientProvider>

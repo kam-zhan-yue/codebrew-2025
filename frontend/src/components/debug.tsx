@@ -1,6 +1,6 @@
-import Overlay from "../../components/overlay";
-import { useGameStore } from "../../store";
 import * as THREE from "three";
+import { useGameStore } from "../store";
+import Overlay from "./overlay";
 
 const Debug = () => {
   const debugState = useGameStore((s) => s.uiState.debug);
@@ -17,7 +17,7 @@ const Debug = () => {
   };
 
   return (
-    <Overlay>
+    <Overlay className="inset-0 w-40 h-40">
       <div style={{ fontFamily: "monospace", lineHeight: "1.5" }}>
         <h1>Debug Data</h1>
         <div>

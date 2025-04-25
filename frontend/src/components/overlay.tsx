@@ -5,8 +5,8 @@ interface OverlayProps {
   className?: string;
 }
 
-const Overlay = ({ children, className = '' }: OverlayProps) => {
-  return <div className={`fixed inset-0 w-full h-full ${className}`.trim()}>{children}</div>;
+const Overlay = ({ children, className = "" }: OverlayProps) => {
+  return <div className={`fixed ${className}`.trim()}>{children}</div>;
 };
 
 export default Overlay;

@@ -1,4 +1,5 @@
-import { useGameStore } from "../../store";
+import { useGameStore } from "../store";
+import Overlay from "./overlay";
 
 const PlayerSelection = () => {
   const setPlayerId = useGameStore((s) => s.setPlayerId);
@@ -10,9 +11,10 @@ const PlayerSelection = () => {
   const handlePlayerTwo = () => {
     setPlayerId("2");
   };
+
   return (
-    <div className="flex justify-center items-center w-full h-full">
-      <div className="flex justify-between w-64">
+    <Overlay className="fixed inset-10 flex items-end justify-center pb-8 pointer-events-none">
+      <div className="flex gap-4 pointer-events-auto">
         <button
           onClick={handlePlayerOne}
           className="px-6 py-3 text-white text-lg bg-blue-500 rounded-md"
@@ -26,7 +28,7 @@ const PlayerSelection = () => {
           Player Two
         </button>
       </div>
-    </div>
+    </Overlay>
   );
 };
 
