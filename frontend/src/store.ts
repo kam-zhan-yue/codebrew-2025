@@ -31,7 +31,22 @@ export const useGameStore = create<GameStore>()((set, get) => ({
   playerId: "0",
   gameState: defaultGameState,
   uiState: defaultUIState,
-  setGameState: (newState) => set({ gameState: newState }),
+  setGameState: (newState) => {
+    set((state) => {
+      const prevCountdown = state.gameState.countdown;
+      const newCountdown = newState.countdown;
+
+      if (prevCountdown === null && newCountdown !== null) {
+        set({ flow: GameFlow.Countdown });
+      }
+
+      if (newCountdown && newCountdown <= 0) {
+        set({ flow: GameFlow.Game });
+      }
+
+      return { gameState: newState };
+    });
+  },
   setFlow: (newFlow) => set({ flow: newFlow }),
 
   setDebug: (newDebugState) =>

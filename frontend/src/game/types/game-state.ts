@@ -11,6 +11,7 @@ export interface GameState {
   playerTwo: PlayerState | null;
   interactions: Interaction[];
   time: number;
+  countdown: number | null;
 }
 
 export const GameStateSchema = z
@@ -32,4 +33,5 @@ export const defaultGameState: GameState = {
   playerTwo: null,
   interactions: defaultInteractions,
   time: 0,
+  countdown: null,
 };
