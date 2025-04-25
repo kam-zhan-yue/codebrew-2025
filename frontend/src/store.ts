@@ -1,12 +1,7 @@
 import { create } from "zustand";
-import {
-  DebugState,
-  defaultGameState,
-  defaultUIState,
-  GameState,
-  UIState,
-} from "./game/types/game-state";
+import { defaultGameState, GameState } from "./game/types/game-state";
 import { InteractionType } from "./game/types/interactions";
+import { DebugState, defaultUIState, UIState } from "./game/types/ui-state";
 
 interface GameStore {
   playerId: string;

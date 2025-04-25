@@ -3,7 +3,6 @@ import { PointerLockControls, useKeyboardControls } from "@react-three/drei";
 import { useRef } from "react";
 import * as THREE from "three";
 import { Controls } from "../game";
-import { PlayerState } from "../types/game-state";
 import { useGameStore } from "../../store";
 import {
   CylinderCollider,
@@ -12,6 +11,7 @@ import {
 } from "@react-three/rapier";
 import { findFirstInteractionHit } from "../utils";
 import { SendJsonMessage } from "react-use-websocket/dist/lib/types";
+import { PlayerState } from "../types/player";
 
 const SPEED = 150;
 const DISTANCE_THRESHOLD = 0.01;

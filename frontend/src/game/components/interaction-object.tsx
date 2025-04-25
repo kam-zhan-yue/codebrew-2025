@@ -1,8 +1,7 @@
 import { Select } from "@react-three/postprocessing";
 import { useGameStore } from "../../store";
-import { Interaction } from "../types/game-state";
 import { Html } from "@react-three/drei";
-import { Interactions } from "../types/interactions";
+import { Interaction, Interactions } from "../types/interactions";
 import { ReactNode } from "react";
 import { Vector3 } from "@react-three/fiber";
 

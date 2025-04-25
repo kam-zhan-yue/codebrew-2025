@@ -6,7 +6,7 @@ import * as THREE from "three";
 import useWebSocket from "react-use-websocket";
 import { WS_URL } from "../api/constants";
 import { useGameStore } from "../store";
-import { GameState } from "./types/game-state";
+import { GameState, GameStateSchema } from "./types/game-state";
 import {
   EffectComposer,
   Outline,
@@ -37,43 +37,14 @@ const Game = () => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const json = lastJsonMessage as any;
     if (json) {
-      const rawState = {
-        playerOne: {
-          id: json.player_one.id,
-          position: new THREE.Vector3(
-            json.player_one.position.x,
-            json.player_one.position.y,
-            json.player_one.position.z,
-          ),
-          rotation: new THREE.Euler(
-            json.player_one.rotation.y,
-            json.player_one.rotation.y,
-            json.player_one.rotation.z,
-          ),
-          animationState: json.player_one.animationState,
-        },
-        playerTwo: {
-          id: json.player_two.id,
-          position: new THREE.Vector3(
-            json.player_two.position.x,
-            json.player_two.position.y,
-            json.player_two.position.z,
-          ),
-          rotation: new THREE.Euler(
-            json.player_two.rotation.y,
-            json.player_two.rotation.y,
-            json.player_two.rotation.z,
-          ),
-          animationState: json.player_two.animationState,
-        },
-        interactions: {
-          gameboy: {
-            type: "gameboy",
-            active: true,
-          },
-        },
-      } as GameState;
-      setGameState(rawState);
+      const parsed = GameStateSchema.safeParse(json);
+
+      if (!parsed.success) {
+        console.error("Invalid game state:", parsed.error);
+        return;
+      }
+      const gameState = parsed.data as GameState;
+      setGameState(gameState);
     }
   }, [setGameState, lastJsonMessage]);
 
