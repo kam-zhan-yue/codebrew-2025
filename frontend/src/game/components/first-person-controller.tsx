@@ -5,9 +5,15 @@ import * as THREE from "three";
 import { Controls } from "../game";
 import { InteractionType, PlayerState } from "../types/game-state";
 import { useGameStore } from "../../store";
+import Astronaut from "./astronaut";
+import {
+  CylinderCollider,
+  RapierRigidBody,
+  RigidBody,
+} from "@react-three/rapier";
 
 const SPEED = 5;
-const CAMERA_OFFSET = new THREE.Vector3(0, 3.3, 0);
+const CAMERA_OFFSET = new THREE.Vector3(0, 1.5, 0);
 
 interface FirstPersonControllerProps {
   player: PlayerState;
@@ -17,6 +23,7 @@ export default function FirstPersonController({
   player,
 }: FirstPersonControllerProps) {
   const { camera, scene } = useThree();
+  const rigidbodyRef = useRef<RapierRigidBody>(null!);
   const direction = useRef<THREE.Vector3>(new THREE.Vector3());
   const raycaster = useRef<THREE.Raycaster>(new THREE.Raycaster());
   const leftPressed = useKeyboardControls((state) => state[Controls.left]);
@@ -56,7 +63,6 @@ export default function FirstPersonController({
   };
 
   const move = (delta: number) => {
-    // Send movement input
     direction.current.set(0, 0, 0);
 
     if (forwardPressed) direction.current.z -= 1;
@@ -76,6 +82,17 @@ export default function FirstPersonController({
       move.y = 0;
       move.normalize().multiplyScalar(SPEED * delta);
       console.info("Moving to ", move);
+
+      const current = rigidbodyRef.current.translation();
+      const newPos = new THREE.Vector3(current.x, current.y, current.z).add(
+        move,
+      );
+
+      rigidbodyRef.current.setNextKinematicTranslation({
+        x: newPos.x,
+        y: newPos.y,
+        z: newPos.z,
+      });
     }
   };
 
@@ -108,5 +125,19 @@ export default function FirstPersonController({
     }
   };
 
-  return <PointerLockControls />;
+  return (
+    <>
+      <RigidBody
+        ref={rigidbodyRef}
+        colliders={false}
+        type="kinematicPosition" // important
+        position={[0, 1, 0]}
+      >
+        <CylinderCollider args={[1, 0.5]}>
+          <meshStandardMaterial color="white" />
+        </CylinderCollider>
+      </RigidBody>
+      <PointerLockControls />
+    </>
+  );
 }

@@ -15,6 +15,7 @@ import {
 } from "@react-three/postprocessing";
 import FirstPersonController from "./components/first-person-controller";
 import Level from "./components/level";
+import { Physics } from "@react-three/rapier";
 
 export const Controls = {
   forward: "forward",
@@ -113,19 +114,21 @@ const Game = () => {
           <ambientLight intensity={1} />
           <directionalLight position={[5, 5, 5]} intensity={0.8} castShadow />
           <Suspense>
-            <Level />
-            <FirstPersonController player={playerOne} />
-            <Selection>
-              <EffectComposer multisampling={8} autoClear={false}>
-                <Outline
-                  blur
-                  visibleEdgeColor={0xffffff}
-                  edgeStrength={100}
-                  width={500}
-                />
-              </EffectComposer>
-              <Gameboy interaction={gameboy} />
-            </Selection>
+            <Physics debug>
+              <Level />
+              <FirstPersonController player={playerOne} />
+              <Selection>
+                <EffectComposer multisampling={8} autoClear={false}>
+                  <Outline
+                    blur
+                    visibleEdgeColor={0xffffff}
+                    edgeStrength={100}
+                    width={500}
+                  />
+                </EffectComposer>
+                <Gameboy interaction={gameboy} />
+              </Selection>
+            </Physics>
           </Suspense>
         </Canvas>
       </KeyboardControls>
