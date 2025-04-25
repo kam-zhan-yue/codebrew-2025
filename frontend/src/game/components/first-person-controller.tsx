@@ -1,23 +1,18 @@
 import { useFrame, useThree } from "@react-three/fiber";
-import {
-  Box,
-  Cylinder,
-  PointerLockControls,
-  useKeyboardControls,
-} from "@react-three/drei";
+import { PointerLockControls, useKeyboardControls } from "@react-three/drei";
 import { useRef } from "react";
 import * as THREE from "three";
 import { Controls } from "../game";
 import { InteractionType, PlayerState } from "../types/game-state";
 import { useGameStore } from "../../store";
 import {
-  CuboidCollider,
   CylinderCollider,
   RapierRigidBody,
   RigidBody,
 } from "@react-three/rapier";
 
-const SPEED = 100;
+const SPEED = 150;
+const DISTANCE_THRESHOLD = 0.01;
 const CAMERA_OFFSET = new THREE.Vector3(0, 1.5, 0);
 
 interface FirstPersonControllerProps {
@@ -54,7 +49,7 @@ export default function FirstPersonController({
     interpolate();
     raycast();
     handleInputs(delta);
-    console.info("Position ", rigidbodyRef.current.translation());
+    validate();
   });
 
   const interpolate = () => {
@@ -68,7 +63,6 @@ export default function FirstPersonController({
   const handleInputs = (delta: number) => {
     move(delta);
     select();
-    // validate();
   };
 
   const move = (delta: number) => {
@@ -90,12 +84,7 @@ export default function FirstPersonController({
       move.applyQuaternion(camera.quaternion);
       move.y = 0;
       move.normalize().multiplyScalar(SPEED * delta);
-      console.info("Moving to ", move);
-
-      const current = rigidbodyRef.current.translation();
-
-      lastValidPosition.current.copy(current);
-
+      // console.info("Moving to ", move);
       rigidbodyRef.current.setLinvel(move, true);
     } else {
       rigidbodyRef.current.setLinvel({ x: 0, y: 0, z: 0 }, true);
@@ -105,17 +94,18 @@ export default function FirstPersonController({
   const validate = () => {
     if (!rigidbodyRef.current) return;
 
-    const actual = rigidbodyRef.current.translation();
-    const expected = lastValidPosition.current;
-    const distance = expected.distanceTo(
-      new THREE.Vector3(actual.x, actual.y, actual.z),
-    );
+    const currentRaw = rigidbodyRef.current.translation();
+    const current = new THREE.Vector3(currentRaw.x, currentRaw.y, currentRaw.z);
 
-    if (distance < 0.01) {
-      console.info("Move Successful");
-    } else {
-      console.warn("Move blocked");
+    if (lastValidPosition.current) {
+      const distance = lastValidPosition.current.distanceTo(current);
+
+      if (distance > DISTANCE_THRESHOLD) {
+        console.info("✅ Move successful");
+      }
     }
+
+    lastValidPosition.current.copy(current);
   };
 
   const select = () => {
@@ -156,6 +146,7 @@ export default function FirstPersonController({
         position={[0, 1, 0]}
         gravityScale={0}
         enabledRotations={[false, false, false]}
+        friction={2}
       >
         <CylinderCollider args={[0.9, 0.5]}>
           <meshStandardMaterial color="white" />
