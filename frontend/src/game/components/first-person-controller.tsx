@@ -11,7 +11,7 @@ import {
 } from "@react-three/rapier";
 import { findFirstInteractionHit } from "../utils";
 import { SendJsonMessage } from "react-use-websocket/dist/lib/types";
-import { PlayerState } from "../types/player";
+import { AnimState, PlayerState } from "../types/player";
 
 const SPEED = 150;
 const DISTANCE_THRESHOLD = 0.01;
@@ -107,18 +107,18 @@ export default function FirstPersonController({
       const distance = lastValidPosition.current.distanceTo(current);
 
       if (distance > DISTANCE_THRESHOLD) {
-        send(current);
+        send(current, "walking");
       } else {
-        send(current);
+        send(current, "idle");
       }
     } else {
-      send(current);
+      send(current, "idle");
     }
 
     lastValidPosition.current.copy(current);
   };
 
-  const send = (position: THREE.Vector3) => {
+  const send = (position: THREE.Vector3, animation: AnimState) => {
     // Always send the rotation. Need to do some weird world rotation here.
     camera.rotation.order = "YXZ";
     const rotation = camera.rotation;
@@ -134,6 +134,7 @@ export default function FirstPersonController({
         y: rotation.y,
         z: rotation.z,
       },
+      animation_state: animation,
     });
   };
 

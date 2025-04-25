@@ -7,6 +7,8 @@ pub const TICKS_PER_SECOND: f64 = 120_f64;
 pub struct Game {
     player_one: PlayerState,
     player_two: PlayerState,
+    interactions: Vec<Interaction>,
+    time: f64,
 }
 
 impl Game {
@@ -15,9 +17,11 @@ impl Game {
         if payload.player_id == "1" {
             self.player_one.position = payload.position;
             self.player_one.rotation = payload.rotation;
+            self.player_one.animation_state = payload.animation_state;
         } else if payload.player_id == "2" {
             self.player_two.position = payload.position;
             self.player_two.rotation = payload.rotation;
+            self.player_two.animation_state = payload.animation_state;
         }
     }
 }
@@ -29,14 +33,44 @@ impl Default for Game {
                 id: String::from("1"),
                 position: Vector3::default(),
                 rotation: Euler::default(),
+                animation_state: AnimationState::Idle,
             },
             player_two: PlayerState {
                 id: String::from("2"),
                 position: Vector3::default(),
                 rotation: Euler::default(),
+                animation_state: AnimationState::Idle,
             },
+            interactions: vec![Interaction {
+                id: InteractionType::Gameboy,
+                active: false,
+            }],
+            time: 0.0, // I have this on frontend for schema validation. Maybe we can make use of it later?
         }
     }
+}
+
+#[derive(Serialize, Clone)]
+#[serde(crate = "rocket::serde")]
+pub enum InteractionType {
+    #[serde(rename = "gameboy")]
+    Gameboy,
+}
+
+#[derive(Serialize, Clone)]
+#[serde(crate = "rocket::serde")]
+struct Interaction {
+    id: InteractionType,
+    active: bool,
+}
+
+#[derive(Serialize, Deserialize, Clone, Debug)]
+#[serde(crate = "rocket::serde")]
+pub enum AnimationState {
+    #[serde(rename = "idle")]
+    Idle,
+    #[serde(rename = "walking")]
+    Walking,
 }
 
 #[derive(Serialize, Clone)]
@@ -45,6 +79,7 @@ struct PlayerState {
     id: String,
     position: Vector3,
     rotation: Euler,
+    animation_state: AnimationState,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug)]
@@ -89,4 +124,5 @@ pub struct UpdatePayload {
     player_id: String,
     position: Vector3,
     rotation: Euler,
+    animation_state: AnimationState,
 }

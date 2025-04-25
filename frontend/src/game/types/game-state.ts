@@ -4,7 +4,7 @@ import {
   Interaction,
   InteractionsSchema,
 } from "./interactions";
-import { PlayerSchema, PlayerState } from "./player";
+import { RawPlayerSchema, PlayerState, PlayerSchema } from "./player";
 import { z } from "zod";
 
 export interface GameState {
@@ -14,12 +14,19 @@ export interface GameState {
   time: number;
 }
 
-export const GameStateSchema = z.object({
-  player_one: PlayerSchema,
-  player_two: PlayerSchema,
-  interactions: InteractionsSchema,
-  time: z.number(),
-});
+export const GameStateSchema = z
+  .object({
+    player_one: RawPlayerSchema,
+    player_two: RawPlayerSchema,
+    interactions: InteractionsSchema,
+    time: z.number(),
+  })
+  .transform((raw) => ({
+    playerOne: PlayerSchema.parse(raw.player_one),
+    playerTwo: PlayerSchema.parse(raw.player_two),
+    interactions: raw.interactions,
+    time: raw.time,
+  }));
 
 export const defaultGameState: GameState = {
   playerOne: {

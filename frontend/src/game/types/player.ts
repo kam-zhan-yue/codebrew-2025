@@ -9,7 +9,7 @@ export interface PlayerState {
   animationState: AnimState;
 }
 
-export const PlayerSchema = z.object({
+export const RawPlayerSchema = z.object({
   id: z.string(),
   position: z.object({
     x: z.number(),
@@ -23,3 +23,10 @@ export const PlayerSchema = z.object({
   }),
   animation_state: z.string(),
 });
+
+export const PlayerSchema = RawPlayerSchema.transform((raw) => ({
+  id: raw.id,
+  position: new THREE.Vector3(raw.position.x, raw.position.y, raw.position.z),
+  rotation: new THREE.Euler(raw.rotation.x, raw.rotation.y, raw.rotation.z),
+  animationState: raw.animation_state,
+}));

@@ -19,8 +19,8 @@ const InteractionObject = ({
   const activeSelection = useGameStore(
     (s) => s.uiState.selection.activeSelection,
   );
-  const enabled = activeSelection === interaction.type;
-  const data = Interactions[interaction.type];
+  const enabled = activeSelection === interaction.id;
+  const data = Interactions[interaction.id];
   const message = interaction.active
     ? data.desactivateMessage
     : data.activateMessage;
@@ -29,7 +29,7 @@ const InteractionObject = ({
     <Select enabled={enabled}>
       <group>
         {/* Wrap children in a group so we can place the Html relative to it */}
-        <group name={interaction.type}>{children}</group>
+        <group name={interaction.id}>{children}</group>
         {enabled && (
           <Html
             position={textPosition} // Raise this value to move label higher

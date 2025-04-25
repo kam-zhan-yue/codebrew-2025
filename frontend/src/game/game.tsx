@@ -2,7 +2,6 @@ import { Canvas } from "@react-three/fiber";
 import "./game.css";
 import { Suspense, useEffect, useMemo } from "react";
 import { KeyboardControls } from "@react-three/drei";
-import * as THREE from "three";
 import useWebSocket from "react-use-websocket";
 import { WS_URL } from "../api/constants";
 import { useGameStore } from "../store";
@@ -44,6 +43,7 @@ const Game = () => {
         return;
       }
       const gameState = parsed.data as GameState;
+      console.info("Game State is ", gameState);
       setGameState(gameState);
     }
   }, [setGameState, lastJsonMessage]);
@@ -63,7 +63,10 @@ const Game = () => {
   const playerOne = useGameStore((s) => s.gameState.playerOne);
   const playerTwo = useGameStore((s) => s.gameState.playerTwo);
   const playerId = useGameStore((s) => s.playerId);
-  const gameboy = useGameStore((s) => s.gameState.interactions.gameboy);
+  const interactions = useGameStore((s) => s.gameState.interactions);
+  const gameboy = interactions.find(
+    (interaction) => interaction.id === "gameboy",
+  )!;
 
   const mainPlayer = playerId === playerOne.id ? playerOne : playerTwo;
 

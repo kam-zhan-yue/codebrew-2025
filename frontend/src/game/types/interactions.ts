@@ -31,7 +31,7 @@ export const Interactions: Record<string, InteractionData> = {
 export type InteractionType = keyof typeof Interactions;
 
 export interface Interaction {
-  type: InteractionType;
+  id: InteractionType;
   active: boolean;
 }
 
@@ -41,7 +41,7 @@ const interactionTypes = z.enum(
 );
 
 const InteractionSchema = z.object({
-  type: interactionTypes,
+  id: interactionTypes,
   active: z.boolean(),
 });
 
@@ -49,7 +49,7 @@ export const InteractionsSchema = z.array(InteractionSchema);
 
 export const defaultInteractions: Interaction[] = Object.keys(Interactions).map(
   (key) => ({
-    type: key as keyof typeof Interactions,
+    id: key as keyof typeof Interactions,
     active: false,
   }),
 );
