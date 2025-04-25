@@ -1,16 +1,21 @@
-import { Canvas } from "@react-three/fiber";
+import { Canvas, Vector3 } from "@react-three/fiber";
 import "./game.css";
 import { Suspense, useEffect, useMemo, useRef } from "react";
 import { KeyboardControls } from "@react-three/drei";
-import FirstPersonController from "./components/first-person-controller";
 import * as THREE from "three";
 import useWebSocket from "react-use-websocket";
 import { WS_URL } from "../api/constants";
 import { useGameStore } from "../store";
 import { GameState } from "./types/game-state";
 import Gameboy from "./components/gameboy";
-import { EffectComposer, Select, Selection } from "@react-three/postprocessing";
-import OutlineEffect from "./components/outline-effect";
+import {
+  EffectComposer,
+  Outline,
+  Select,
+  Selection,
+} from "@react-three/postprocessing";
+import FirstPersonController from "./components/first-person-controller";
+import Level from "./components/level";
 
 export const Controls = {
   forward: "forward",
@@ -20,7 +25,19 @@ export const Controls = {
   jump: "jump",
 } as const;
 
-function Game() {
+interface BoxProps {
+  position: Vector3;
+}
+const Box = ({ position }: BoxProps) => {
+  return (
+    <mesh position={position}>
+      <boxGeometry />
+      <meshStandardMaterial color="orange" />
+    </mesh>
+  );
+};
+
+const Game = () => {
   const setGameState = useGameStore((state) => state.setGameState);
   const wsProtocol = window.location.protocol === "https:" ? "wss://" : "ws://";
   const wsUrl = `${wsProtocol}${WS_URL}`;
@@ -102,19 +119,24 @@ function Game() {
         <Canvas shadows>
           <color attach="background" args={["#ececec"]} />
           <ambientLight intensity={1} />
-          <directionalLight
-            position={[5, 5, 5]}
-            intensity={0.8}
-            castShadow
-            color={"#9e69da"}
-          />
+          <directionalLight position={[5, 5, 5]} intensity={0.8} castShadow />
           <Suspense>
+            <Level />
             <FirstPersonController player={playerOne} />
             <Selection>
-              <EffectComposer>
-                <OutlineEffect />
+              <EffectComposer multisampling={8} autoClear={false}>
+                <Outline
+                  blur
+                  visibleEdgeColor={0xffffff}
+                  edgeStrength={100}
+                  width={500}
+                />
               </EffectComposer>
               <Select enabled>
+                <mesh position={[-2, 0, 0]}>
+                  <boxGeometry />
+                  <meshStandardMaterial color="orange" />
+                </mesh>
                 <Gameboy interaction={gameboy} />
               </Select>
             </Selection>
@@ -123,6 +145,6 @@ function Game() {
       </KeyboardControls>
     </>
   );
-}
+};
 
 export default Game;

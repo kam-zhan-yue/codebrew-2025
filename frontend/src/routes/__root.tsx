@@ -17,7 +17,7 @@ function RootComponent() {
       <QueryClientProvider client={queryClient}>
         <div id="app">
           <Game />
-          <Debug />
+          {/* <Debug /> */}
           <Outlet />
         </div>
       </QueryClientProvider>
