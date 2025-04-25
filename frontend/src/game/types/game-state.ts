@@ -27,14 +27,24 @@ export interface SelectionState {
   activeSelection: InteractionType;
 }
 
+export interface UIState {
+  debug: DebugState | null;
+  selection: SelectionState;
+}
+
 export interface GameState {
   playerOne: PlayerState;
   playerTwo: PlayerState;
   interactions: InteractionState;
   time: number;
-  debug: DebugState | null;
-  selection: SelectionState;
 }
+
+export const defaultUIState: UIState = {
+  debug: null,
+  selection: {
+    activeSelection: "none",
+  },
+};
 
 export const defaultGameState: GameState = {
   playerOne: {
@@ -51,8 +61,4 @@ export const defaultGameState: GameState = {
     gameboy: { type: "gameboy", active: true },
   },
   time: 0,
-  debug: null,
-  selection: {
-    activeSelection: "none",
-  },
 };

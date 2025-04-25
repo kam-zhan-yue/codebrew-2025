@@ -72,13 +72,19 @@ export default function FirstPersonController({
     const coords = new THREE.Vector2(0, 0); // center of the screen
     raycaster.current.setFromCamera(coords, camera);
     const intersects = raycaster.current.intersectObjects(scene.children, true);
+    let hasSelection = false;
     if (intersects.length > 0) {
       setDebug({ raycastData: intersects[0] });
       const firstHit = intersects[0]?.object;
       if (firstHit && firstHit.parent && firstHit.parent.parent) {
         const interaction = firstHit.parent.parent.name;
+        hasSelection = true;
         setActiveSelection(interaction as InteractionType);
       }
+    }
+
+    if (!hasSelection) {
+      setActiveSelection("none");
     }
   };
 
