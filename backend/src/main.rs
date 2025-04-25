@@ -49,7 +49,7 @@ async fn main() -> Result<(), rocket::Error> {
 
     // Creates an index route, mounts the route at / and launches the app
     let r = rocket::build()
-        .mount("/", routes![index, hello, game_stream])
+        .mount("/", routes![game_stream])
         .attach(cors)
         .manage(Arc::clone(&game_state));
 
@@ -75,16 +75,6 @@ async fn main() -> Result<(), rocket::Error> {
     r.launch().await?;
 
     Ok(())
-}
-
-#[get("/")]
-fn index() -> &'static str {
-    "Hello, world!"
-}
-
-#[get("/hello/<name>")]
-fn hello(name: &str) -> String {
-    format!("Hello, {}!", name)
 }
 
 #[get("/game_state")]
