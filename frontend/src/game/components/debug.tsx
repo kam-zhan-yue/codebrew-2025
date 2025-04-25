@@ -21,7 +21,7 @@ const Debug = () => {
       <div style={{ fontFamily: "monospace", lineHeight: "1.5" }}>
         <h1>Debug Data</h1>
         <div>
-          <strong>Player ID</strong>
+          <strong>Player ID </strong>
           {playerId}
         </div>
         {raycastHit ? (
@@ -42,7 +42,7 @@ const Debug = () => {
               <strong>Hierarchy:</strong> {getObjectHierarchy(raycastHit)}
             </div>
             <div>
-              <strong>Main Object: {raycastHit.parent?.parent?.name}</strong>
+              <strong>Main Object: {raycastHit?.name}</strong>
             </div>
           </>
         ) : (

@@ -1,8 +1,9 @@
 import { Object3D, Intersection } from "three";
-import { InteractionType } from "./types/interactions";
+import { Interactions, InteractionType } from "./types/interactions";
+import * as THREE from "three";
 
 const isInteractionType = (name: string): name is InteractionType => {
-  return (name as InteractionType) !== undefined;
+  return name in Interactions;
 };
 
 export const findFirstInteractionHit = (
@@ -19,4 +20,12 @@ export const findFirstInteractionHit = (
   }
 
   return null;
+};
+
+export const toThreeVector3 = (vector: {
+  x: number;
+  y: number;
+  z: number;
+}): THREE.Vector3 => {
+  return new THREE.Vector3(vector.x, vector.y, vector.z);
 };

@@ -9,10 +9,11 @@ import {
   RapierRigidBody,
   RigidBody,
 } from "@react-three/rapier";
-import { findFirstInteractionHit } from "../utils";
+import { findFirstInteractionHit, toThreeVector3 } from "../utils";
 import { SendJsonMessage } from "react-use-websocket/dist/lib/types";
 import { AnimState, PlayerState } from "../types/player";
 
+const INTERACT_THRESHOLD = 2;
 const SPEED = 150;
 const DISTANCE_THRESHOLD = 0.01;
 const CAMERA_OFFSET = new THREE.Vector3(0, 1.5, 0);
@@ -42,7 +43,7 @@ export default function FirstPersonController({
   );
   const currentPos = useRef(new THREE.Vector3());
 
-  // const setDebug = useGameStore((s) => s.setDebug);
+  const setDebug = useGameStore((s) => s.setDebug);
   const playerId = useGameStore((s) => s.playerId);
   const setActiveSelection = useGameStore((s) => s.setActiveSelection);
   const activeSelection = useGameStore(
@@ -164,9 +165,16 @@ export default function FirstPersonController({
     let hasSelection = false;
 
     const result = findFirstInteractionHit(intersects);
+    setDebug({ raycastData: result });
     if (result) {
-      setActiveSelection(result.interaction);
-      hasSelection = true;
+      const currentPosition = toThreeVector3(
+        rigidbodyRef.current.translation(),
+      );
+      const distance = currentPosition.distanceTo(result.object.position);
+      if (distance <= INTERACT_THRESHOLD) {
+        setActiveSelection(result.interaction);
+        hasSelection = true;
+      }
     }
     if (!hasSelection) {
       setActiveSelection("none");

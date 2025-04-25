@@ -43,7 +43,6 @@ const Game = () => {
         return;
       }
       const gameState = parsed.data as GameState;
-      console.info("Game State is ", gameState);
       setGameState(gameState);
     }
   }, [setGameState, lastJsonMessage]);

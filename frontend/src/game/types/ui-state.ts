@@ -2,7 +2,10 @@ import { InteractionType } from "./interactions";
 import * as THREE from "three";
 
 export interface DebugState {
-  raycastData: THREE.Intersection<THREE.Object3D<THREE.Object3DEventMap>>;
+  raycastData: {
+    object: THREE.Object3D;
+    interaction: InteractionType;
+  } | null;
 }
 
 export interface SelectionState {
