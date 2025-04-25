@@ -22,6 +22,8 @@ import {
   PlayerMessageSchema,
 } from "../types/messages";
 
+const ORBIT_ORIGIN = new THREE.Vector3(1, 1, -2);
+const ORBIT_MAX_DISTANCE = 7;
 const INTERACT_THRESHOLD = 2;
 const SPEED = 3;
 const INTERPOLATION_SPEED = 10;
@@ -245,7 +247,14 @@ export default function FirstPersonController({
           <PointerLockControls enabled={started} />
         </>
       )}
-      {!player && <OrbitControls />}
+      {!player && (
+        <OrbitControls
+          target={ORBIT_ORIGIN}
+          maxDistance={ORBIT_MAX_DISTANCE}
+          minPolarAngle={Math.PI / 4}
+          maxPolarAngle={Math.PI / 2}
+        />
+      )}
     </>
   );
 }
