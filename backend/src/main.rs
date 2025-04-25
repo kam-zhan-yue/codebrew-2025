@@ -77,13 +77,43 @@ async fn main() -> Result<(), rocket::Error> {
     Ok(())
 }
 
-#[get("/game_state")]
-fn game_stream<'r>(ws: ws::WebSocket, state: &'r State<Arc<Mutex<Game>>>) -> ws::Channel<'r> {
+#[get("/game_state/<player_id>")]
+fn game_stream<'r>(
+    ws: ws::WebSocket,
+    state: &'r State<Arc<Mutex<Game>>>,
+    player_id: &'r str,
+) -> ws::Channel<'r> {
     ws.channel(move |mut stream| {
         Box::pin(async move {
             let tick_duration = Duration::from_secs_f64(1_f64 / game::TICKS_PER_SECOND);
             let mut tick_interval = interval(tick_duration);
             let state_ref = state.inner().clone();
+
+            {
+                let dup_state_ref = state_ref.clone();
+                let mut game_state = dup_state_ref.lock().await;
+
+                if (player_id == "1" && !game_state.player_one_connected)
+                    || (player_id == "2" && !game_state.player_two_connected)
+                {
+                    game_state.connect(String::from(player_id));
+                } else {
+                    let close_frame = ws::frame::CloseFrame {
+                        code: ws::frame::CloseCode::Normal,
+                        reason: "Invalid player id or this player is already connected."
+                            .to_string()
+                            .into(),
+                    };
+                    let _ = stream.close(Some(close_frame)).await;
+                }
+            }
+
+            // weird hack to get disconnect to work
+            let id = if player_id == "1" {
+                String::from("1")
+            } else {
+                String::from("2")
+            };
 
             tokio::spawn(async move {
                 loop {
@@ -92,14 +122,15 @@ fn game_stream<'r>(ws: ws::WebSocket, state: &'r State<Arc<Mutex<Game>>>) -> ws:
                             let game_state = state_ref.lock().await;
                             let _ = stream
                                 .send(ws::Message::text(
-                                    serde_json::to_string(&game_state.clone()).unwrap(),
+                                    serde_json::to_string(&game_state.game_state.clone()).unwrap(),
                                 ))
                                 .await;
                         }
                         Some(Ok(message)) = stream.next() => {
+                            let mut game_state = state_ref.lock().await;
+
                             match message {
                                 Message::Text(text) => {
-                                    let mut game_state = state_ref.lock().await;
                                     let payload: UpdatePayload =
                                         serde_json::from_str(text.as_str()).unwrap();
                                     game_state.client_update(payload);
@@ -110,6 +141,7 @@ fn game_stream<'r>(ws: ws::WebSocket, state: &'r State<Arc<Mutex<Game>>>) -> ws:
                                         reason: "Client disconected".to_string().into(),
                                     };
                                     let _ = stream.close(Some(close_frame)).await;
+                                    game_state.disconnect(id);
                                     break;
                                 }
                                 _ => {}
@@ -121,6 +153,8 @@ fn game_stream<'r>(ws: ws::WebSocket, state: &'r State<Arc<Mutex<Game>>>) -> ws:
                                 reason: "Client disconected".to_string().into(),
                             };
                             let _ = stream.close(Some(close_frame)).await;
+                            let mut game_state = state_ref.lock().await;
+                            game_state.disconnect(id);
                             break;
                         }
                     }

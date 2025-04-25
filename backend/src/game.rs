@@ -2,45 +2,95 @@ use rocket::serde::{Deserialize, Serialize};
 
 pub const TICKS_PER_SECOND: f64 = 120_f64;
 
-#[derive(Serialize, Clone)]
-#[serde(crate = "rocket::serde")]
 pub struct Game {
-    player_one: PlayerState,
-    player_two: PlayerState,
-    interactions: Vec<Interaction>,
-    time: f64,
-}
-
-impl Game {
-    pub fn update(&mut self) {}
-    pub fn client_update(&mut self, payload: UpdatePayload) {
-        if payload.player_id == "1" {
-            self.player_one.position = payload.position;
-            self.player_one.rotation = payload.rotation;
-            self.player_one.animation_state = payload.animation_state;
-        } else if payload.player_id == "2" {
-            self.player_two.position = payload.position;
-            self.player_two.rotation = payload.rotation;
-            self.player_two.animation_state = payload.animation_state;
-        }
-    }
+    pub game_state: GameState,
+    pub player_one_connected: bool,
+    pub player_two_connected: bool,
 }
 
 impl Default for Game {
     fn default() -> Self {
         Self {
-            player_one: PlayerState {
-                id: String::from("1"),
-                position: Vector3::default(),
-                rotation: Euler::default(),
-                animation_state: AnimationState::Idle,
-            },
-            player_two: PlayerState {
+            game_state: GameState::default(),
+            player_one_connected: false,
+            player_two_connected: false,
+        }
+    }
+}
+
+impl Game {
+    pub fn update(&mut self) {
+        self.game_state.update();
+    }
+
+    pub fn client_update(&mut self, payload: UpdatePayload) {
+        self.game_state.client_update(payload);
+    }
+
+    pub fn connect(&mut self, player_id: String) {
+        if player_id == "1" {
+            self.player_one_connected = true;
+            self.game_state.player_one = Some(PlayerState {
                 id: String::from("2"),
                 position: Vector3::default(),
                 rotation: Euler::default(),
                 animation_state: AnimationState::Idle,
-            },
+            });
+        } else {
+            self.player_two_connected = true;
+            self.game_state.player_two = Some(PlayerState {
+                id: String::from("2"),
+                position: Vector3::default(),
+                rotation: Euler::default(),
+                animation_state: AnimationState::Idle,
+            });
+        }
+    }
+
+    pub fn disconnect(&mut self, player_id: String) {
+        if player_id == "1" {
+            self.player_one_connected = false;
+            self.game_state.player_one = None;
+        } else {
+            self.player_two_connected = false;
+            self.game_state.player_two = None;
+        }
+    }
+}
+
+#[derive(Serialize, Clone)]
+#[serde(crate = "rocket::serde")]
+pub struct GameState {
+    player_one: Option<PlayerState>,
+    player_two: Option<PlayerState>,
+    interactions: Vec<Interaction>,
+    time: f64,
+}
+
+impl GameState {
+    pub fn update(&mut self) {}
+    pub fn client_update(&mut self, payload: UpdatePayload) {
+        if payload.player_id == "1" {
+            if let Some(player) = &mut self.player_one {
+                player.position = payload.position;
+                player.rotation = payload.rotation;
+                player.animation_state = payload.animation_state;
+            }
+        } else if payload.player_id == "2" {
+            if let Some(player) = &mut self.player_two {
+                player.position = payload.position;
+                player.rotation = payload.rotation;
+                player.animation_state = payload.animation_state;
+            }
+        }
+    }
+}
+
+impl Default for GameState {
+    fn default() -> Self {
+        Self {
+            player_one: None,
+            player_two: None,
             interactions: vec![Interaction {
                 id: InteractionType::Gameboy,
                 active: false,
