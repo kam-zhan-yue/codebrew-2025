@@ -22,6 +22,9 @@ export default function FirstPersonController({
   const leftPressed = useKeyboardControls((state) => state[Controls.left]);
   const rightPressed = useKeyboardControls((state) => state[Controls.right]);
   const backPressed = useKeyboardControls((state) => state[Controls.back]);
+  const interactPressed = useKeyboardControls(
+    (state) => state[Controls.interact],
+  );
   const forwardPressed = useKeyboardControls(
     (state) => state[Controls.forward],
   );
@@ -29,11 +32,14 @@ export default function FirstPersonController({
 
   const setDebug = useGameStore((s) => s.setDebug);
   const setActiveSelection = useGameStore((s) => s.setActiveSelection);
+  const activeSelection = useGameStore(
+    (s) => s.uiState.selection.activeSelection,
+  );
 
   useFrame((_, delta) => {
     interpolate();
-    move(delta);
     raycast();
+    handleInputs(delta);
   });
 
   const interpolate = () => {
@@ -42,6 +48,11 @@ export default function FirstPersonController({
     const targetPosition = player.position.clone().add(CAMERA_OFFSET);
     currentPos.current.lerp(targetPosition, 0.1);
     camera.position.copy(currentPos.current);
+  };
+
+  const handleInputs = (delta: number) => {
+    move(delta);
+    select();
   };
 
   const move = (delta: number) => {
@@ -65,6 +76,15 @@ export default function FirstPersonController({
       move.y = 0;
       move.normalize().multiplyScalar(SPEED * delta);
       console.info("Moving to ", move);
+    }
+  };
+
+  const select = () => {
+    if (!interactPressed) return;
+    switch (activeSelection) {
+      case "gameboy":
+        console.info("Send Interact Information");
+        break;
     }
   };
 
