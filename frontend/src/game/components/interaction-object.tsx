@@ -4,14 +4,17 @@ import { Interaction } from "../types/game-state";
 import { Html } from "@react-three/drei";
 import { Interactions } from "../types/interactions";
 import { ReactNode } from "react";
+import { Vector3 } from "@react-three/fiber";
 
 interface InteractionObjectProps {
   interaction: Interaction;
+  textPosition: Vector3;
   children: ReactNode;
 }
 
 const InteractionObject = ({
   interaction,
+  textPosition,
   children,
 }: InteractionObjectProps) => {
   const activeSelection = useGameStore(
@@ -25,24 +28,28 @@ const InteractionObject = ({
 
   return (
     <Select enabled={enabled}>
-      {children}
-      {enabled && (
-        <Html
-          position={[0, 0.5, 0]}
-          center
-          distanceFactor={10}
-          style={{
-            background: "white",
-            padding: "6px 12px",
-            borderRadius: "8px",
-            fontSize: "6px",
-            fontWeight: "bold",
-            color: "black",
-          }}
-        >
-          {message}
-        </Html>
-      )}
+      <group>
+        {/* Wrap children in a group so we can place the Html relative to it */}
+        <group name={interaction.type}>{children}</group>
+        {enabled && (
+          <Html
+            position={textPosition} // Raise this value to move label higher
+            center
+            distanceFactor={10}
+            style={{
+              background: "white",
+              padding: "6px 12px",
+              borderRadius: "8px",
+              fontSize: "6px",
+              fontWeight: "bold",
+              color: "black",
+              whiteSpace: "nowrap",
+            }}
+          >
+            {message}
+          </Html>
+        )}
+      </group>
     </Select>
   );
 };

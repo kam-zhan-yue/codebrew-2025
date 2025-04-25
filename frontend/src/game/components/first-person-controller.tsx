@@ -140,10 +140,10 @@ export default function FirstPersonController({
 
   return (
     <>
-      {/* <RigidBody
+      <RigidBody
         ref={rigidbodyRef}
         colliders={false}
-        type="dynamic" // important
+        type="dynamic"
         position={[0, 1, 0]}
         gravityScale={0}
         enabledRotations={[false, false, false]}
@@ -152,7 +152,7 @@ export default function FirstPersonController({
         <CylinderCollider args={[0.9, 0.5]}>
           <meshStandardMaterial color="white" />
         </CylinderCollider>
-      </RigidBody> */}
+      </RigidBody>
       <PointerLockControls />
     </>
   );

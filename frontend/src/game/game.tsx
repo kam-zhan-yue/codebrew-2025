@@ -16,6 +16,8 @@ import {
 import FirstPersonController from "./components/first-person-controller";
 import Level from "./components/level";
 import { Physics } from "@react-three/rapier";
+import InteractionObject from "./components/interaction-object";
+import { GameboyModel } from "./models/gameboy-model";
 
 export const Controls = {
   forward: "forward",
@@ -126,7 +128,12 @@ const Game = () => {
                     width={500}
                   />
                 </EffectComposer>
-                <Gameboy interaction={gameboy} />
+                <InteractionObject
+                  interaction={gameboy}
+                  textPosition={[0, 1.5, 0]}
+                >
+                  <GameboyModel position={[0, 1, 0]} rotation={[0, -90, 0]} />
+                </InteractionObject>
               </Selection>
             </Physics>
           </Suspense>
