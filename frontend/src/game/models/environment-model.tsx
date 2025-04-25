@@ -9,6 +9,8 @@ import { useGraph } from "@react-three/fiber";
 import { useGLTF } from "@react-three/drei";
 import { GLTF, SkeletonUtils } from "three-stdlib";
 import { CuboidCollider, RigidBody } from "@react-three/rapier";
+import InteractionObject from "../components/interaction-object";
+import { useGameStore } from "../../store";
 
 type GLTFResult = GLTF & {
   nodes: {
@@ -95,6 +97,7 @@ export function EnvironmentModel(props: JSX.IntrinsicElements["group"]) {
   const { scene } = useGLTF("/models/environment.glb");
   const clone = React.useMemo(() => SkeletonUtils.clone(scene), [scene]);
   const { nodes, materials } = useGraph(clone) as GLTFResult;
+  const gameboy = useGameStore((s) => s.gameState.interactions.gameboy);
   return (
     <group {...props} dispose={null}>
       <group
@@ -269,17 +272,19 @@ export function EnvironmentModel(props: JSX.IntrinsicElements["group"]) {
         material={materials["Material.008"]}
         position={[0.003, 1, -0.008]}
       />
-      <RigidBody type="fixed" colliders={false}>
-        <mesh
-          geometry={nodes.Table.geometry}
-          material={materials.mat20}
-          position={[0.791, 0.011, -0.6]}
-        />
-        <CuboidCollider
-          args={[0.3, 0.4, 0.3]} // Replace with actual dimensions
-          position={[0.791, 0.011, -0.6]}
-        />
-      </RigidBody>
+      <InteractionObject interaction={gameboy}>
+        <RigidBody type="fixed" colliders={false}>
+          <mesh
+            geometry={nodes.Table.geometry}
+            material={materials.mat20}
+            position={[0.791, 0.011, -0.6]}
+          />
+          <CuboidCollider
+            args={[0.3, 0.4, 0.3]} // Replace with actual dimensions
+            position={[0.791, 0.011, -0.6]}
+          />
+        </RigidBody>
+      </InteractionObject>
       <mesh
         geometry={nodes.Table_haute.geometry}
         material={materials["Material.003"]}

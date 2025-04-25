@@ -1,8 +1,7 @@
 import * as THREE from "three";
+import { InteractionType } from "./interactions";
 
 export type AnimState = "idle" | "walking";
-
-export type InteractionType = "none" | "gameboy";
 
 export interface PlayerState {
   id: string;
