@@ -70,17 +70,44 @@ pub struct GameState {
 impl GameState {
     pub fn update(&mut self) {}
     pub fn client_update(&mut self, payload: UpdatePayload) {
-        if payload.player_id == "1" {
-            if let Some(player) = &mut self.player_one {
-                player.position = payload.position;
-                player.rotation = payload.rotation;
-                player.animation_state = payload.animation_state;
+        match payload.message_id {
+            MessageType::Player => {
+                let player_ref = if payload.player_id == "1" {
+                    &mut self.player_one
+                } else if payload.player_id == "2" {
+                    &mut self.player_two
+                } else {
+                    &mut None
+                };
+
+                if let Some(player) = player_ref {
+                    if let Some(position) = payload.position {
+                        player.position = position;
+                    }
+
+                    if let Some(rotation) = payload.rotation {
+                        player.rotation = rotation;
+                    }
+
+                    if let Some(animation_state) = payload.animation_state {
+                        player.animation_state = animation_state
+                    }
+                }
             }
-        } else if payload.player_id == "2" {
-            if let Some(player) = &mut self.player_two {
-                player.position = payload.position;
-                player.rotation = payload.rotation;
-                player.animation_state = payload.animation_state;
+            MessageType::Interaction => {
+                if let Some(interaction_id) = payload.interaction_id {
+                    if let Some(found_interaction_index) = self
+                        .interactions
+                        .iter()
+                        .position(|interaction| interaction.id == interaction_id)
+                    {
+                        let interaction = &mut self.interactions[found_interaction_index];
+
+                        if let Some(active) = payload.active {
+                            interaction.active = active;
+                        }
+                    }
+                }
             }
         }
     }
@@ -100,7 +127,7 @@ impl Default for GameState {
     }
 }
 
-#[derive(Serialize, Clone)]
+#[derive(Serialize, Clone, Deserialize, Debug, PartialEq)]
 #[serde(crate = "rocket::serde")]
 pub enum InteractionType {
     #[serde(rename = "gameboy")]
@@ -171,8 +198,18 @@ impl Default for Euler {
 #[derive(Deserialize, Clone, Debug)]
 #[serde(crate = "rocket::serde")]
 pub struct UpdatePayload {
+    message_id: MessageType,
     player_id: String,
-    position: Vector3,
-    rotation: Euler,
-    animation_state: AnimationState,
+    position: Option<Vector3>,
+    rotation: Option<Euler>,
+    animation_state: Option<AnimationState>,
+    interaction_id: Option<InteractionType>,
+    active: Option<bool>,
+}
+
+#[derive(Deserialize, Clone, Debug)]
+#[serde(crate = "rocket::serde", rename_all = "lowercase")]
+enum MessageType {
+    Player,
+    Interaction,
 }
