@@ -6,6 +6,8 @@ Command: npx gltfjsx@6.5.3 ./public/models/room.glb -t
 import * as THREE from "three";
 import { useGLTF } from "@react-three/drei";
 import { GLTF } from "three-stdlib";
+import Phone from "../components/phone";
+import { CuboidCollider, RigidBody } from "@react-three/rapier";
 
 type GLTFResult = GLTF & {
   nodes: {
@@ -184,39 +186,64 @@ export function RoomModel({
   ) as unknown as GLTFResult;
   return (
     <group position={position} rotation={rotation} scale={scale} dispose={null}>
-      <mesh
-        geometry={nodes.desk.geometry}
-        material={materials["Desk - brown"]}
-      />
+      <CuboidCollider
+          args={[1, 1, 2]} // Replace with actual dimensions
+          position={[0, 0, 0]} // Replace with actual position
+        />
+      <RigidBody type="fixed" colliders={false}>
+        <mesh
+          geometry={nodes.desk.geometry}
+          material={materials["Desk - brown"]}
+        />
+        <CuboidCollider
+          args={[0.3, 0.4, 0.3]} // Replace with actual dimensions
+        />
+      </RigidBody>
       <mesh geometry={nodes.tv_stand.geometry} material={materials.brown} />
       <mesh
         geometry={nodes.Sphere.geometry}
         material={materials["Material.001"]}
       />
+      <RigidBody type="fixed" colliders={false}>
+        <mesh
+          geometry={nodes.cardboard_box.geometry}
+          material={materials["box texture.002"]}
+        />
+      <CuboidCollider
+          args={[0.3, 0.4, 0.3]} // Replace with actual dimensions
+        />
+      </RigidBody>
+      <RigidBody type="fixed" colliders={false}>
+        <mesh
+          geometry={nodes.bookshelf.geometry}
+          material={materials["Material.002"]}
+        />
+      <CuboidCollider
+          args={[0.3, 0.4, 0.3]} // Replace with actual dimensions
+        />
+      </RigidBody>
+      <RigidBody type="fixed" colliders={false}>        
+        <mesh
+          geometry={nodes.shelf.geometry}
+          material={materials["shelf 1 - brown"]}
+        />
+      <CuboidCollider
+          args={[0.3, 0.4, 0.3]} // Replace with actual dimensions
+        />
+      </RigidBody>
+      <RigidBody type="fixed" colliders={false}>
+        <mesh
+          geometry={nodes.shelf_2.geometry}
+          material={materials["shelf 2 - brown"]}
+        />
+      <CuboidCollider
+          args={[0.3, 0.4, 0.3]} // Replace with actual dimensions
+        />
+      </RigidBody>
       <mesh
-        geometry={nodes.bedside_drawer.geometry}
-        material={materials["bed - brown"]}
-      />
-      <mesh
-        geometry={nodes.cardboard_box.geometry}
-        material={materials["box texture.002"]}
-      />
-      <mesh
-        geometry={nodes.bookshelf.geometry}
-        material={materials["Material.002"]}
-      />
-      <mesh
-        geometry={nodes.shelf.geometry}
-        material={materials["shelf 1 - brown"]}
-      />
-      <mesh
-        geometry={nodes.shelf_2.geometry}
-        material={materials["shelf 2 - brown"]}
-      />
-      {/* <mesh
         geometry={nodes.drawing_empty.geometry}
         material={materials.paper}
-      /> */}
+      /> 
       <mesh
         geometry={nodes.explore_2_poster.geometry}
         material={materials["explorer poster"]}
@@ -277,31 +304,47 @@ export function RoomModel({
         geometry={nodes.Cube_2.geometry}
         material={materials["room - wood"]}
       />
-      <mesh
-        geometry={nodes.Cube009.geometry}
-        material={materials["boombox - light"]}
-      />
-      <mesh geometry={nodes.Cube009_1.geometry} material={materials.tv} />
-      {/* <mesh
-        geometry={nodes.Cube013.geometry}
-        material={materials["lamp - silver"]}
-      />
-      <mesh
-        geometry={nodes.Cube013_1.geometry}
-        material={materials["lamp - orange"]}
-      />
-      <mesh
-        geometry={nodes.Cube013_2.geometry}
-        material={materials["lamp - yellow light"]}
-      />
-      <mesh
-        geometry={nodes.Cube013_3.geometry}
-        material={materials["lamp - dark "]}
-      />
-      <mesh
-        geometry={nodes.Cube013_4.geometry}
-        material={materials["lamp - red"]}
-      /> */}
+      <RigidBody type="fixed" colliders={false}>
+        <mesh
+          geometry={nodes.Cube009.geometry}
+          material={materials["boombox - light"]}
+        />
+      <CuboidCollider
+          args={[0.3, 0.4, 0.3]} // Replace with actual dimensions
+        />
+      </RigidBody>
+      <RigidBody type="fixed" colliders={false}>
+        <mesh geometry={nodes.Cube009_1.geometry} material={materials.tv} />
+      <CuboidCollider
+          args={[0.3, 0.4, 0.3]} // Replace with actual dimensions
+        />
+      </RigidBody>
+
+      <RigidBody type="fixed" colliders={false}>
+        <mesh
+          geometry={nodes.Cube013.geometry}
+          material={materials["lamp - silver"]}
+        />
+        <mesh
+          geometry={nodes.Cube013_1.geometry}
+          material={materials["lamp - orange"]}
+        />
+        <mesh
+          geometry={nodes.Cube013_2.geometry}
+          material={materials["lamp - yellow light"]}
+        />
+        <mesh
+          geometry={nodes.Cube013_3.geometry}
+          material={materials["lamp - dark "]}
+        />
+        <mesh
+          geometry={nodes.Cube013_4.geometry}
+          material={materials["lamp - red"]}
+        />
+      <CuboidCollider
+          args={[0.3, 0.4, 0.3]} // Replace with actual dimensions
+        />
+      </RigidBody>
       {/* <mesh
         geometry={nodes.Cube022.geometry}
         material={materials["DS - green"]}
@@ -403,14 +446,21 @@ export function RoomModel({
         geometry={nodes.Cylinder012_3.geometry}
         material={materials["clock - red"]}
       />
-      <mesh
-        geometry={nodes.Cube045.geometry}
-        material={materials["Chair-blue"]}
-      />
-      <mesh
-        geometry={nodes.Cube045_1.geometry}
-        material={materials["Chair - black"]}
-      />
+
+      <RigidBody type="fixed" colliders={false}>
+        <mesh
+          geometry={nodes.Cube045.geometry}
+          material={materials["Chair-blue"]}
+        />
+        <mesh
+          geometry={nodes.Cube045_1.geometry}
+          material={materials["Chair - black"]}
+        />
+      <CuboidCollider
+          args={[0.3, 0.4, 0.3]} // Replace with actual dimensions
+        />
+      </RigidBody>
+
       <mesh
         geometry={nodes.Cube004.geometry}
         material={materials["white.008"]}
@@ -451,18 +501,27 @@ export function RoomModel({
         geometry={nodes.Cube023_1.geometry}
         material={materials["green.007"]}
       />
-      <mesh
-        geometry={nodes.Cube001.geometry}
-        material={materials["bed - blue.001"]}
-      />
-      <mesh
-        geometry={nodes.Cube001_1.geometry}
-        material={materials["bed - brown.001"]}
-      />
-      <mesh
-        geometry={nodes.Cube001_2.geometry}
-        material={materials["bed - yellow.001"]}
-      />
+      <RigidBody type="fixed" colliders={false}>
+        <mesh
+          geometry={nodes.Cube001.geometry}
+          material={materials["bed - blue.001"]}
+        />
+        <mesh
+          geometry={nodes.Cube001_1.geometry}
+          material={materials["bed - brown.001"]}
+        />
+        <mesh
+          geometry={nodes.Cube001_2.geometry}
+          material={materials["bed - yellow.001"]}
+        />
+        <mesh
+          geometry={nodes.bedside_drawer.geometry}
+          material={materials["bed - brown"]}
+        />
+      <CuboidCollider
+          args={[1.5, 1.5, 2]} // Replace with actual dimensions
+        />
+      </RigidBody>
     </group>
   );
 }
