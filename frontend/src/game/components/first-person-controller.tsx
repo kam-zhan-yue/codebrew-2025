@@ -45,9 +45,6 @@ export default function FirstPersonController({
   const leftPressed = useKeyboardControls((state) => state[Controls.left]);
   const rightPressed = useKeyboardControls((state) => state[Controls.right]);
   const backPressed = useKeyboardControls((state) => state[Controls.back]);
-  const interactPressed = useKeyboardControls(
-    (state) => state[Controls.interact],
-  );
   const forwardPressed = useKeyboardControls(
     (state) => state[Controls.forward],
   );
