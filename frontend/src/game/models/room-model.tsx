@@ -4,7 +4,6 @@ Command: npx gltfjsx@6.5.3 ./public/models/room.glb -t
 */
 
 import * as THREE from "three";
-import { JSX } from "react";
 import { useGLTF } from "@react-three/drei";
 import { GLTF } from "three-stdlib";
 
@@ -232,14 +231,9 @@ export function RoomModel({
       <mesh
         geometry={nodes.drawing_S.geometry}
         material={materials["paper - S"]}
-        position={[245.388, 69.788, -83.391]}
-        scale={[4.201, 5.855, 6.102]}
+        position={[-2.049, -0.427, -0.563]}
       />
-      <group
-        position={[259.19, 71.687, -2.431]}
-        rotation={[-2.525, -1.484, -2.525]}
-        scale={[1.431, 0.299, 0.077]}
-      >
+      <group position={[-2.049, -0.427, -0.563]}>
         <mesh
           geometry={nodes.Cube019.geometry}
           material={materials["DS - green.001"]}
@@ -249,22 +243,14 @@ export function RoomModel({
           material={materials["DS - screen.001"]}
         />
       </group>
-      <group
-        position={[252.32, 65.577, 80.653]}
-        rotation={[0, -0.294, 0]}
-        scale={[3.99, 0.549, 4.329]}
-      >
+      <group position={[-2.049, -0.427, -0.563]}>
         <mesh geometry={nodes.Cube017.geometry} material={materials.blue} />
         <mesh
           geometry={nodes.Cube017_1.geometry}
           material={materials["book - white"]}
         />
       </group>
-      <group
-        position={[197.454, 65.472, 97.749]}
-        rotation={[-Math.PI, 0.36, -Math.PI]}
-        scale={[2.867, 0.825, 5.017]}
-      >
+      <group position={[-2.049, -0.427, -0.563]}>
         <mesh
           geometry={nodes.Cube038.geometry}
           material={materials["phone - red.001"]}
