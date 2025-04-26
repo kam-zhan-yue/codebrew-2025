@@ -71,18 +71,28 @@ export default function FirstPersonController({
   const player = getPlayer();
 
   // SFX STUFF
+  const listener = new THREE.AudioListener();
+  camera.add(listener);
+  const audioLoader = new THREE.AudioLoader();
+  const interactionSound = new THREE.Audio(listener);
   const playSFX = useCallback(() => {
-    const listener = new THREE.AudioListener();
-    camera.add(listener);
-    const audioLoader = new THREE.AudioLoader();
-    const interactionSound = new THREE.Audio(listener);
     audioLoader.load("/sounds/interaction.mp3", (buffer) => {
       interactionSound.setBuffer(buffer);
       interactionSound.setVolume(0.5);
       interactionSound.setLoop(false);
       interactionSound.play();
     });
-  }, [camera]);
+  }, [audioLoader, interactionSound]);
+
+  const rickrollSound = new THREE.Audio(listener);
+  const rickrollSoundRef = useRef<THREE.Audio | null>(null);
+
+  audioLoader.load("/sounds/rickroll.mp3", (buffer) => {
+    rickrollSound.setBuffer(buffer);
+    rickrollSound.setVolume(0.5);
+    rickrollSound.setLoop(true);
+    rickrollSoundRef.current = rickrollSound; // Store the sound in the ref
+  });
 
   const [sub] = useKeyboardControls<Controls>();
 
@@ -91,7 +101,6 @@ export default function FirstPersonController({
 
     const interaction = interactions?.find((i) => i.id === activeSelection);
     if (!interaction) return;
-    playSFX();
     const data = {
       message_id: MessageType.interaction,
       player_id: playerId,
@@ -100,13 +109,25 @@ export default function FirstPersonController({
       active: !interaction.active,
     };
 
+    if (interaction.id === "gameboy") {
+      if (!interaction.active) {
+        console.info("new state is ", !interaction.active)
+        rickrollSoundRef.current?.play();     // should cont playback from where it's left off
+        console.info("rick roll playing:", rickrollSoundRef.current?.isPlaying);
+      } else {
+        console.info("new state is ", !interaction.active)
+        rickrollSoundRef.current?.pause();
+        console.info("rick roll playing:", rickrollSoundRef.current?.isPlaying);
+      }
+    }
+
     try {
       InteractionMessageSchema.parse(data);
       sendJsonMessage(data);
     } catch (error) {
       console.error("Validation failed for interaction message:", error);
     }
-  }, [activeSelection, interactions, playerId, sendJsonMessage, playSFX]);
+  }, [activeSelection, interactions, playerId, sendJsonMessage]);
 
   const sendRestart = useCallback(() => {
     const shouldRestart = restart;
@@ -133,13 +154,14 @@ export default function FirstPersonController({
         if (pressed) {
           if (flow === GameFlow.Game) {
             select();
+            playSFX();
           } else if (flow === GameFlow.GameOver) {
             sendRestart();
           }
         }
       },
     );
-  }, [select, sub, playSFX, activeSelection, flow, sendRestart]);
+  }, [select, sub, playSFX, flow, sendRestart]);
 
   useEffect(() => {
     camera.position.copy(new THREE.Vector3(5, 5, 5));

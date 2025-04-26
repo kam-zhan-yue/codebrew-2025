@@ -82,6 +82,14 @@ export const Interactions = {
     deactivateGoal: "Stop reading classics",
     position: [2.3, 1, 4],
   },
+  boombox: {
+    label: "Boombox",
+    description: "A great boombox.",
+    activateMessage: "Press E to turn on",
+    deactivateMessage: "Press E to turn off",
+    activateGoal: "Listen to some tunes",
+    deactivateGoal: "Stop the music!",
+  }
 } as const;
 
 export type InteractionType = keyof typeof Interactions;
