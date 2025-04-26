@@ -5,7 +5,7 @@ import { RoomModel } from "../models/room-model";
 const Level = () => {
   return (
     <>
-      <RoomModel />
+      <RoomModel position={[0, -50, 0]} />
       <Gameboy position={[0, 1, 0]} rotation={[0, 0, 0]} />
       <Player />
     </>
