@@ -109,7 +109,7 @@ export default function FirstPersonController({
       active: !interaction.active,
     };
 
-    if (interaction.id === "gameboy") {
+    if (interaction.id === "gameboy") {     // TODO: when making boombox, change 'gameboy' to 'boombox' so sound correctly plays
       if (!interaction.active) {
         console.info("new state is ", !interaction.active)
         rickrollSoundRef.current?.play();     // should cont playback from where it's left off
