@@ -2,16 +2,15 @@ import { useRef, useState } from "react";
 import { Mesh, Vector3 } from "three";
 import { useFrame } from "@react-three/fiber";
 import { useGameStore } from "../../store";
-import { PlayerAnimation, PlayerModel } from "../models/player-model";
+import { PlayerAnimation } from "../models/player-model";
+import { RedPlayerModel } from "../models/red-player-model";
 
 const MODEL_ROTATE_OFFSET = Math.PI;
 
 const Player = () => {
   const mesh = useRef<Mesh>(null!);
   const currentPos = useRef(new Vector3());
-  const [animation, setAnimation] = useState<PlayerAnimation>(
-    "Armature|mixamo.com|Layer0",
-  );
+  const [animation, setAnimation] = useState<PlayerAnimation>("idle");
   const getOtherPlayer = useGameStore((s) => s.getOtherPlayer);
   const player = getOtherPlayer();
 
@@ -25,9 +24,11 @@ const Player = () => {
     mesh.current.rotation.set(0, player.rotation.y + MODEL_ROTATE_OFFSET, 0);
 
     if (player.animationState == "idle") {
-      setAnimation("Armature|mixamo.com|Layer0");
+      console.info("Setting animation to idle");
+      setAnimation("idle");
     } else if (player.animationState == "walking") {
-      setAnimation("Armature|mixamo.com|Layer0.001");
+      console.info("Setting animation to walking");
+      setAnimation("running");
     }
   });
 
@@ -35,9 +36,9 @@ const Player = () => {
     <>
       {player && (
         <mesh ref={mesh}>
-          <PlayerModel
+          <RedPlayerModel
             position={[0, -1, 0]}
-            scale={0.1}
+            scale={0.5}
             animation={animation}
           />
         </mesh>

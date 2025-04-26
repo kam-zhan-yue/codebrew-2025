@@ -207,20 +207,19 @@ export default function FirstPersonController({
   const validate = () => {
     if (!rigidbodyRef.current) return;
 
+    if (forwardPressed) direction.current.z -= 1;
+    if (backPressed) direction.current.z += 1;
+    if (leftPressed) direction.current.x -= 1;
+    if (rightPressed) direction.current.x += 1;
+
+    direction.current.normalize();
+    const animation: AnimState =
+      direction.current.length() > 0 ? "walking" : "idle";
+
     const currentRaw = rigidbodyRef.current.translation();
     const current = new THREE.Vector3(currentRaw.x, currentRaw.y, currentRaw.z);
 
-    if (lastValidPosition.current) {
-      const distance = lastValidPosition.current.distanceTo(current);
-
-      if (distance > DISTANCE_THRESHOLD) {
-        send(current, "walking");
-      } else {
-        send(current, "idle");
-      }
-    } else {
-      send(current, "idle");
-    }
+    send(current, animation);
 
     lastValidPosition.current.copy(current);
   };
