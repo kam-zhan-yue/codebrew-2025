@@ -159,6 +159,7 @@ impl GameState {
             }
         }
     }
+
     pub fn client_update(&mut self, payload: UpdatePayload) {
         match payload.message_id {
             MessageType::Player => {
@@ -201,6 +202,21 @@ impl GameState {
             }
         }
     }
+
+    fn get_randomised_tasks() -> Vec<Interaction> {
+        let interactions = vec![Interaction {
+            id: InteractionType::Gameboy,
+            active: false,
+        }];
+
+        interactions
+            .into_iter()
+            .map(|interaction| Interaction {
+                id: interaction.id,
+                active: random_bool(0.5),
+            })
+            .collect()
+    }
 }
 
 impl Default for GameState {
@@ -208,10 +224,7 @@ impl Default for GameState {
         Self {
             player_one: None,
             player_two: None,
-            interactions: vec![Interaction {
-                id: InteractionType::Gameboy,
-                active: false,
-            }],
+            interactions: GameState::get_randomised_tasks(),
             winner_id: None,
             countdown: None,
         }
