@@ -4,7 +4,7 @@ import { Suspense, useEffect, useMemo, useState } from "react";
 import { KeyboardControls, KeyboardControlsEntry } from "@react-three/drei";
 import useWebSocket from "react-use-websocket";
 import { WS_URL } from "../api/constants";
-import { useGameStore } from "../store";
+import { GameFlow, useGameStore } from "../store";
 import { GameState, GameStateSchema } from "./types/game-state";
 import {
   EffectComposer,
@@ -20,6 +20,12 @@ const Game = () => {
   const setGameState = useGameStore((state) => state.setGameState);
   const playerId = useGameStore((s) => s.playerId);
   const [socketUrl, setSocketUrl] = useState("wss://echo.websocket.org");
+
+  const flow = useGameStore((s) => s.flow);
+  const activeSelection = useGameStore((s) => s.uiState.selection.activeSelection);
+  const crosshairSelected = activeSelection !== "none"
+  const canShowCrosshair = flow === GameFlow.Lobby || flow === GameFlow.Countdown || flow === GameFlow.Game
+
 
   const { sendJsonMessage, lastJsonMessage } = useWebSocket(
     socketUrl,
@@ -70,7 +76,7 @@ const Game = () => {
           <directionalLight position={[5, 5, 5]} intensity={0.8} castShadow />
           <Suspense>
             <Physics debug>
-              <FirstPersonController sendJsonMessage={sendJsonMessage} />
+              <FirstPersonController sendJsonMessage={sendJsonMessage}/>
               <Selection>
                 <EffectComposer multisampling={8} autoClear={false}>
                   <Outline
@@ -85,6 +91,20 @@ const Game = () => {
             </Physics>
           </Suspense>
         </Canvas>
+        {
+          canShowCrosshair && 
+            <div style={{         // TODO: make invisible before game starts, after game ends
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              width: "10px",
+              height: "10px",
+              borderRadius: "50%",
+              transform: "translate(-50%, -50%)",
+              border: "2px solid",
+              borderColor: crosshairSelected ? "green" : "white",
+            }}/>
+        }
       </KeyboardControls>
     </>
   );

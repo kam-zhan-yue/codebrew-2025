@@ -224,17 +224,17 @@ export default function FirstPersonController({
     if (!hasSelection) {
       setActiveSelection("none");
     }
-    visualiseRay();
+    // visualiseRay();
   };
 
-  const visualiseRay = () => {
-    if (!arrowRef.current || !raycaster.current) return;
+  // const visualiseRay = () => {
+  //   if (!arrowRef.current || !raycaster.current) return;
 
-    const origin = raycaster.current.ray.origin;
-    const direction = raycaster.current.ray.direction.clone().normalize();
-    arrowRef.current.position.copy(origin);
-    arrowRef.current.setDirection(direction);
-  };
+  //   const origin = raycaster.current.ray.origin;
+  //   const direction = raycaster.current.ray.direction.clone().normalize();
+  //   arrowRef.current.position.copy(origin);
+  //   arrowRef.current.setDirection(direction);
+  // };
 
   return (
     <>

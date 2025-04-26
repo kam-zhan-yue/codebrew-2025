@@ -23,11 +23,14 @@ const Gameboy = ({ position, rotation }: GameboyProps) => {
     (s) => s.uiState.selection.activeSelection,
   );
 
-  useFrame((_, delta) => {
+  useFrame((_, delta) => {    // example of box moving up
     if (mesh.current) {
       mesh.current.position.y += 0.05 * delta;
     }
   });
+
+  console.info("Gameboy", gameboy);
+  console.info("Active selection", activeSelection);
 
   if (!gameboy) {
     return <></>;
@@ -43,7 +46,7 @@ const Gameboy = ({ position, rotation }: GameboyProps) => {
     <Select enabled={isHovering}>
       <group position={position} rotation={rotation}>
         <group name={gameboy.id}>
-          <Box ref={mesh} />
+          {/* <Box ref={mesh} /> */}
           <GameboyModel />
         </group>
         {isHovering && <Tooltip position={[0, 0.5, 0]}>{message}</Tooltip>}
