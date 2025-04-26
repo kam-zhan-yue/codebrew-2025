@@ -253,10 +253,11 @@ impl GameState {
 
     fn get_randomised_tasks() -> Vec<Interaction> {
         let interactions = vec![
-            Interaction {
-                id: InteractionType::Gameboy,
-                active: false,
-            },
+            // Licensing issues...
+            // Interaction {
+            //     id: InteractionType::Gameboy,
+            //     active: false,
+            // },
             Interaction {
                 id: InteractionType::Television,
                 active: false,
