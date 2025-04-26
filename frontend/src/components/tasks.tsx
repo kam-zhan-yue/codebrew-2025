@@ -28,7 +28,8 @@ const Tasks = () => {
 
   return (
     <Overlay className="inset-x-16 inset-y-16">
-      <p className="text-3xl mb-4">Your Tasks</p>
+      <p className="text-3xl mb-1">Your Tasks</p>
+      <div className="w-60 h-px bg-gray-300 mb-2" />
       {playerTasks.map((task) => {
         const taskData = getTaskData(task);
         return (
