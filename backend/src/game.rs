@@ -114,6 +114,7 @@ impl Game {
             self.connect(String::from("2"));
             self.player_one_resetting = false;
             self.player_two_resetting = false;
+            self.started = false;
             self.game_state.countdown = Some(5_f64);
         }
     }
