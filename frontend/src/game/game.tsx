@@ -76,9 +76,16 @@ const Game = () => {
     <>
       <KeyboardControls map={map}>
         <Canvas shadows>
-          <color attach="background" args={["#b2d8d8"]} />
-          <ambientLight intensity={1} />
-          <directionalLight position={[5, 5, 5]} intensity={0.8} castShadow />
+          <color attach="background" args={["#000000"]} />
+          <ambientLight intensity={0.1} />
+          <pointLight
+            position={[0, 3, 0]}
+            intensity={10}
+            distance={20}
+            decay={2}
+            color="#ffddb3"
+            castShadow
+          />
           <Suspense>
             <Physics debug={debug}>
               <FirstPersonController sendJsonMessage={sendJsonMessage} />

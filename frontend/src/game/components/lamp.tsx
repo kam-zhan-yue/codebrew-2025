@@ -40,6 +40,9 @@ const Lamp = ({ position, rotation, scale }: LampProps) => {
       <group position={position} rotation={rotation} scale={scale}>
         <group name={interaction.id}>
           <LampModel />
+          {interaction.active && (
+            <spotLight position={position} intensity={1} />
+          )}
         </group>
         {isHovering && <Tooltip position={[0, 2, 0]}>{message}</Tooltip>}
       </group>
