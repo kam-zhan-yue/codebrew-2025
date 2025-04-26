@@ -1,3 +1,4 @@
+import { useTasks } from "../api/hooks/get-tasks";
 import { Interactions } from "../game/types/interactions";
 import { Task } from "../game/types/ui-state";
 import { useGameStore } from "../store";
@@ -9,7 +10,9 @@ interface TaskData {
 }
 
 const Tasks = () => {
-  const playerTasks = useGameStore((s) => s.uiState.tasks);
+  const playerId = useGameStore((s) => s.playerId);
+  const { isPending, isError, data, error } = useTasks(playerId);
+
   const interactions = useGameStore((s) => s.gameState.interactions);
   const getTaskData = (task: Task): TaskData => {
     const interaction = Interactions[task.interactionId];
@@ -25,6 +28,29 @@ const Tasks = () => {
       completed,
     };
   };
+
+  if (isPending) return <></>;
+  if (isError)
+    return (
+      <>
+        <Overlay className="inset-x-16 inset-y-16">
+          <p className="text-3xl mb-1">Tasks Failed to Generate</p>
+          <div className="w-60 h-px bg-gray-300 mb-2" />
+          <p>{error.message}</p>
+        </Overlay>
+      </>
+    );
+
+  const taskData = data?.data || [];
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const mapTask = (data: any): Task => {
+    return {
+      interactionId: data.id,
+      targetState: data.target_state,
+    };
+  };
+  const playerTasks: Task[] = taskData.map(mapTask);
 
   return (
     <Overlay className="inset-x-16 inset-y-16">
