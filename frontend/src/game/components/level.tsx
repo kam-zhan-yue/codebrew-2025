@@ -1,11 +1,11 @@
 import Player from "./player";
-import { EnvironmentModel } from "../models/environment-model";
 import Gameboy from "./gameboy";
+import { RoomModel } from "../models/room-model";
 
 const Level = () => {
   return (
     <>
-      <EnvironmentModel />
+      <RoomModel position={[0, -50, 0]} />
       <Gameboy position={[0, 1, 0]} rotation={[0, 0, 0]} />
       <Player />
     </>

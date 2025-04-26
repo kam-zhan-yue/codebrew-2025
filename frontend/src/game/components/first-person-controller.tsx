@@ -19,6 +19,7 @@ import {
   InteractionMessageSchema,
   MessageType,
   PlayerMessageSchema,
+  RestartMessageSchema,
 } from "../types/messages";
 import { Controls } from "../types/controls";
 
@@ -60,10 +61,12 @@ export default function FirstPersonController({
   const flow = useGameStore((s) => s.flow);
   const started = flow !== GameFlow.Selection;
   const interactions = useGameStore((s) => s.gameState.interactions);
+  const restart = useGameStore((s) => s.uiState.restart);
+  const setRestart = useGameStore((s) => s.setRestart);
 
   const getPlayer = useGameStore((s) => s.getPlayer);
   const player = getPlayer();
-  
+
   // SFX STUFF
   const playSFX = useCallback(() => {
     const listener = new THREE.AudioListener();
@@ -76,18 +79,16 @@ export default function FirstPersonController({
       interactionSound.setLoop(false);
       interactionSound.play();
     });
-  }, [camera])
+  }, [camera]);
 
   const [sub] = useKeyboardControls<Controls>();
-  const canInteract = flow === GameFlow.Game;
 
   const select = useCallback(() => {
-    if (!canInteract) return;
     if (activeSelection === "none") return;
 
     const interaction = interactions?.find((i) => i.id === activeSelection);
     if (!interaction) return;
-
+    playSFX();
     const data = {
       message_id: MessageType.interaction,
       player_id: playerId,
@@ -102,7 +103,23 @@ export default function FirstPersonController({
     } catch (error) {
       console.error("Validation failed for interaction message:", error);
     }
-  }, [activeSelection, canInteract, interactions, playerId, sendJsonMessage]);
+  }, [activeSelection, interactions, playerId, sendJsonMessage, playSFX]);
+
+  const sendRestart = useCallback(() => {
+    const shouldRestart = restart;
+    const data = {
+      message_id: MessageType.restart,
+      restart: shouldRestart,
+    };
+    setRestart(!shouldRestart);
+    try {
+      RestartMessageSchema.parse(data);
+      sendJsonMessage(data);
+    } catch (error) {
+      console.error("Validation failed for restart message:", error);
+    }
+    console.info("");
+  }, [restart, sendJsonMessage, setRestart]);
 
   // Selection Code
   useEffect(() => {
@@ -110,14 +127,15 @@ export default function FirstPersonController({
       (state) => state[Controls.interact],
       (pressed) => {
         if (pressed) {
-          select();
-          if (activeSelection !== "none") {
-            playSFX();
+          if (flow === GameFlow.Game) {
+            select();
+          } else if (flow === GameFlow.GameOver) {
+            sendRestart();
           }
         }
       },
     );
-  }, [select, sub, playSFX, activeSelection]);
+  }, [select, sub, playSFX, activeSelection, flow, sendRestart]);
 
   useFrame((_, delta) => {
     if (!started) return;

@@ -3,7 +3,17 @@ import { z } from "zod";
 export enum MessageType {
   player = "player",
   interaction = "interaction",
+  restart = "restart",
 }
+
+export const RestartMessageSchema = z.object({
+  message_id: z.union([
+    z.literal(MessageType.interaction),
+    z.enum([MessageType.interaction, MessageType.player]),
+  ]),
+  player_id: z.string(),
+  restart: z.boolean(),
+});
 
 export const InteractionMessageSchema = z.object({
   message_id: z.union([
