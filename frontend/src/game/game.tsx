@@ -80,18 +80,18 @@ const Game = () => {
           <ambientLight intensity={0.2} />
           <pointLight
             position={[0, 3, 0]}
-            intensity={10}
+            intensity={20}
             distance={20}
             decay={2}
-            color="#ffc64b" // soft purple
+            color="#ffda8b"
             castShadow
           />
-          <directionalLight
-            position={[5, 10, 5]} // angled from the side and above
+          {/* <directionalLight
+            position={[0, 3, 3]}
             intensity={1}
-            color="#ffc64b" // soft purple
+            color="#ffda8b"
             castShadow
-          />
+          /> */}
           <Suspense>
             <Physics debug={debug}>
               <FirstPersonController sendJsonMessage={sendJsonMessage} />
