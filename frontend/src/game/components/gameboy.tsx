@@ -1,10 +1,8 @@
 import { Select } from "@react-three/postprocessing";
 import { GameFlow, useGameStore } from "../../store";
 import { Interactions } from "../types/interactions";
-import { useFrame, Vector3 } from "@react-three/fiber";
+import { Vector3 } from "@react-three/fiber";
 import { GameboyModel } from "../models/gameboy-model";
-import * as THREE from "three";
-import { useRef } from "react";
 import Tooltip from "./tooltip";
 
 interface GameboyProps {
@@ -13,7 +11,6 @@ interface GameboyProps {
 }
 
 const Gameboy = ({ position, rotation }: GameboyProps) => {
-  const mesh = useRef<THREE.Mesh>(null!);
   const interactions = useGameStore((s) => s.gameState.interactions);
   const flow = useGameStore((s) => s.flow);
   const gameboy = interactions?.find(
@@ -22,13 +19,6 @@ const Gameboy = ({ position, rotation }: GameboyProps) => {
   const activeSelection = useGameStore(
     (s) => s.uiState.selection.activeSelection,
   );
-
-  useFrame((_, delta) => {
-    // example of box moving up
-    if (mesh.current) {
-      mesh.current.position.y += 0.05 * delta;
-    }
-  });
 
   if (!gameboy) {
     return <></>;
@@ -47,7 +37,6 @@ const Gameboy = ({ position, rotation }: GameboyProps) => {
     <Select enabled={isHovering}>
       <group position={position} rotation={rotation}>
         <group name={gameboy.id}>
-          {/* <Box ref={mesh} /> */}
           <GameboyModel />
         </group>
         {isHovering && <Tooltip position={[0, 0.5, 0]}>{message}</Tooltip>}
