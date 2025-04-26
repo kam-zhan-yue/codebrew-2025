@@ -8,7 +8,7 @@ const Countdown = () => {
       {countdown && (
         <Overlay className="inset-y-12">
           <div className="text-2xl">Game Starts in...</div>
-          <div className="text-5xl">{Math.floor(countdown).toFixed(2)}</div>
+          <div className="text-5xl">{Math.ceil(countdown).toFixed(2)}</div>
         </Overlay>
       )}
     </>

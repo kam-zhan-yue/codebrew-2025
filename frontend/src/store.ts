@@ -36,7 +36,7 @@ export const useGameStore = create<GameStore>()((set, get) => ({
       const prevCountdown = state.gameState.countdown;
       const newCountdown = newState.countdown;
 
-      if (prevCountdown === null && newCountdown !== null) {
+      if ((prevCountdown ?? null) === null && (newCountdown ?? null) !== null && (newCountdown || 0) > 0) {
         set({ flow: GameFlow.Countdown });
       }
 

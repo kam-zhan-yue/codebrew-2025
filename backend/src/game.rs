@@ -28,6 +28,8 @@ impl Game {
     }
 
     pub fn connect(&mut self, player_id: String) {
+        let both_not_connected = !self.player_one_connected || !self.player_two_connected;
+
         if player_id == "1" {
             self.player_one_connected = true;
             self.game_state.player_one = Some(PlayerState {
@@ -44,6 +46,12 @@ impl Game {
                 rotation: Euler::default(),
                 animation_state: AnimationState::Idle,
             });
+        }
+
+        let both_connected = self.player_one_connected && self.player_two_connected;
+
+        if both_not_connected && both_connected {
+            self.game_state.countdown = Some(5_f64);
         }
     }
 
@@ -64,11 +72,17 @@ pub struct GameState {
     player_one: Option<PlayerState>,
     player_two: Option<PlayerState>,
     interactions: Vec<Interaction>,
-    time: f64,
+    countdown: Option<f64>,
 }
 
 impl GameState {
-    pub fn update(&mut self) {}
+    pub fn update(&mut self) {
+        if let Some(countdown) = self.countdown {
+            if countdown > 0_f64 {
+                self.countdown = Some(countdown - 1_f64 / TICKS_PER_SECOND);
+            }
+        }
+    }
     pub fn client_update(&mut self, payload: UpdatePayload) {
         match payload.message_id {
             MessageType::Player => {
@@ -122,7 +136,7 @@ impl Default for GameState {
                 id: InteractionType::Gameboy,
                 active: false,
             }],
-            time: 0.0, // I have this on frontend for schema validation. Maybe we can make use of it later?
+            countdown: None,
         }
     }
 }

@@ -10,7 +10,6 @@ export interface GameState {
   playerOne: PlayerState | null;
   playerTwo: PlayerState | null;
   interactions: Interaction[];
-  time: number;
   countdown: number | null;
 }
 
@@ -19,19 +18,18 @@ export const GameStateSchema = z
     player_one: RawPlayerSchema.optional(),
     player_two: RawPlayerSchema.optional(),
     interactions: InteractionsSchema,
-    time: z.number(),
+    countdown: z.number().optional(),
   })
   .transform((raw) => ({
     playerOne: raw.player_one ? PlayerSchema.parse(raw.player_one) : undefined,
     playerTwo: raw.player_two ? PlayerSchema.parse(raw.player_two) : undefined,
     interactions: raw.interactions,
-    time: raw.time,
+    countdown: raw.countdown,
   }));
 
 export const defaultGameState: GameState = {
   playerOne: null,
   playerTwo: null,
   interactions: defaultInteractions,
-  time: 0,
   countdown: null,
 };
