@@ -37,31 +37,29 @@ const Boombox = ({ position, rotation, scale }: BoomboxProps) => {
       musicSound.setLoop(true);
       musicSoundRef.current = musicSound; // Store the sound in the ref
     });
-    camera.add(listener)
-  }, [camera])
+    camera.add(listener);
+  }, [camera]);
 
   const playMusic = useCallback(() => {
     if (musicSoundRef.current) {
       musicSoundRef.current?.play();
     }
-  }, [])
+  }, []);
 
   const stopMusic = useCallback(() => {
     if (musicSoundRef.current) {
       musicSoundRef.current?.pause();
     }
-  }, [])
+  }, []);
 
   useEffect(() => {
     if (boombox) {
       const active = boombox.active;
       // If the boombox turned active and we are not playing, then play
       if (active && !playing.current) {
-        console.info("Play music")
         playing.current = true;
         playMusic();
       } else if (!active && playing.current) {
-        console.info("Stop music")
         playing.current = false;
         stopMusic();
       }
@@ -80,7 +78,6 @@ const Boombox = ({ position, rotation, scale }: BoomboxProps) => {
   } else {
     message = data.description;
   }
-
 
   return (
     <Select enabled={isHovering}>

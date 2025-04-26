@@ -38,7 +38,6 @@ export const useGameStore = create<GameStore>()((set, get) => ({
 
       // Only go into countdown if there is a new countdown that is not 0
       if (newCountdown && newCountdown > 0 && state.flow === GameFlow.Lobby) {
-        console.info("Going to countdown ", newCountdown);
         set({ flow: GameFlow.Countdown });
       }
       // Only go into game if we were previously at countdown and the new countdown has finished
@@ -47,7 +46,6 @@ export const useGameStore = create<GameStore>()((set, get) => ({
         newCountdown <= 0 &&
         state.flow === GameFlow.Countdown
       ) {
-        console.info("Coundown is ", newCountdown);
         set({ flow: GameFlow.Game });
       }
 
@@ -57,8 +55,15 @@ export const useGameStore = create<GameStore>()((set, get) => ({
       }
 
       // If we are in game over and countdown resets, go back to countdown
-      if (state.flow === GameFlow.GameOver && newCountdown && newCountdown > 0) {
-        set({ flow: GameFlow.Countdown, uiState: { ...state.uiState, restart: true } });
+      if (
+        state.flow === GameFlow.GameOver &&
+        newCountdown &&
+        newCountdown > 0
+      ) {
+        set({
+          flow: GameFlow.Countdown,
+          uiState: { ...state.uiState, restart: true },
+        });
       }
 
       // If at any point, a player goes missing, go back to Lobby

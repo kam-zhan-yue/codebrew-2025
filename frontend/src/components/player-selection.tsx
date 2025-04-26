@@ -16,23 +16,23 @@ const PlayerSelection = () => {
   return (
     <>
       <Overlay className="fixed flex h-90 justify-center pointer-events-none">
-        <h1 style={{fontSize: "150px", border: "white"}}>RETRONAUTS</h1>
+        <h1 style={{ fontSize: "150px", border: "white" }}>RETRONAUTS</h1>
       </Overlay>
       <Overlay className="fixed inset-10 flex items-end justify-center pb-70 pointer-events-none">
         <div className="flex gap-4 pointer-events-auto">
           <button
             type="button"
             onClick={handlePlayerOne}
-            className="px-6 py-3 text-white text-lg bg-red-500 rounded-md"
+            className="px-6 py-3 text-white text-lg bg-red-500 rounded-md cursor-pointer"
           >
-            Player Red
+            Red Player
           </button>
           <button
             type="button"
             onClick={handlePlayerTwo}
-            className="px-6 py-3 text-white text-lg bg-blue-500 rounded-md"
+            className="px-6 py-3 text-white text-lg bg-blue-500 rounded-md cursor-pointer"
           >
-            Player Blue
+            Blue Player
           </button>
         </div>
       </Overlay>
