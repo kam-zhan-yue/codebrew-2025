@@ -23,6 +23,7 @@ export const GameStateSchema = z
     playerTwo: raw.player_two ? PlayerSchema.parse(raw.player_two) : undefined,
     interactions: raw.interactions ? raw.interactions : undefined,
     countdown: raw.countdown ? raw.countdown : undefined,
+    winnerId: raw.winner_id,
   }));
 
 export const defaultGameState: GameState = {

@@ -3,6 +3,10 @@ use rocket::serde::{Deserialize, Serialize};
 
 pub const TICKS_PER_SECOND: f64 = 120_f64;
 
+fn vec_eq<T: PartialEq>(vec1: &Vec<T>, vec2: &Vec<T>) -> bool {
+    vec1.iter().zip(vec2).all(|(item1, item2)| *item1 == *item2)
+}
+
 pub struct Game {
     pub game_state: GameState,
     pub player_one_connected: bool,
@@ -34,18 +38,39 @@ impl Game {
                 let player_one_tasks = self.get_randomised_tasks();
                 let mut player_two_tasks = self.get_randomised_tasks();
 
-                while player_one_tasks
-                    .clone()
-                    .into_iter()
-                    .zip(player_two_tasks.clone())
-                    .all(|(task1, task2)| task1 == task2)
-                {
+                while vec_eq(&player_one_tasks, &player_two_tasks) {
                     player_two_tasks = self.get_randomised_tasks();
                 }
 
                 self.player_one_tasks = Some(player_one_tasks);
                 self.player_two_tasks = Some(player_two_tasks);
                 self.started = true;
+            }
+        }
+
+        if self.started {
+            let translated_interactions: Vec<InteractionTarget> = self
+                .game_state
+                .interactions
+                .iter()
+                .map(|task| InteractionTarget {
+                    id: task.id.clone(),
+                    target_state: task.active,
+                })
+                .collect();
+
+            if vec_eq(
+                &translated_interactions,
+                &self.player_one_tasks.as_ref().unwrap(),
+            ) {
+                self.game_state.winner_id = Some(String::from("1"));
+            } else if vec_eq(
+                &translated_interactions,
+                &self.player_two_tasks.as_ref().unwrap(),
+            ) {
+                self.game_state.winner_id = Some(String::from("2"));
+            } else {
+                self.game_state.winner_id = None;
             }
         }
     }
@@ -122,6 +147,7 @@ pub struct GameState {
     player_one: Option<PlayerState>,
     player_two: Option<PlayerState>,
     interactions: Vec<Interaction>,
+    winner_id: Option<String>,
     countdown: Option<f64>,
 }
 
@@ -186,6 +212,7 @@ impl Default for GameState {
                 id: InteractionType::Gameboy,
                 active: false,
             }],
+            winner_id: None,
             countdown: None,
         }
     }
@@ -198,7 +225,7 @@ pub enum InteractionType {
     Gameboy,
 }
 
-#[derive(Serialize, Clone)]
+#[derive(Serialize, Clone, PartialEq)]
 #[serde(crate = "rocket::serde")]
 struct Interaction {
     id: InteractionType,
