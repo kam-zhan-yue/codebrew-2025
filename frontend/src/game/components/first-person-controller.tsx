@@ -24,8 +24,8 @@ import {
 import { Controls } from "../types/controls";
 import { Interactions } from "../types/interactions";
 
-const ORBIT_ORIGIN = new THREE.Vector3(1, 1, -2);
-const ORBIT_MAX_DISTANCE = 7;
+const ORBIT_ORIGIN = new THREE.Vector3(1.5, 2, 2);
+const ORBIT_MAX_DISTANCE = 20;
 const INTERACT_THRESHOLD = 3;
 const SPEED = 3;
 const INTERPOLATION_SPEED = 10;
@@ -76,7 +76,7 @@ export default function FirstPersonController({
     if (interactionSoundRef.current) {
       interactionSoundRef.current.play();
     }
-  }, [interactionSoundRef]);
+  }, []);
 
   useEffect(() => {
     const audioLoader = new THREE.AudioLoader();
@@ -148,7 +148,7 @@ export default function FirstPersonController({
   }, [select, sub, playSFX, flow, sendRestart]);
 
   useEffect(() => {
-    camera.position.copy(new THREE.Vector3(5, 5, 5));
+    camera.position.copy(new THREE.Vector3(5, 10, 10));
     camera.lookAt(ORBIT_ORIGIN);
   }, [camera]);
 
