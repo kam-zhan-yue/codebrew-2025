@@ -24,7 +24,7 @@ import {
 import { Controls } from "../types/controls";
 import { Interactions } from "../types/interactions";
 
-const ORBIT_ORIGIN = new THREE.Vector3(1.5, 2, 2);
+const ORBIT_ORIGIN = new THREE.Vector3(0, 2, 2);
 const ORBIT_MAX_DISTANCE = 20;
 const INTERACT_THRESHOLD = 3;
 const SPEED = 3;
