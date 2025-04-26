@@ -185,20 +185,24 @@ export function RoomModel({
   ) as unknown as GLTFResult;
   return (
     <group position={position} rotation={rotation} scale={scale} dispose={null}>
-      <CuboidCollider
-        args={[1, 1, 2]} // Replace with actual dimensions
-        position={[0, 0, 0]} // Replace with actual position
-      />
       <RigidBody type="fixed" colliders={false}>
         <mesh
           geometry={nodes.desk.geometry}
           material={materials["Desk - brown"]}
         />
         <CuboidCollider
-          args={[0.3, 0.4, 0.3]} // Replace with actual dimensions
+          args={[2, 1, 1.7]} // Replace with actual dimensions
+          position={[4.6, 2, -8.5]}
         />
       </RigidBody>
-      <mesh geometry={nodes.tv_stand.geometry} material={materials.brown} />
+      <RigidBody type="fixed" colliders={false}>
+        <mesh geometry={nodes.tv_stand.geometry} material={materials.brown} />
+        <CuboidCollider
+          args={[1.3, 1, 0.7]} // Replace with actual dimensions
+          position={[-5.6, 2, -8.4]}
+          rotation={[0, 0.55, 0]}
+        />
+      </RigidBody>
       <mesh
         geometry={nodes.Sphere.geometry}
         material={materials["Material.001"]}
@@ -209,7 +213,8 @@ export function RoomModel({
           material={materials["box texture.002"]}
         />
         <CuboidCollider
-          args={[0.3, 0.4, 0.3]} // Replace with actual dimensions
+          args={[0.7, 0.7, 0.7]} // Replace with actual dimensions
+          position={[-5, 2, -0.3]}
         />
       </RigidBody>
       <RigidBody type="fixed" colliders={false}>
@@ -218,7 +223,8 @@ export function RoomModel({
           material={materials["Material.002"]}
         />
         <CuboidCollider
-          args={[0.3, 0.4, 0.3]} // Replace with actual dimensions
+          args={[1.8, 1, 0.7]} // Replace with actual dimensions
+          position={[-0.8, 2, -9.5]}
         />
       </RigidBody>
       <RigidBody type="fixed" colliders={false}>
@@ -227,7 +233,8 @@ export function RoomModel({
           material={materials["shelf 1 - brown"]}
         />
         <CuboidCollider
-          args={[0.3, 0.4, 0.3]} // Replace with actual dimensions
+          args={[1, 1, 1]} // Replace with actual dimensions
+          position={[6, 2, -0.4]}
         />
       </RigidBody>
       <RigidBody type="fixed" colliders={false}>
@@ -236,7 +243,9 @@ export function RoomModel({
           material={materials["shelf 2 - brown"]}
         />
         <CuboidCollider
-          args={[0.3, 0.4, 0.3]} // Replace with actual dimensions
+          args={[2, 1, 0.7]} // Replace with actual dimensions
+          position={[4.8, 2, 8.9]}
+          rotation={[0, 0.8, 0]}
         />
       </RigidBody>
       {/* <mesh
@@ -291,18 +300,36 @@ export function RoomModel({
           material={materials["tv screen"]}
         />
       </group> */}
-      <mesh
-        geometry={nodes.Cube.geometry}
-        material={materials["room - blue"]}
-      />
-      <mesh
-        geometry={nodes.Cube_1.geometry}
-        material={materials["room - gorund"]}
-      />
-      <mesh
-        geometry={nodes.Cube_2.geometry}
-        material={materials["room - wood"]}
-      />
+      <RigidBody type="fixed" colliders={false}>
+        <mesh
+          geometry={nodes.Cube.geometry}
+          material={materials["room - blue"]}
+        />
+        <mesh
+          geometry={nodes.Cube_1.geometry}
+          material={materials["room - gorund"]}
+        />
+        <mesh
+          geometry={nodes.Cube_2.geometry}
+          material={materials["room - wood"]}
+        />
+        <CuboidCollider
+          args={[0.7, 4, 15]} // Replace with actual dimensions
+          position={[-8, 2, 0]}
+        />
+        <CuboidCollider
+          args={[0.7, 4, 15]} // Replace with actual dimensions
+          position={[8, 2, 0]}
+        />
+        <CuboidCollider
+          args={[15, 4, 0.7]} // Replace with actual dimensions
+          position={[0, 2, 13]}
+        />
+        <CuboidCollider
+          args={[15, 4, 0.7]} // Replace with actual dimensions
+          position={[0, 2, -12]}
+        />
+      </RigidBody>
       {/* <RigidBody type="fixed" colliders={false}>
         <mesh
           geometry={nodes.Cube009.geometry}
@@ -456,7 +483,8 @@ export function RoomModel({
           material={materials["Chair - black"]}
         />
         <CuboidCollider
-          args={[0.3, 0.4, 0.3]} // Replace with actual dimensions
+          args={[0.7, 1, 0.7]} // Replace with actual dimensions
+          position={[0, 2, 10]}
         />
       </RigidBody>
 
@@ -518,7 +546,8 @@ export function RoomModel({
           material={materials["bed - brown"]}
         />
         <CuboidCollider
-          args={[1.5, 1.5, 2]} // Replace with actual dimensions
+          args={[2, 1, 3]} // Replace with actual dimensions
+          position={[-4.5, 2, 7.9]}
         />
       </RigidBody>
     </group>

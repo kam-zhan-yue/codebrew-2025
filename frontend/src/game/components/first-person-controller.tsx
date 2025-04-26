@@ -229,6 +229,7 @@ export default function FirstPersonController({
     // Always send the rotation. Need to do some weird world rotation here.
     camera.rotation.order = "YXZ";
     const rotation = camera.rotation;
+    console.log(position);
 
     const data = {
       message_id: MessageType.player,
