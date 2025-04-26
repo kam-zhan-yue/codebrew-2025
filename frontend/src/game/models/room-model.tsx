@@ -6,7 +6,6 @@ Command: npx gltfjsx@6.5.3 ./public/models/room.glb -t
 import * as THREE from "three";
 import { useGLTF } from "@react-three/drei";
 import { GLTF } from "three-stdlib";
-import Phone from "../components/phone";
 import { CuboidCollider, RigidBody } from "@react-three/rapier";
 
 type GLTFResult = GLTF & {
@@ -187,9 +186,9 @@ export function RoomModel({
   return (
     <group position={position} rotation={rotation} scale={scale} dispose={null}>
       <CuboidCollider
-          args={[1, 1, 2]} // Replace with actual dimensions
-          position={[0, 0, 0]} // Replace with actual position
-        />
+        args={[1, 1, 2]} // Replace with actual dimensions
+        position={[0, 0, 0]} // Replace with actual position
+      />
       <RigidBody type="fixed" colliders={false}>
         <mesh
           geometry={nodes.desk.geometry}
@@ -209,7 +208,7 @@ export function RoomModel({
           geometry={nodes.cardboard_box.geometry}
           material={materials["box texture.002"]}
         />
-      <CuboidCollider
+        <CuboidCollider
           args={[0.3, 0.4, 0.3]} // Replace with actual dimensions
         />
       </RigidBody>
@@ -218,16 +217,16 @@ export function RoomModel({
           geometry={nodes.bookshelf.geometry}
           material={materials["Material.002"]}
         />
-      <CuboidCollider
+        <CuboidCollider
           args={[0.3, 0.4, 0.3]} // Replace with actual dimensions
         />
       </RigidBody>
-      <RigidBody type="fixed" colliders={false}>        
+      <RigidBody type="fixed" colliders={false}>
         <mesh
           geometry={nodes.shelf.geometry}
           material={materials["shelf 1 - brown"]}
         />
-      <CuboidCollider
+        <CuboidCollider
           args={[0.3, 0.4, 0.3]} // Replace with actual dimensions
         />
       </RigidBody>
@@ -236,14 +235,14 @@ export function RoomModel({
           geometry={nodes.shelf_2.geometry}
           material={materials["shelf 2 - brown"]}
         />
-      <CuboidCollider
+        <CuboidCollider
           args={[0.3, 0.4, 0.3]} // Replace with actual dimensions
         />
       </RigidBody>
-      <mesh
+      {/* <mesh
         geometry={nodes.drawing_empty.geometry}
         material={materials.paper}
-      /> 
+      /> */}
       <mesh
         geometry={nodes.explore_2_poster.geometry}
         material={materials["explorer poster"]}
@@ -304,23 +303,23 @@ export function RoomModel({
         geometry={nodes.Cube_2.geometry}
         material={materials["room - wood"]}
       />
-      <RigidBody type="fixed" colliders={false}>
+      {/* <RigidBody type="fixed" colliders={false}>
         <mesh
           geometry={nodes.Cube009.geometry}
           material={materials["boombox - light"]}
         />
-      <CuboidCollider
+        <CuboidCollider
           args={[0.3, 0.4, 0.3]} // Replace with actual dimensions
         />
-      </RigidBody>
-      <RigidBody type="fixed" colliders={false}>
+      </RigidBody> */}
+      {/* <RigidBody type="fixed" colliders={false}>
         <mesh geometry={nodes.Cube009_1.geometry} material={materials.tv} />
-      <CuboidCollider
+        <CuboidCollider
           args={[0.3, 0.4, 0.3]} // Replace with actual dimensions
         />
-      </RigidBody>
+      </RigidBody> */}
 
-      <RigidBody type="fixed" colliders={false}>
+      {/* <RigidBody type="fixed" colliders={false}>
         <mesh
           geometry={nodes.Cube013.geometry}
           material={materials["lamp - silver"]}
@@ -344,7 +343,7 @@ export function RoomModel({
       <CuboidCollider
           args={[0.3, 0.4, 0.3]} // Replace with actual dimensions
         />
-      </RigidBody>
+      </RigidBody> */}
       {/* <mesh
         geometry={nodes.Cube022.geometry}
         material={materials["DS - green"]}
@@ -456,7 +455,7 @@ export function RoomModel({
           geometry={nodes.Cube045_1.geometry}
           material={materials["Chair - black"]}
         />
-      <CuboidCollider
+        <CuboidCollider
           args={[0.3, 0.4, 0.3]} // Replace with actual dimensions
         />
       </RigidBody>
@@ -518,7 +517,7 @@ export function RoomModel({
           geometry={nodes.bedside_drawer.geometry}
           material={materials["bed - brown"]}
         />
-      <CuboidCollider
+        <CuboidCollider
           args={[1.5, 1.5, 2]} // Replace with actual dimensions
         />
       </RigidBody>
