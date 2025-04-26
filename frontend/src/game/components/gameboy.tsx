@@ -23,14 +23,12 @@ const Gameboy = ({ position, rotation }: GameboyProps) => {
     (s) => s.uiState.selection.activeSelection,
   );
 
-  useFrame((_, delta) => {    // example of box moving up
+  useFrame((_, delta) => {
+    // example of box moving up
     if (mesh.current) {
       mesh.current.position.y += 0.05 * delta;
     }
   });
-
-  console.info("Gameboy", gameboy);
-  console.info("Active selection", activeSelection);
 
   if (!gameboy) {
     return <></>;
