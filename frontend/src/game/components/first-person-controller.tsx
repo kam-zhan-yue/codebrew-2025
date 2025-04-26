@@ -69,7 +69,6 @@ export default function FirstPersonController({
 
   const getPlayer = useGameStore((s) => s.getPlayer);
   const player = getPlayer();
-  const rickrollSoundRef = useRef<THREE.Audio | null>(null);
   const interactionSoundRef = useRef<THREE.Audio | null>(null);
 
   // SFX STUFF
@@ -82,19 +81,12 @@ export default function FirstPersonController({
   useEffect(() => {
     const audioLoader = new THREE.AudioLoader();
     const listener = new THREE.AudioListener();
-    audioLoader.load("/sounds/rickroll.mp3", (buffer) => {
-      rickrollSound.setBuffer(buffer);
-      rickrollSound.setVolume(0.5);
-      rickrollSound.setLoop(true);
-      rickrollSoundRef.current = rickrollSound; // Store the sound in the ref
-    });
     audioLoader.load("/sounds/interaction.mp3", (buffer) => {
       interactionSound.setBuffer(buffer);
       interactionSound.setVolume(0.5);
       interactionSound.setLoop(false);
       interactionSoundRef.current = interactionSound;
     });
-    const rickrollSound = new THREE.Audio(listener);
     const interactionSound = new THREE.Audio(listener);
     camera.add(listener);
   }, [camera]);
@@ -113,14 +105,6 @@ export default function FirstPersonController({
       // NOTE(Alex): This is where we try to toggle off the interaction
       active: !interaction.active,
     };
-
-    if (interaction.id === "gameboy") {     // TODO: when making boombox, change 'gameboy' to 'boombox' so sound correctly plays
-      if (!interaction.active) {
-        rickrollSoundRef.current?.play(); // should cont playback from where it's left off
-      } else {
-        rickrollSoundRef.current?.pause();
-      }
-    }
 
     try {
       InteractionMessageSchema.parse(data);
