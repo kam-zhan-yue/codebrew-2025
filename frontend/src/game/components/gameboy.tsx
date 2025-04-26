@@ -15,7 +15,7 @@ interface GameboyProps {
 const Gameboy = ({ position, rotation }: GameboyProps) => {
   const mesh = useRef<THREE.Mesh>(null!);
   const interactions = useGameStore((s) => s.gameState.interactions);
-  const gameboy = interactions.find(
+  const gameboy = interactions?.find(
     (interaction) => interaction.id === "gameboy",
   );
   const activeSelection = useGameStore(

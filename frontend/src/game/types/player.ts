@@ -9,22 +9,20 @@ export interface PlayerState {
   animationState: AnimState;
 }
 
-export const RawPlayerSchema = z
-  .object({
-    id: z.string(),
-    position: z.object({
-      x: z.number(),
-      y: z.number(),
-      z: z.number(),
-    }),
-    rotation: z.object({
-      x: z.number(),
-      y: z.number(),
-      z: z.number(),
-    }),
-    animation_state: z.string(),
-  })
-  .nullable();
+export const RawPlayerSchema = z.object({
+  id: z.string(),
+  position: z.object({
+    x: z.number(),
+    y: z.number(),
+    z: z.number(),
+  }),
+  rotation: z.object({
+    x: z.number(),
+    y: z.number(),
+    z: z.number(),
+  }),
+  animation_state: z.string(),
+});
 
 export const PlayerSchema = RawPlayerSchema.transform((raw) => {
   if (raw === null) {
