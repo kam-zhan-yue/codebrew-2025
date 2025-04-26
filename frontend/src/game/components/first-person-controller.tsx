@@ -63,6 +63,20 @@ export default function FirstPersonController({
 
   const getPlayer = useGameStore((s) => s.getPlayer);
   const player = getPlayer();
+  
+  // SFX STUFF
+  const playSFX = useCallback(() => {
+    const listener = new THREE.AudioListener();
+    camera.add(listener);
+    const audioLoader = new THREE.AudioLoader();
+    const interactionSound = new THREE.Audio(listener);
+    audioLoader.load("/sounds/interaction.mp3", (buffer) => {
+      interactionSound.setBuffer(buffer);
+      interactionSound.setVolume(0.5);
+      interactionSound.setLoop(false);
+      interactionSound.play();
+    });
+  }, [camera])
 
   const [sub] = useKeyboardControls<Controls>();
   const canInteract = flow === GameFlow.Game;
@@ -97,10 +111,13 @@ export default function FirstPersonController({
       (pressed) => {
         if (pressed) {
           select();
+          if (activeSelection !== "none") {
+            playSFX();
+          }
         }
       },
     );
-  }, [select, sub]);
+  }, [select, sub, playSFX, activeSelection]);
 
   useFrame((_, delta) => {
     if (!started) return;
