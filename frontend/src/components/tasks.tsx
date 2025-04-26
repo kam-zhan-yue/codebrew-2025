@@ -28,15 +28,24 @@ const Tasks = () => {
 
   return (
     <Overlay className="inset-x-16 inset-y-16">
-      <h3>Your Tasks</h3>
+      <p className="text-3xl mb-4">Your Tasks</p>
       {playerTasks.map((task) => {
         const taskData = getTaskData(task);
         return (
-          <div key={task.interactionId}>
+          <div
+            className="text-xl flex items-center gap-2 mb-2"
+            key={task.interactionId}
+          >
+            <input
+              type="checkbox"
+              checked={taskData.completed}
+              readOnly
+              className="w-5 h-5 accent-green-400"
+            />
             {taskData.completed ? (
-              <s>{taskData.message}</s>
+              <s className="text-green-400">{taskData.message}</s>
             ) : (
-              <p>{taskData.message}</p>
+              <span className="text-red-400">{taskData.message}</span>
             )}
           </div>
         );

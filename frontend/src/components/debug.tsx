@@ -1,11 +1,12 @@
 import * as THREE from "three";
-import { useGameStore } from "../store";
+import { GameFlow, useGameStore } from "../store";
 import Overlay from "./overlay";
 
 const Debug = () => {
   const debugState = useGameStore((s) => s.uiState.debug);
   const raycastHit = debugState?.raycastData?.object;
   const playerId = useGameStore((s) => s.playerId);
+  const flow = useGameStore((s) => s.flow);
   const getObjectHierarchy = (obj: THREE.Object3D | null | undefined) => {
     const names = [];
     let current = obj;
@@ -17,12 +18,16 @@ const Debug = () => {
   };
 
   return (
-    <Overlay className="inset-0 w-40 h-40">
+    <Overlay className="inset-x-0 inset-y-100 w-40 h-40">
       <div style={{ fontFamily: "monospace", lineHeight: "1.5" }}>
         <h1>Debug Data</h1>
         <div>
           <strong>Player ID </strong>
           {playerId}
+        </div>
+        <div>
+          <strong>Game Flow </strong>
+          {GameFlow[flow]}
         </div>
         {raycastHit ? (
           <>

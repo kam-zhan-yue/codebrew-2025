@@ -28,5 +28,10 @@ export const defaultUIState: UIState = {
   selection: {
     activeSelection: "none",
   },
-  tasks: [],
+  tasks: [
+    {
+      interactionId: "gameboy",
+      targetState: true,
+    },
+  ],
 };

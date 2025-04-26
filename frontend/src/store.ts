@@ -50,6 +50,11 @@ export const useGameStore = create<GameStore>()((set, get) => ({
         set({ flow: GameFlow.Game });
       }
 
+      // If at any point, a player goes missing, go back to Lobby
+      if (!state.gameState.playerOne || !state.gameState.playerTwo) {
+        set({ flow: GameFlow.Lobby });
+      }
+
       return { gameState: newState };
     });
   },
