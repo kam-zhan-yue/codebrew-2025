@@ -49,7 +49,7 @@ async fn main() -> Result<(), rocket::Error> {
 
     // Creates an index route, mounts the route at / and launches the app
     let r = rocket::build()
-        .mount("/", routes![game_stream])
+        .mount("/", routes![game_stream, tasks])
         .attach(cors)
         .manage(Arc::clone(&game_state));
 
@@ -164,4 +164,25 @@ fn game_stream<'r>(
             Ok(())
         })
     })
+}
+
+#[get("/tasks/<player_id>")]
+async fn tasks<'r>(state: &'r State<Arc<Mutex<Game>>>, player_id: &'r str) -> String {
+    if player_id != "1" && player_id != "2" {
+        return String::from("");
+    }
+
+    let game_ref = state.inner().clone();
+    let game_state = game_ref.lock().await;
+
+    let player_tasks = if player_id == "1" {
+        &game_state.player_one_tasks.clone()
+    } else {
+        &game_state.player_two_tasks.clone()
+    };
+
+    match player_tasks {
+        Some(tasks) => serde_json::to_string(tasks).unwrap(),
+        None => String::from(""),
+    }
 }
