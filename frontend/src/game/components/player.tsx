@@ -1,15 +1,17 @@
 import { useRef, useState } from "react";
-import { AstronautAnimation, AstronautModel } from "../models/astronaut-model";
 import { Mesh, Vector3 } from "three";
 import { useFrame } from "@react-three/fiber";
 import { useGameStore } from "../../store";
+import { PlayerAnimation, PlayerModel } from "../models/player-model";
 
 const MODEL_ROTATE_OFFSET = Math.PI;
 
-const Astronaut = () => {
+const Player = () => {
   const mesh = useRef<Mesh>(null!);
   const currentPos = useRef(new Vector3());
-  const [animation, setAnimation] = useState<AstronautAnimation>("idle");
+  const [animation, setAnimation] = useState<PlayerAnimation>(
+    "Armature|mixamo.com|Layer0",
+  );
   const getOtherPlayer = useGameStore((s) => s.getOtherPlayer);
   const player = getOtherPlayer();
 
@@ -23,9 +25,9 @@ const Astronaut = () => {
     mesh.current.rotation.set(0, player.rotation.y + MODEL_ROTATE_OFFSET, 0);
 
     if (player.animationState == "idle") {
-      setAnimation("idle");
+      setAnimation("Armature|mixamo.com|Layer0");
     } else if (player.animationState == "walking") {
-      setAnimation("walk");
+      setAnimation("Armature|mixamo.com|Layer0.001");
     }
   });
 
@@ -33,11 +35,15 @@ const Astronaut = () => {
     <>
       {player && (
         <mesh ref={mesh}>
-          <AstronautModel scale={0.3} animation={animation} />
+          <PlayerModel
+            position={[0, -1, 0]}
+            scale={0.1}
+            animation={animation}
+          />
         </mesh>
       )}
     </>
   );
 };
 
-export default Astronaut;
+export default Player;

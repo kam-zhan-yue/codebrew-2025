@@ -1,4 +1,4 @@
-import Astronaut from "../components/astronaut";
+import Player from "./player";
 import { EnvironmentModel } from "../models/environment-model";
 import Gameboy from "./gameboy";
 
@@ -7,7 +7,7 @@ const Level = () => {
     <>
       <EnvironmentModel />
       <Gameboy position={[0, 1, 0]} rotation={[0, 0, 0]} />
-      <Astronaut />
+      <Player />
     </>
   );
 };
