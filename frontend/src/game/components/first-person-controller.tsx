@@ -4,7 +4,7 @@ import {
   PointerLockControls,
   useKeyboardControls,
 } from "@react-three/drei";
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import { GameFlow, useGameStore } from "../../store";
 import {
@@ -39,7 +39,9 @@ export default function FirstPersonController({
   sendJsonMessage,
 }: FirstPersonControllerProps) {
   const { camera, scene } = useThree();
+  const [inited, setInited] = useState(false);
   const rigidbodyRef = useRef<RapierRigidBody>(null!);
+  const prevFlow = useRef<GameFlow>(GameFlow.Selection);
   const direction = useRef<THREE.Vector3>(new THREE.Vector3());
   const raycaster = useRef<THREE.Raycaster>(new THREE.Raycaster());
   const leftPressed = useKeyboardControls((state) => state[Controls.left]);
@@ -137,7 +139,21 @@ export default function FirstPersonController({
     );
   }, [select, sub, playSFX, activeSelection, flow, sendRestart]);
 
+  useEffect(() => {
+    camera.position.copy(new THREE.Vector3(5, 5, 5));
+    camera.lookAt(ORBIT_ORIGIN);
+  }, [camera]);
+
+  useEffect(() => {
+    if (flow === GameFlow.Lobby && prevFlow.current === GameFlow.Selection) {
+      camera.position.copy(new THREE.Vector3(0, 0, 0));
+      setInited(true);
+    }
+    prevFlow.current = flow;
+  }, [camera.position, flow]);
+
   useFrame((_, delta) => {
+    if (!inited) return;
     if (!started) return;
     if (!player) return;
     interpolate(delta);
