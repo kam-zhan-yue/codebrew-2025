@@ -3,13 +3,15 @@ import { GameFlow, useGameStore } from "../../store";
 import { Interactions } from "../types/interactions";
 import Tooltip from "./tooltip";
 import { BookActiveModel } from "../models/book-active-model";
+import { BookInactiveModel } from "../models/book-inactive-model";
 
 interface BookProps {
   position: [number, number, number];
   rotation: [number, number, number];
+  scale: number;
 }
 
-const Book = ({ position, rotation }: BookProps) => {
+const Book = ({ position, rotation, scale }: BookProps) => {
   const interactions = useGameStore((s) => s.gameState.interactions);
   const flow = useGameStore((s) => s.flow);
   const interaction = interactions?.find(
@@ -37,14 +39,12 @@ const Book = ({ position, rotation }: BookProps) => {
 
   return (
     <Select enabled={isHovering}>
-      <group position={position} rotation={rotation}>
+      <group position={position} rotation={rotation} scale={scale}>
         <group name={interaction.id}>
           {interaction.active && <BookActiveModel />}
-          {!interaction.active && <BookActiveModel />}
-          {/* {!interaction.active && <BookActiveModel />} */}
-          {/* {!interaction.active && <PhoneInactiveModel />} */}
+          {!interaction.active && <BookInactiveModel />}
         </group>
-        {isHovering && <Tooltip position={[0, 5, 0]}>{message}</Tooltip>}
+        {isHovering && <Tooltip position={[0, 0.8, 0]}>{message}</Tooltip>}
       </group>
     </Select>
   );
