@@ -69,30 +69,35 @@ export default function FirstPersonController({
 
   const getPlayer = useGameStore((s) => s.getPlayer);
   const player = getPlayer();
+  const rickrollSoundRef = useRef<THREE.Audio | null>(null);
+  const interactionSoundRef = useRef<THREE.Audio | null>(null);
 
   // SFX STUFF
-  const listener = new THREE.AudioListener();
-  camera.add(listener);
-  const audioLoader = new THREE.AudioLoader();
-  const interactionSound = new THREE.Audio(listener);
   const playSFX = useCallback(() => {
+    if (interactionSoundRef.current) {
+      interactionSoundRef.current.play();
+    }
+  }, [interactionSoundRef]);
+
+  useEffect(() => {
+    const audioLoader = new THREE.AudioLoader();
+    const listener = new THREE.AudioListener();
+    audioLoader.load("/sounds/rickroll.mp3", (buffer) => {
+      rickrollSound.setBuffer(buffer);
+      rickrollSound.setVolume(0.5);
+      rickrollSound.setLoop(true);
+      rickrollSoundRef.current = rickrollSound; // Store the sound in the ref
+    });
     audioLoader.load("/sounds/interaction.mp3", (buffer) => {
       interactionSound.setBuffer(buffer);
       interactionSound.setVolume(0.5);
       interactionSound.setLoop(false);
-      interactionSound.play();
+      interactionSoundRef.current = interactionSound;
     });
-  }, [audioLoader, interactionSound]);
-
-  const rickrollSound = new THREE.Audio(listener);
-  const rickrollSoundRef = useRef<THREE.Audio | null>(null);
-
-  audioLoader.load("/sounds/rickroll.mp3", (buffer) => {
-    rickrollSound.setBuffer(buffer);
-    rickrollSound.setVolume(0.5);
-    rickrollSound.setLoop(true);
-    rickrollSoundRef.current = rickrollSound; // Store the sound in the ref
-  });
+    const rickrollSound = new THREE.Audio(listener);
+    const interactionSound = new THREE.Audio(listener);
+    camera.add(listener);
+  }, [camera]);
 
   const [sub] = useKeyboardControls<Controls>();
 
@@ -111,13 +116,9 @@ export default function FirstPersonController({
 
     if (interaction.id === "gameboy") {     // TODO: when making boombox, change 'gameboy' to 'boombox' so sound correctly plays
       if (!interaction.active) {
-        console.info("new state is ", !interaction.active)
-        rickrollSoundRef.current?.play();     // should cont playback from where it's left off
-        console.info("rick roll playing:", rickrollSoundRef.current?.isPlaying);
+        rickrollSoundRef.current?.play(); // should cont playback from where it's left off
       } else {
-        console.info("new state is ", !interaction.active)
         rickrollSoundRef.current?.pause();
-        console.info("rick roll playing:", rickrollSoundRef.current?.isPlaying);
       }
     }
 
