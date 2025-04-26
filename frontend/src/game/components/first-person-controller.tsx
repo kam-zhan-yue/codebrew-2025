@@ -22,6 +22,7 @@ import {
   RestartMessageSchema,
 } from "../types/messages";
 import { Controls } from "../types/controls";
+import { Interactions } from "../types/interactions";
 
 const ORBIT_ORIGIN = new THREE.Vector3(1, 1, -2);
 const ORBIT_MAX_DISTANCE = 7;
@@ -247,6 +248,7 @@ export default function FirstPersonController({
   };
 
   const raycast = () => {
+    console.info("Position", rigidbodyRef.current.translation());
     const coords = new THREE.Vector2(0, 0); // center of screen
     raycaster.current.setFromCamera(coords, camera);
 
@@ -259,8 +261,13 @@ export default function FirstPersonController({
       const currentPosition = toThreeVector3(
         rigidbodyRef.current.translation(),
       );
-      const distance = currentPosition.distanceTo(result.object.position);
+
+      // Hard code interaction position because I'm dumb
+      const interaction = Interactions[result.interaction];
+      const targetPosition = new THREE.Vector3(...interaction.position);
+      const distance = currentPosition.distanceTo(targetPosition);
       if (distance <= INTERACT_THRESHOLD) {
+        console.info("Active interaction is ", result.interaction);
         setActiveSelection(result.interaction);
         hasSelection = true;
       }

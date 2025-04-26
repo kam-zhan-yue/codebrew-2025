@@ -8,6 +8,7 @@ export const Interactions = {
     deactivateMessage: "",
     activateGoal: "",
     deactivateGoal: "",
+    position: [0, 0, 0],
   },
   gameboy: {
     label: "Gameboy",
@@ -16,6 +17,7 @@ export const Interactions = {
     deactivateMessage: "Press E to turn off",
     activateGoal: "Play some retro games",
     deactivateGoal: "Get off the games!",
+    position: [0, 0, 0],
   },
   television: {
     label: "Television",
@@ -24,6 +26,7 @@ export const Interactions = {
     deactivateMessage: "Press E to turn off",
     activateGoal: "Watch some telly",
     deactivateGoal: "Silence the noisy talk show",
+    position: [-2.7, 1, -4.1],
   },
   phone: {
     label: "Phone",
@@ -32,6 +35,7 @@ export const Interactions = {
     deactivateMessage: "Press E to put down",
     activateGoal: "Make a call",
     deactivateGoal: "Stop the call",
+    position: [0, 1, 4.6],
   },
   ds: {
     label: "3DS",
@@ -40,6 +44,7 @@ export const Interactions = {
     deactivateMessage: "Press E to close",
     activateGoal: "Play some Pokemon",
     deactivateGoal: "Stop playing Pokemon",
+    position: [2.8, 1, 0],
   },
   boombox: {
     label: "Boombox",
@@ -48,6 +53,7 @@ export const Interactions = {
     deactivateMessage: "Press E to close",
     activateGoal: "Play some Pokemon",
     deactivateGoal: "Stop playing Pokemon",
+    position: [-0.6, 1, -4.6],
   },
   paper: {
     label: "Paper",
@@ -56,6 +62,7 @@ export const Interactions = {
     deactivateMessage: "Press E to erase",
     activateGoal: "Play some Pokemon",
     deactivateGoal: "Stop playing Pokemon",
+    position: [2, 1, -4],
   },
   lamp: {
     label: "Lamp",
@@ -64,6 +71,7 @@ export const Interactions = {
     deactivateMessage: "Press E to turn off",
     activateGoal: "Play some Pokemon",
     deactivateGoal: "Stop playing Pokemon",
+    position: [3.1, 1, -4.3],
   },
   book: {
     label: "Book",
@@ -72,6 +80,7 @@ export const Interactions = {
     deactivateMessage: "Press E to close",
     activateGoal: "Read a book",
     deactivateGoal: "Stop reading",
+    position: [2.3, 1, 4],
   },
 } as const;
 

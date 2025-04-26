@@ -32,6 +32,8 @@ const Phone = ({ active, inactive }: PhoneProps) => {
     message = data.description;
   }
 
+  // console.info("Active Selection ", activeSelection, " ID ", phone.id);
+
   return (
     <Select enabled={isHovering}>
       <group name={phone.id}>
