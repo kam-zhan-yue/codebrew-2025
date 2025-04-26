@@ -143,7 +143,6 @@ export default function FirstPersonController({
     } catch (error) {
       console.error("Validation failed for restart message:", error);
     }
-    console.info("");
   }, [restart, sendJsonMessage, setRestart, playerId]);
 
   // Selection Code
@@ -270,7 +269,6 @@ export default function FirstPersonController({
   };
 
   const raycast = () => {
-    console.info("Position", rigidbodyRef.current.translation());
     const coords = new THREE.Vector2(0, 0); // center of screen
     raycaster.current.setFromCamera(coords, camera);
 

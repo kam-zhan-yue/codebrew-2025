@@ -4,16 +4,16 @@ import { Interactions } from "../types/interactions";
 import Tooltip from "./tooltip";
 import { Vector3 } from "three";
 
-interface PhoneProps {
+interface LampProps {
   position: Vector3;
   rotation: [number, number, number];
 }
 
-const Phone = ({ position, rotation }: PhoneProps) => {
+const Lamp = ({ position, rotation }: LampProps) => {
   const interactions = useGameStore((s) => s.gameState.interactions);
   const flow = useGameStore((s) => s.flow);
   const interaction = interactions?.find(
-    (interaction) => interaction.id === "phone",
+    (interaction) => interaction.id === "lamp",
   );
   const activeSelection = useGameStore(
     (s) => s.uiState.selection.activeSelection,
@@ -40,8 +40,8 @@ const Phone = ({ position, rotation }: PhoneProps) => {
     <Select enabled={isHovering}>
       <group position={position} rotation={rotation}>
         <group name={interaction.id}>
-          {/* {interaction.active && <PhoneActiveModel />}
-          {!interaction.active && <PhoneInactiveModel />} */}
+          {interaction.active && <LampActiveModel />}
+          {!interaction.active && <LampInactiveModel />}
         </group>
         {isHovering && <Tooltip position={[0, 5, 0]}>{message}</Tooltip>}
       </group>
@@ -49,4 +49,4 @@ const Phone = ({ position, rotation }: PhoneProps) => {
   );
 };
 
-export default Phone;
+export default Lamp;
