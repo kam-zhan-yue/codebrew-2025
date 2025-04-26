@@ -1,4 +1,4 @@
-use rand::random_bool;
+use rand::{random_bool, rng, seq::IndexedRandom};
 use rocket::serde::{Deserialize, Serialize};
 
 pub const TICKS_PER_SECOND: f64 = 120_f64;
@@ -39,12 +39,39 @@ impl Game {
 
         if let Some(countdown) = &self.game_state.countdown {
             if *countdown < 0_f64 && !self.started {
-                let player_one_tasks = self.get_randomised_tasks();
-                let mut player_two_tasks = self.get_randomised_tasks();
+                let mut rng = rng();
+                let random_selection: Vec<InteractionType> = self
+                    .game_state
+                    .interactions
+                    .choose_multiple(&mut rng, self.game_state.interactions.len() / 2)
+                    .map(|interaction| interaction.id.clone())
+                    .collect();
 
-                while vec_eq(&player_one_tasks, &player_two_tasks) {
-                    player_two_tasks = self.get_randomised_tasks();
-                }
+                let player_one_tasks: Vec<InteractionTarget> = self
+                    .game_state
+                    .interactions
+                    .iter()
+                    .map(|interaction| {
+                        if random_selection.contains(&interaction.id) {
+                            InteractionTarget {
+                                id: interaction.id.clone(),
+                                target_state: !interaction.active,
+                            }
+                        } else {
+                            InteractionTarget {
+                                id: interaction.id.clone(),
+                                target_state: interaction.active,
+                            }
+                        }
+                    })
+                    .collect();
+                let player_two_tasks: Vec<InteractionTarget> = player_one_tasks
+                    .iter()
+                    .map(|interaction| InteractionTarget {
+                        id: interaction.id.clone(),
+                        target_state: !interaction.target_state,
+                    })
+                    .collect();
 
                 self.player_one_tasks = Some(player_one_tasks);
                 self.player_two_tasks = Some(player_two_tasks);
@@ -89,18 +116,6 @@ impl Game {
             self.player_two_resetting = false;
             self.game_state.countdown = Some(5_f64);
         }
-    }
-
-    fn get_randomised_tasks(&self) -> Vec<InteractionTarget> {
-        self.game_state
-            .interactions
-            .clone()
-            .into_iter()
-            .map(|interaction| InteractionTarget {
-                id: interaction.id,
-                target_state: random_bool(0.5),
-            })
-            .collect()
     }
 
     pub fn client_update(&mut self, payload: UpdatePayload) {
