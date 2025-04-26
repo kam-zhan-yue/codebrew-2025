@@ -58,7 +58,7 @@ export const useGameStore = create<GameStore>()((set, get) => ({
 
       // If we are in game over and countdown resets, go back to countdown
       if (state.flow === GameFlow.GameOver && newCountdown && newCountdown > 0) {
-        set({ flow: GameFlow.Countdown, uiState: { ...state.uiState, restart: false } });
+        set({ flow: GameFlow.Countdown, uiState: { ...state.uiState, restart: true } });
       }
 
       // If at any point, a player goes missing, go back to Lobby
