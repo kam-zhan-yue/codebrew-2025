@@ -24,6 +24,7 @@ interface GameStore {
   setPlayerId: (newPlayerId: string) => void;
   getPlayer: () => PlayerState | null;
   getOtherPlayer: () => PlayerState | null;
+  setRestart: (restart: boolean) => void;
 }
 
 export const useGameStore = create<GameStore>()((set, get) => ({
@@ -103,4 +104,12 @@ export const useGameStore = create<GameStore>()((set, get) => ({
     if (gameState.playerTwo?.id === playerId) return gameState.playerOne;
     return null;
   },
+
+  setRestart: (restart) =>
+    set((state) => ({
+      uiState: {
+        ...state.uiState,
+        restart: restart,
+      },
+    })),
 }));

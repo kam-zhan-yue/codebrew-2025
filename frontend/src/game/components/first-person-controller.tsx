@@ -19,6 +19,7 @@ import {
   InteractionMessageSchema,
   MessageType,
   PlayerMessageSchema,
+  RestartMessageSchema,
 } from "../types/messages";
 import { Controls } from "../types/controls";
 
@@ -60,6 +61,8 @@ export default function FirstPersonController({
   const flow = useGameStore((s) => s.flow);
   const started = flow !== GameFlow.Selection;
   const interactions = useGameStore((s) => s.gameState.interactions);
+  const restart = useGameStore((s) => s.uiState.restart);
+  const setRestart = useGameStore((s) => s.setRestart);
 
   const getPlayer = useGameStore((s) => s.getPlayer);
   const player = getPlayer();
@@ -67,30 +70,42 @@ export default function FirstPersonController({
   const [sub] = useKeyboardControls<Controls>();
 
   const select = useCallback(() => {
-    if (flow === GameFlow.Game) {
-      if (activeSelection === "none") return;
+    if (activeSelection === "none") return;
 
-      const interaction = interactions?.find((i) => i.id === activeSelection);
-      if (!interaction) return;
+    const interaction = interactions?.find((i) => i.id === activeSelection);
+    if (!interaction) return;
 
-      const data = {
-        message_id: MessageType.interaction,
-        player_id: playerId,
-        interaction_id: interaction.id,
-        // NOTE(Alex): This is where we try to toggle off the interaction
-        active: !interaction.active,
-      };
+    const data = {
+      message_id: MessageType.interaction,
+      player_id: playerId,
+      interaction_id: interaction.id,
+      // NOTE(Alex): This is where we try to toggle off the interaction
+      active: !interaction.active,
+    };
 
-      try {
-        InteractionMessageSchema.parse(data);
-        sendJsonMessage(data);
-      } catch (error) {
-        console.error("Validation failed for interaction message:", error);
-      }
-    } else if (flow === GameFlow.GameOver) {
-      console.info("");
+    try {
+      InteractionMessageSchema.parse(data);
+      sendJsonMessage(data);
+    } catch (error) {
+      console.error("Validation failed for interaction message:", error);
     }
-  }, [activeSelection, flow, interactions, playerId, sendJsonMessage]);
+  }, [activeSelection, interactions, playerId, sendJsonMessage]);
+
+  const sendRestart = useCallback(() => {
+    const shouldRestart = restart;
+    const data = {
+      message_id: MessageType.restart,
+      restart: shouldRestart,
+    };
+    setRestart(!shouldRestart);
+    try {
+      RestartMessageSchema.parse(data);
+      sendJsonMessage(data);
+    } catch (error) {
+      console.error("Validation failed for restart message:", error);
+    }
+    console.info("");
+  }, [restart, sendJsonMessage, setRestart]);
 
   // Selection Code
   useEffect(() => {
@@ -98,11 +113,15 @@ export default function FirstPersonController({
       (state) => state[Controls.interact],
       (pressed) => {
         if (pressed) {
-          select();
+          if (flow === GameFlow.Game) {
+            select();
+          } else if (flow === GameFlow.GameOver) {
+            sendRestart();
+          }
         }
       },
     );
-  }, [select, sub]);
+  }, [flow, select, sendRestart, sub]);
 
   useFrame((_, delta) => {
     if (!started) return;

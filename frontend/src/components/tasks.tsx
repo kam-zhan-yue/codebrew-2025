@@ -19,7 +19,7 @@ const Tasks = () => {
     const message = task.targetState
       ? interaction.activateGoal
       : interaction.deactivateGoal;
-    const serverInteraction = interactions.find(
+    const serverInteraction = interactions?.find(
       (i) => i.id === task.interactionId,
     );
     const completed = serverInteraction?.active === task.targetState;
