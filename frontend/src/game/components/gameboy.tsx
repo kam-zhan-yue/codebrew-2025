@@ -1,5 +1,5 @@
 import { Select } from "@react-three/postprocessing";
-import { useGameStore } from "../../store";
+import { GameFlow, useGameStore } from "../../store";
 import { Interactions } from "../types/interactions";
 import { useFrame, Vector3 } from "@react-three/fiber";
 import { GameboyModel } from "../models/gameboy-model";
@@ -15,6 +15,7 @@ interface GameboyProps {
 const Gameboy = ({ position, rotation }: GameboyProps) => {
   const mesh = useRef<THREE.Mesh>(null!);
   const interactions = useGameStore((s) => s.gameState.interactions);
+  const flow = useGameStore((s) => s.flow);
   const gameboy = interactions?.find(
     (interaction) => interaction.id === "gameboy",
   );
@@ -35,9 +36,12 @@ const Gameboy = ({ position, rotation }: GameboyProps) => {
 
   const isHovering = activeSelection === gameboy.id;
   const data = Interactions[gameboy.id];
-  const message = gameboy.active
-    ? data.deactivateMessage
-    : data.activateMessage;
+  let message = "";
+  if (flow === GameFlow.Game) {
+    message = gameboy.active ? data.deactivateMessage : data.activateMessage;
+  } else {
+    message = data.description;
+  }
 
   return (
     <Select enabled={isHovering}>

@@ -38,7 +38,6 @@ export default function FirstPersonController({
   sendJsonMessage,
 }: FirstPersonControllerProps) {
   const { camera, scene } = useThree();
-  const arrowRef = useRef<THREE.ArrowHelper | null>(null);
   const rigidbodyRef = useRef<RapierRigidBody>(null!);
   const direction = useRef<THREE.Vector3>(new THREE.Vector3());
   const raycaster = useRef<THREE.Raycaster>(new THREE.Raycaster());
@@ -66,13 +65,10 @@ export default function FirstPersonController({
   const player = getPlayer();
 
   const [sub] = useKeyboardControls<Controls>();
-
-  useEffect(() => {
-    camera.position.set(5, 5, 5);
-    camera.lookAt(ORBIT_ORIGIN);
-  }, [camera]);
+  const canInteract = flow === GameFlow.Game;
 
   const select = useCallback(() => {
+    if (!canInteract) return;
     if (activeSelection === "none") return;
 
     const interaction = interactions?.find((i) => i.id === activeSelection);
@@ -92,7 +88,7 @@ export default function FirstPersonController({
     } catch (error) {
       console.error("Validation failed for interaction message:", error);
     }
-  }, [activeSelection, interactions, playerId, sendJsonMessage]);
+  }, [activeSelection, canInteract, interactions, playerId, sendJsonMessage]);
 
   // Selection Code
   useEffect(() => {
@@ -202,15 +198,6 @@ export default function FirstPersonController({
     const coords = new THREE.Vector2(0, 0); // center of screen
     raycaster.current.setFromCamera(coords, camera);
 
-    // Only create the arrow once
-    if (!arrowRef.current) {
-      const origin = raycaster.current.ray.origin;
-      const direction = raycaster.current.ray.direction.clone().normalize();
-      const arrow = new THREE.ArrowHelper(direction, origin, 3, 0xff0000);
-      arrowRef.current = arrow;
-      scene.add(arrow);
-    }
-
     const intersects = raycaster.current.intersectObjects(scene.children, true);
     let hasSelection = false;
 
@@ -229,17 +216,7 @@ export default function FirstPersonController({
     if (!hasSelection) {
       setActiveSelection("none");
     }
-    // visualiseRay();
   };
-
-  // const visualiseRay = () => {
-  //   if (!arrowRef.current || !raycaster.current) return;
-
-  //   const origin = raycaster.current.ray.origin;
-  //   const direction = raycaster.current.ray.direction.clone().normalize();
-  //   arrowRef.current.position.copy(origin);
-  //   arrowRef.current.setDirection(direction);
-  // };
 
   return (
     <>
