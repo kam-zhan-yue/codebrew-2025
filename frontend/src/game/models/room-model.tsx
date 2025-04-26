@@ -6,6 +6,7 @@ Command: npx gltfjsx@6.5.3 ./public/models/room.glb -t
 import * as THREE from "three";
 import { useGLTF } from "@react-three/drei";
 import { GLTF } from "three-stdlib";
+import Phone from "../components/phone";
 
 type GLTFResult = GLTF & {
   nodes: {
@@ -46,9 +47,6 @@ type GLTFResult = GLTF & {
     Cube012_5: THREE.Mesh;
     bedside_drawer: THREE.Mesh;
     cardboard_box: THREE.Mesh;
-    Cube018: THREE.Mesh;
-    Cube018_1: THREE.Mesh;
-    Cube018_2: THREE.Mesh;
     bookshelf: THREE.Mesh;
     shelf: THREE.Mesh;
     shelf_2: THREE.Mesh;
@@ -85,6 +83,11 @@ type GLTFResult = GLTF & {
     Cube017_1: THREE.Mesh;
     Cube038: THREE.Mesh;
     Cube038_1: THREE.Mesh;
+    Cube001: THREE.Mesh;
+    Cube001_1: THREE.Mesh;
+    Cube001_2: THREE.Mesh;
+    Cube003: THREE.Mesh;
+    Cube003_1: THREE.Mesh;
   };
   materials: {
     ["room - blue"]: THREE.MeshStandardMaterial;
@@ -123,8 +126,6 @@ type GLTFResult = GLTF & {
     ["green.003"]: THREE.MeshStandardMaterial;
     ["bed - brown"]: THREE.MeshStandardMaterial;
     ["box texture.002"]: THREE.MeshStandardMaterial;
-    ["bed - blue"]: THREE.MeshStandardMaterial;
-    ["bed - yellow"]: THREE.MeshStandardMaterial;
     ["Material.002"]: THREE.MeshStandardMaterial;
     ["shelf 1 - brown"]: THREE.MeshStandardMaterial;
     ["shelf 2 - brown"]: THREE.MeshStandardMaterial;
@@ -160,6 +161,11 @@ type GLTFResult = GLTF & {
     ["book - white"]: THREE.MeshStandardMaterial;
     ["phone - red.001"]: THREE.MeshStandardMaterial;
     ["phone - red"]: THREE.MeshStandardMaterial;
+    ["bed - blue.001"]: THREE.MeshStandardMaterial;
+    ["bed - brown.001"]: THREE.MeshStandardMaterial;
+    ["bed - yellow.001"]: THREE.MeshStandardMaterial;
+    ["tv.001"]: THREE.MeshStandardMaterial;
+    ["tv screen"]: THREE.MeshStandardMaterial;
   };
 };
 
@@ -250,14 +256,42 @@ export function RoomModel({
           material={materials["book - white"]}
         />
       </group>
-      <group position={[-2.049, -0.427, -0.563]}>
+
+      <Phone
+        active={
+          <group position={[-2.049, -0.427, -0.563]}>
+            <mesh
+              geometry={nodes.Cube038.geometry}
+              material={materials["phone - red.001"]}
+            />
+            <mesh
+              geometry={nodes.Cube038_1.geometry}
+              material={materials["phone - red"]}
+            />
+          </group>
+        }
+        inactive={
+          <>
+            <mesh
+              geometry={nodes.Cube016.geometry}
+              material={materials["phone - red.002"]}
+            />
+            <mesh
+              geometry={nodes.Cube016_1.geometry}
+              material={materials["phone - red.003"]}
+            />
+          </>
+        }
+      />
+
+      <group position={[0, -0.095, 0]}>
         <mesh
-          geometry={nodes.Cube038.geometry}
-          material={materials["phone - red.001"]}
+          geometry={nodes.Cube003.geometry}
+          material={materials["tv.001"]}
         />
         <mesh
-          geometry={nodes.Cube038_1.geometry}
-          material={materials["phone - red"]}
+          geometry={nodes.Cube003_1.geometry}
+          material={materials["tv screen"]}
         />
       </group>
       <mesh
@@ -371,18 +405,6 @@ export function RoomModel({
         material={materials["green.003"]}
       />
       <mesh
-        geometry={nodes.Cube018.geometry}
-        material={materials["bed - blue"]}
-      />
-      <mesh
-        geometry={nodes.Cube018_1.geometry}
-        material={materials["bed - brown"]}
-      />
-      <mesh
-        geometry={nodes.Cube018_2.geometry}
-        material={materials["bed - yellow"]}
-      />
-      <mesh
         geometry={nodes.Cube031.geometry}
         material={materials["door - white"]}
       />
@@ -443,14 +465,6 @@ export function RoomModel({
         material={materials["green.004"]}
       />
       <mesh
-        geometry={nodes.Cube016.geometry}
-        material={materials["phone - red.002"]}
-      />
-      <mesh
-        geometry={nodes.Cube016_1.geometry}
-        material={materials["phone - red.003"]}
-      />
-      <mesh
         geometry={nodes.Cube021.geometry}
         material={materials["white.009"]}
       />
@@ -465,6 +479,18 @@ export function RoomModel({
       <mesh
         geometry={nodes.Cube023_1.geometry}
         material={materials["green.007"]}
+      />
+      <mesh
+        geometry={nodes.Cube001.geometry}
+        material={materials["bed - blue.001"]}
+      />
+      <mesh
+        geometry={nodes.Cube001_1.geometry}
+        material={materials["bed - brown.001"]}
+      />
+      <mesh
+        geometry={nodes.Cube001_2.geometry}
+        material={materials["bed - yellow.001"]}
       />
     </group>
   );

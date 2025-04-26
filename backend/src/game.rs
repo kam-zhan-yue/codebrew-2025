@@ -236,10 +236,40 @@ impl GameState {
     }
 
     fn get_randomised_tasks() -> Vec<Interaction> {
-        let interactions = vec![Interaction {
-            id: InteractionType::Gameboy,
-            active: false,
-        }];
+        let interactions = vec![
+            Interaction {
+                id: InteractionType::Gameboy,
+                active: false,
+            },
+            Interaction {
+                id: InteractionType::Television,
+                active: false,
+            },
+            Interaction {
+                id: InteractionType::Phone,
+                active: false,
+            },
+            Interaction {
+                id: InteractionType::Ds,
+                active: false,
+            },
+            Interaction {
+                id: InteractionType::Boombox,
+                active: false,
+            },
+            Interaction {
+                id: InteractionType::Paper,
+                active: false,
+            },
+            Interaction {
+                id: InteractionType::Lamp,
+                active: false,
+            },
+            Interaction {
+                id: InteractionType::Book,
+                active: false,
+            },
+        ];
 
         interactions
             .into_iter()
@@ -268,6 +298,20 @@ impl Default for GameState {
 pub enum InteractionType {
     #[serde(rename = "gameboy")]
     Gameboy,
+    #[serde(rename = "television")]
+    Television,
+    #[serde(rename = "phone")]
+    Phone,
+    #[serde(rename = "ds")]
+    Ds,
+    #[serde(rename = "boombox")]
+    Boombox,
+    #[serde(rename = "paper")]
+    Paper,
+    #[serde(rename = "lamp")]
+    Lamp,
+    #[serde(rename = "book")]
+    Book,
 }
 
 #[derive(Serialize, Clone, PartialEq)]
