@@ -43,7 +43,7 @@ const Phone = ({ position, rotation, scale }: PhoneProps) => {
           {interaction.active && <PhoneActiveModel />}
           {!interaction.active && <PhoneInactiveModel />}
         </group>
-        {isHovering && <Tooltip position={[0, 0.5, 0]}>{message}</Tooltip>}
+        {isHovering && <Tooltip position={[0, 0.6, 0]}>{message}</Tooltip>}
       </group>
     </Select>
   );

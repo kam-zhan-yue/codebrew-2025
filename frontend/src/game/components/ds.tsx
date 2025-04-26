@@ -41,7 +41,7 @@ const Ds = ({ position, rotation, scale }: DSProps) => {
       <group position={position} rotation={rotation} scale={scale}>
         <group name={interaction.id}>
           {interaction.active && <DSActiveModel />}
-          {!interaction.active && <DSInactiveModel />}
+          {!interaction.active && <DSInactiveModel position={[0, -0.12, 0]} />}
         </group>
         {isHovering && <Tooltip position={[0, 0.8, 0]}>{message}</Tooltip>}
       </group>

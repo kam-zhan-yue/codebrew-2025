@@ -41,7 +41,7 @@ const Lamp = ({ position, rotation, scale }: LampProps) => {
         <group name={interaction.id}>
           <LampModel />
         </group>
-        {isHovering && <Tooltip position={[0, 5, 0]}>{message}</Tooltip>}
+        {isHovering && <Tooltip position={[0, 2, 0]}>{message}</Tooltip>}
       </group>
     </Select>
   );

@@ -282,7 +282,7 @@ export function RoomModel({
         material={materials["boombox - light"]}
       />
       <mesh geometry={nodes.Cube009_1.geometry} material={materials.tv} />
-      <mesh
+      {/* <mesh
         geometry={nodes.Cube013.geometry}
         material={materials["lamp - silver"]}
       />
@@ -301,7 +301,7 @@ export function RoomModel({
       <mesh
         geometry={nodes.Cube013_4.geometry}
         material={materials["lamp - red"]}
-      />
+      /> */}
       {/* <mesh
         geometry={nodes.Cube022.geometry}
         material={materials["DS - green"]}
@@ -435,14 +435,14 @@ export function RoomModel({
         geometry={nodes.Cube004_5.geometry}
         material={materials["green.004"]}
       />
-      <mesh
+      {/* <mesh
         geometry={nodes.Cube021.geometry}
         material={materials["white.009"]}
       />
       <mesh
         geometry={nodes.Cube021_1.geometry}
         material={materials["blue.003"]}
-      />
+      /> */}
       <mesh
         geometry={nodes.Cube023.geometry}
         material={materials["white.010"]}

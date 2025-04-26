@@ -14,7 +14,9 @@ interface TelevisionProps {
 const Television = ({ position, rotation, scale }: TelevisionProps) => {
   const interactions = useGameStore((s) => s.gameState.interactions);
   const flow = useGameStore((s) => s.flow);
-  const television = interactions?.find((interaction) => interaction.id === "television");
+  const television = interactions?.find(
+    (interaction) => interaction.id === "television",
+  );
   const activeSelection = useGameStore(
     (s) => s.uiState.selection.activeSelection,
   );
@@ -39,7 +41,7 @@ const Television = ({ position, rotation, scale }: TelevisionProps) => {
           {television.active && <TelevisionActiveModel />}
           {!television.active && <TelevisionInactiveModel />}
         </group>
-        {isHovering && <Tooltip position={[0, 0.8, 0]}>{message}</Tooltip>}
+        {isHovering && <Tooltip position={[0, 2.4, 0]}>{message}</Tooltip>}
       </group>
     </Select>
   );

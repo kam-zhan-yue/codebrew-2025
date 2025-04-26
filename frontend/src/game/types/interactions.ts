@@ -12,7 +12,8 @@ export const Interactions = {
   },
   gameboy: {
     label: "Gameboy",
-    description: "An old school handheld console. You can almost see the screen",
+    description:
+      "An old school handheld console. You can almost see the screen",
     activateMessage: "Press E to turn on",
     deactivateMessage: "Press E to turn off",
     activateGoal: "Play some retro games",
@@ -30,7 +31,7 @@ export const Interactions = {
   },
   phone: {
     label: "Phone",
-    description: "An phone... with an antenna",
+    description: "A phone... with an antenna",
     activateMessage: "Press E to call",
     deactivateMessage: "Press E to put down",
     activateGoal: "Call Barbara to hear the goss",
@@ -39,7 +40,8 @@ export const Interactions = {
   },
   ds: {
     label: "3DS",
-    description: "A new school handheld console. It makes your eyes feel weird...",
+    description:
+      "A new school handheld console. It makes your eyes feel weird...",
     activateMessage: "Press E to to turn on 3D mode",
     deactivateMessage: "Press E to stop the eye pain",
     activateGoal: "Play another Pokemon remake",
@@ -48,7 +50,8 @@ export const Interactions = {
   },
   boombox: {
     label: "Boombox",
-    description: "The subwoofers on this thing look like they can move some serious air",
+    description:
+      "The subwoofers on this thing look like they can move some serious air",
     activateMessage: "Press E to play some beats",
     deactivateMessage: "Press E to turn off the tunes",
     activateGoal: "Listen to some classics",
@@ -66,7 +69,8 @@ export const Interactions = {
   },
   lamp: {
     label: "Lamp",
-    description: "The only thing standing between you and the monsters under the bed",
+    description:
+      "The only thing standing between you and the monsters under the bed",
     activateMessage: "Press E to ignite",
     deactivateMessage: "Press E to extinguish",
     activateGoal: "Scare away mosters with the lamp",
