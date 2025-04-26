@@ -17,18 +17,13 @@
   background-color: black;
 }
 
-* {
-  margin: 0;
-  padding: 0;
-}
-
 .tooltip {
   font-size: 6px;
   color: black;
   text-shadow: none;
-  background: white;
+  background: rgba(255, 255, 255, 0.8); /* white with 80% opacity */
   padding: 6px 12px;
-  border-radius: 8px;
+  border-radius: 4px;
   white-space: nowrap;
 }
 
