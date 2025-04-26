@@ -2,47 +2,47 @@ import { Select } from "@react-three/postprocessing";
 import { GameFlow, useGameStore } from "../../store";
 import { Interactions } from "../types/interactions";
 import Tooltip from "./tooltip";
+import { PaperActiveModel } from "../models/paper-active-model";
+import { PaperInactiveModel } from "../models/paper-inactive-model";
 
-interface BoomboxProps {
+interface PaperProps {
     position: [number, number, number];
     rotation: [number, number, number];
     scale: number;
 }
 
-const Boombox = ({ position, rotation, scale }: BoomboxProps) => {
+const Paper = ({ position, rotation, scale }: PaperProps) => {
     const interactions = useGameStore((s) => s.gameState.interactions);
     const flow = useGameStore((s) => s.flow);
-    const boombox = interactions?.find((interaction) => interaction.id === "boombox");
+    const paper = interactions?.find((interaction) => interaction.id === "paper");
     const activeSelection = useGameStore(
         (s) => s.uiState.selection.activeSelection,
     );
 
-    if (!boombox) {
+    if (!paper) {
         return <></>;
     }
 
-    const isHovering = activeSelection === boombox.id;
-    const data = Interactions[boombox.id];
+    const isHovering = activeSelection === paper.id;
+    const data = Interactions[paper.id];
     let message = "";
     if (flow === GameFlow.Game) {
-        message = boombox.active ? data.deactivateMessage : data.activateMessage;
+        message = paper.active ? data.deactivateMessage : data.activateMessage;
     } else {
         message = data.description;
     }
 
-    // console.info("Active Selection ", activeSelection, " ID ", boombox.id);
-
     return (
         <Select enabled={isHovering}>
             <group position={position} rotation={rotation} scale={scale}>
-                <group name={boombox.id}>
-                    {/* {boombox.active && <BoomboxActiveModel />}
-                    {!boombox.active && <BoomboxInactiveModel />} */}
+                <group name={paper.id}>
+                    {paper.active && <PaperActiveModel />}
+                    {!paper.active && <PaperInactiveModel />}
                 </group>
-                {isHovering && <Tooltip position={[0, 5, 0]}>{message}</Tooltip>}
+                {isHovering && <Tooltip position={[0, 0.8, 0]}>{message}</Tooltip>}
             </group>
         </Select>
     );
 };
 
-export default Boombox;
+export default Paper;
