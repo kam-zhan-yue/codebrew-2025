@@ -31,7 +31,7 @@ const Boombox = ({ position, rotation, scale }: BoomboxProps) => {
     const audioLoader = new THREE.AudioLoader();
     const listener = new THREE.AudioListener();
     const musicSound = new THREE.Audio(listener);
-    audioLoader.load("/sounds/rickroll.mp3", (buffer) => {
+    audioLoader.load("/sounds/beats.mp3", (buffer) => {
       musicSound.setBuffer(buffer);
       musicSound.setVolume(0.5);
       musicSound.setLoop(true);
