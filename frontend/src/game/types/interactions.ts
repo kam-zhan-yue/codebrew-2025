@@ -1,30 +1,29 @@
 import { z } from "zod";
 
-type InteractionData = {
-  label: string;
-  description: string;
-  activateMessage: string;
-  deactivateMessage: string;
-};
-
-export const Interactions: Record<string, InteractionData> = {
+export const Interactions = {
   none: {
     label: "",
     description: "",
     activateMessage: "",
     deactivateMessage: "",
+    activateGoal: "",
+    deactivateGoal: "",
   },
   gameboy: {
     label: "Gameboy",
     description: "An old school handheld console.",
     activateMessage: "Press E to turn on",
     deactivateMessage: "Press E to turn off",
+    activateGoal: "Play some retro games",
+    deactivateGoal: "Get off the games!",
   },
   television: {
     label: "Television",
     description: "An old school handheld console.",
     activateMessage: "Press E to turn on",
     deactivateMessage: "Press E to turn off",
+    activateGoal: "Watch some telly",
+    deactivateGoal: "Silence the noisy talk show",
   },
 } as const;
 

@@ -12,9 +12,15 @@ export interface SelectionState {
   activeSelection: InteractionType;
 }
 
+export interface Task {
+  interactionId: InteractionType;
+  targetState: boolean;
+}
+
 export interface UIState {
   debug: DebugState | null;
   selection: SelectionState;
+  tasks: Task[];
 }
 
 export const defaultUIState: UIState = {
@@ -22,4 +28,5 @@ export const defaultUIState: UIState = {
   selection: {
     activeSelection: "none",
   },
+  tasks: [],
 };
