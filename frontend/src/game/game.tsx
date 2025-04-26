@@ -1,7 +1,7 @@
 import { Canvas } from "@react-three/fiber";
 import "./game.css";
 import { Suspense, useEffect, useMemo, useState } from "react";
-import { KeyboardControls } from "@react-three/drei";
+import { KeyboardControls, KeyboardControlsEntry } from "@react-three/drei";
 import useWebSocket from "react-use-websocket";
 import { WS_URL } from "../api/constants";
 import { useGameStore } from "../store";
@@ -14,15 +14,7 @@ import {
 import FirstPersonController from "./components/first-person-controller";
 import Level from "./components/level";
 import { Physics } from "@react-three/rapier";
-
-export const Controls = {
-  forward: "forward",
-  back: "back",
-  left: "left",
-  right: "right",
-  jump: "jump",
-  interact: "interact",
-} as const;
+import { Controls } from "./types/controls";
 
 const Game = () => {
   const setGameState = useGameStore((state) => state.setGameState);
@@ -57,14 +49,14 @@ const Game = () => {
     }
   }, [setGameState, lastJsonMessage, socketUrl]);
 
-  const map = useMemo(
+  const map = useMemo<KeyboardControlsEntry<Controls>[]>(
     () => [
       { name: Controls.forward, keys: ["ArrowUp", "KeyW"] },
       { name: Controls.back, keys: ["ArrowDown", "KeyS"] },
       { name: Controls.left, keys: ["ArrowLeft", "KeyA"] },
       { name: Controls.right, keys: ["ArrowRight", "KeyD"] },
       { name: Controls.jump, keys: ["Space"] },
-      { name: Controls.interact, keys: ["KeyE"] },
+      { name: Controls.interact, keys: ["KeyE"], up: true },
     ],
     [],
   );

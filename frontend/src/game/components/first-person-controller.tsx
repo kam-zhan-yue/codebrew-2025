@@ -4,9 +4,8 @@ import {
   PointerLockControls,
   useKeyboardControls,
 } from "@react-three/drei";
-import { useRef } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import * as THREE from "three";
-import { Controls } from "../game";
 import { GameFlow, useGameStore } from "../../store";
 import {
   CylinderCollider,
@@ -21,6 +20,7 @@ import {
   MessageType,
   PlayerMessageSchema,
 } from "../types/messages";
+import { Controls } from "../types/controls";
 
 const ORBIT_ORIGIN = new THREE.Vector3(1, 1, -2);
 const ORBIT_MAX_DISTANCE = 7;
@@ -68,6 +68,42 @@ export default function FirstPersonController({
   const getPlayer = useGameStore((s) => s.getPlayer);
   const player = getPlayer();
 
+  const [sub] = useKeyboardControls<Controls>();
+
+  const select = useCallback(() => {
+    if (activeSelection === "none") return;
+
+    const interaction = interactions.find((i) => i.id === activeSelection);
+    if (!interaction) return;
+
+    const data = {
+      message_id: MessageType.interaction,
+      player_id: playerId,
+      interaction_id: interaction.id,
+      // NOTE(Alex): This is where we try to toggle off the interaction
+      active: !interaction.active,
+    };
+
+    try {
+      InteractionMessageSchema.parse(data);
+      sendJsonMessage(data);
+    } catch (error) {
+      console.error("Validation failed for interaction message:", error);
+    }
+  }, [activeSelection, interactions, playerId, sendJsonMessage]);
+
+  // Selection Code
+  useEffect(() => {
+    return sub(
+      (state) => state[Controls.interact],
+      (pressed) => {
+        if (pressed) {
+          select();
+        }
+      },
+    );
+  }, [select, sub]);
+
   useFrame((_, delta) => {
     if (!started) return;
     if (!player) return;
@@ -85,7 +121,6 @@ export default function FirstPersonController({
 
   const handleInputs = () => {
     move();
-    select();
   };
 
   const move = () => {
@@ -161,28 +196,7 @@ export default function FirstPersonController({
     }
   };
 
-  const select = () => {
-    if (!interactPressed) return;
-    if (activeSelection === "none") return;
-
-    const interaction = interactions.find((i) => i.id === activeSelection);
-    if (!interaction) return;
-
-    const data = {
-      message_id: MessageType.interaction,
-      player_id: playerId,
-      interaction_id: interaction.id,
-      // NOTE(Alex): This is where we try to toggle off the interaction
-      active: !interaction.active,
-    };
-
-    try {
-      InteractionMessageSchema.parse(data);
-      sendJsonMessage(data);
-    } catch (error) {
-      console.error("Validation failed for interaction message:", error);
-    }
-  };
+  const select = () => {};
 
   const raycast = () => {
     const coords = new THREE.Vector2(0, 0); // center of screen
