@@ -2,8 +2,9 @@ import { useRef, useState } from "react";
 import { Mesh, Vector3 } from "three";
 import { useFrame } from "@react-three/fiber";
 import { useGameStore } from "../../store";
-import { PlayerAnimation } from "../models/player-model";
 import { RedPlayerModel } from "../models/red-player-model";
+import { PLAYER_ONE, PlayerAnimation } from "../constants";
+import { BluePlayerModel } from "../models/Blue";
 
 const MODEL_ROTATE_OFFSET = Math.PI;
 
@@ -24,23 +25,32 @@ const Player = () => {
     mesh.current.rotation.set(0, player.rotation.y + MODEL_ROTATE_OFFSET, 0);
 
     if (player.animationState == "idle") {
-      console.info("Setting animation to idle");
       setAnimation("idle");
     } else if (player.animationState == "walking") {
-      console.info("Setting animation to walking");
       setAnimation("running");
     }
   });
+
+  const isRed = player?.id === PLAYER_ONE;
 
   return (
     <>
       {player && (
         <mesh ref={mesh}>
-          <RedPlayerModel
-            position={[0, -1, 0]}
-            scale={0.5}
-            animation={animation}
-          />
+          {isRed && (
+            <RedPlayerModel
+              position={[0, -0.6, 0]}
+              scale={0.3}
+              animation={animation}
+            />
+          )}
+          {!isRed && (
+            <BluePlayerModel
+              position={[0, -0.6, 0]}
+              scale={0.3}
+              animation={animation}
+            />
+          )}
         </mesh>
       )}
     </>
