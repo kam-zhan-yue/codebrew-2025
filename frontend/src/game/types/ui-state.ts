@@ -20,6 +20,7 @@ export interface Task {
 export interface UIState {
   debug: DebugState | null;
   selection: SelectionState;
+  restart: boolean;
 }
 
 export const defaultUIState: UIState = {
@@ -27,4 +28,5 @@ export const defaultUIState: UIState = {
   selection: {
     activeSelection: "none",
   },
+  restart: true,
 };

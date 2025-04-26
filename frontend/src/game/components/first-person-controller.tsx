@@ -65,30 +65,32 @@ export default function FirstPersonController({
   const player = getPlayer();
 
   const [sub] = useKeyboardControls<Controls>();
-  const canInteract = flow === GameFlow.Game;
 
   const select = useCallback(() => {
-    if (!canInteract) return;
-    if (activeSelection === "none") return;
+    if (flow === GameFlow.Game) {
+      if (activeSelection === "none") return;
 
-    const interaction = interactions?.find((i) => i.id === activeSelection);
-    if (!interaction) return;
+      const interaction = interactions?.find((i) => i.id === activeSelection);
+      if (!interaction) return;
 
-    const data = {
-      message_id: MessageType.interaction,
-      player_id: playerId,
-      interaction_id: interaction.id,
-      // NOTE(Alex): This is where we try to toggle off the interaction
-      active: !interaction.active,
-    };
+      const data = {
+        message_id: MessageType.interaction,
+        player_id: playerId,
+        interaction_id: interaction.id,
+        // NOTE(Alex): This is where we try to toggle off the interaction
+        active: !interaction.active,
+      };
 
-    try {
-      InteractionMessageSchema.parse(data);
-      sendJsonMessage(data);
-    } catch (error) {
-      console.error("Validation failed for interaction message:", error);
+      try {
+        InteractionMessageSchema.parse(data);
+        sendJsonMessage(data);
+      } catch (error) {
+        console.error("Validation failed for interaction message:", error);
+      }
+    } else if (flow === GameFlow.GameOver) {
+      console.info("");
     }
-  }, [activeSelection, canInteract, interactions, playerId, sendJsonMessage]);
+  }, [activeSelection, flow, interactions, playerId, sendJsonMessage]);
 
   // Selection Code
   useEffect(() => {
