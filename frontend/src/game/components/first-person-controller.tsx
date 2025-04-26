@@ -67,10 +67,15 @@ export default function FirstPersonController({
 
   const [sub] = useKeyboardControls<Controls>();
 
+  useEffect(() => {
+    camera.position.set(5, 5, 5);
+    camera.lookAt(ORBIT_ORIGIN);
+  }, [camera]);
+
   const select = useCallback(() => {
     if (activeSelection === "none") return;
 
-    const interaction = interactions.find((i) => i.id === activeSelection);
+    const interaction = interactions?.find((i) => i.id === activeSelection);
     if (!interaction) return;
 
     const data = {
