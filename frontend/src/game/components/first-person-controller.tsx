@@ -196,8 +196,6 @@ export default function FirstPersonController({
     }
   };
 
-  const select = () => {};
-
   const raycast = () => {
     const coords = new THREE.Vector2(0, 0); // center of screen
     raycaster.current.setFromCamera(coords, camera);
