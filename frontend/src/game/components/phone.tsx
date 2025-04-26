@@ -4,43 +4,42 @@ import { Interactions } from "../types/interactions";
 import { Vector3 } from "@react-three/fiber";
 import { GameboyModel } from "../models/gameboy-model";
 import Tooltip from "./tooltip";
+import { ReactNode } from "@tanstack/react-router";
 
 interface PhoneProps {
-  position: Vector3;
-  rotation: [number, number, number];
+  active: ReactNode;
+  inactive: ReactNode;
 }
 
-const Phone = ({ position, rotation }: PhoneProps) => {
+const Phone = ({ active, inactive }: PhoneProps) => {
   const interactions = useGameStore((s) => s.gameState.interactions);
   const flow = useGameStore((s) => s.flow);
-  const gameboy = interactions?.find(
-    (interaction) => interaction.id === "phone",
-  );
+  const phone = interactions?.find((interaction) => interaction.id === "phone");
   const activeSelection = useGameStore(
     (s) => s.uiState.selection.activeSelection,
   );
 
-  if (!gameboy) {
+  if (!phone) {
     return <></>;
   }
 
-  const isHovering = activeSelection === gameboy.id;
-  const data = Interactions[gameboy.id];
+  const isHovering = activeSelection === phone.id;
+  const data = Interactions[phone.id];
   let message = "";
   if (flow === GameFlow.Game) {
-    message = gameboy.active ? data.deactivateMessage : data.activateMessage;
+    message = phone.active ? data.deactivateMessage : data.activateMessage;
   } else {
     message = data.description;
   }
 
   return (
     <Select enabled={isHovering}>
-      <group position={position} rotation={rotation}>
-        <group name={gameboy.id}>
-          <GameboyModel />
-        </group>
-        {isHovering && <Tooltip position={[0, 0.5, 0]}>{message}</Tooltip>}
+      <group name={phone.id}>
+        {phone.active && active}
+        {!phone.active && inactive}
+        <GameboyModel />
       </group>
+      {isHovering && <Tooltip position={[0, 0.5, 0]}>{message}</Tooltip>}
     </Select>
   );
 };
