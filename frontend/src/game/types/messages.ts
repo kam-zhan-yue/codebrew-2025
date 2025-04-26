@@ -7,29 +7,20 @@ export enum MessageType {
 }
 
 export const RestartMessageSchema = z.object({
-  message_id: z.union([
-    z.literal(MessageType.interaction),
-    z.enum([MessageType.interaction, MessageType.player]),
-  ]),
+  message_id: z.literal(MessageType.restart),
   player_id: z.string(),
   restart: z.boolean(),
 });
 
 export const InteractionMessageSchema = z.object({
-  message_id: z.union([
-    z.literal(MessageType.interaction),
-    z.enum([MessageType.interaction, MessageType.player]),
-  ]),
+  message_id: z.literal(MessageType.interaction),
   player_id: z.string(),
   interaction_id: z.string().min(1),
   active: z.boolean(),
 });
 
 export const PlayerMessageSchema = z.object({
-  message_id: z.union([
-    z.literal(MessageType.interaction),
-    z.enum([MessageType.interaction, MessageType.player]),
-  ]),
+  message_id: z.literal(MessageType.player),
   player_id: z.string(),
   position: z.object({
     x: z.number(),

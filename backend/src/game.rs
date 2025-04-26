@@ -13,6 +13,8 @@ pub struct Game {
     pub player_two_connected: bool,
     pub player_one_tasks: Option<Vec<InteractionTarget>>,
     pub player_two_tasks: Option<Vec<InteractionTarget>>,
+    player_one_resetting: bool,
+    player_two_resetting: bool,
     started: bool,
 }
 
@@ -24,6 +26,8 @@ impl Default for Game {
             player_two_connected: false,
             player_one_tasks: None,
             player_two_tasks: None,
+            player_one_resetting: false,
+            player_two_resetting: false,
             started: false,
         }
     }
@@ -48,7 +52,7 @@ impl Game {
             }
         }
 
-        if self.started {
+        if self.started && self.game_state.winner_id.is_none() {
             let translated_interactions: Vec<InteractionTarget> = self
                 .game_state
                 .interactions
@@ -73,6 +77,18 @@ impl Game {
                 self.game_state.winner_id = None;
             }
         }
+
+        if self.game_state.winner_id.is_some()
+            && self.player_one_resetting
+            && self.player_two_resetting
+        {
+            self.game_state = GameState::default();
+            self.connect(String::from("1"));
+            self.connect(String::from("2"));
+            self.player_one_resetting = false;
+            self.player_two_resetting = false;
+            self.game_state.countdown = Some(5_f64);
+        }
     }
 
     fn get_randomised_tasks(&self) -> Vec<InteractionTarget> {
@@ -88,6 +104,21 @@ impl Game {
     }
 
     pub fn client_update(&mut self, payload: UpdatePayload) {
+        match payload.message_id {
+            MessageType::Restart => {
+                if payload.player_id == "1" {
+                    if let Some(reset) = payload.restart {
+                        self.player_one_resetting = reset;
+                    }
+                } else if payload.player_id == "2" {
+                    if let Some(reset) = payload.restart {
+                        self.player_two_resetting = reset;
+                    }
+                }
+            }
+            _ => {}
+        }
+
         self.game_state.client_update(payload);
     }
 
@@ -200,6 +231,7 @@ impl GameState {
                     }
                 }
             }
+            MessageType::Restart => {}
         }
     }
 
@@ -316,6 +348,7 @@ pub struct UpdatePayload {
     animation_state: Option<AnimationState>,
     interaction_id: Option<InteractionType>,
     active: Option<bool>,
+    restart: Option<bool>,
 }
 
 #[derive(Deserialize, Clone, Debug)]
@@ -323,4 +356,5 @@ pub struct UpdatePayload {
 enum MessageType {
     Player,
     Interaction,
+    Restart,
 }

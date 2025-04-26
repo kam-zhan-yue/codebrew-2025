@@ -111,6 +111,7 @@ export default function FirstPersonController({
     const shouldRestart = restart;
     const data = {
       message_id: MessageType.restart,
+      player_id: playerId,
       restart: shouldRestart,
     };
     setRestart(!shouldRestart);
@@ -121,7 +122,7 @@ export default function FirstPersonController({
       console.error("Validation failed for restart message:", error);
     }
     console.info("");
-  }, [restart, sendJsonMessage, setRestart]);
+  }, [restart, sendJsonMessage, setRestart, playerId]);
 
   // Selection Code
   useEffect(() => {
