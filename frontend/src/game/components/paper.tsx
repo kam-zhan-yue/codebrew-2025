@@ -39,7 +39,7 @@ const Paper = ({ position, rotation, scale }: PaperProps) => {
                     {paper.active && <PaperActiveModel />}
                     {!paper.active && <PaperInactiveModel />}
                 </group>
-                {isHovering && <Tooltip position={[0, 0.8, 0]}>{message}</Tooltip>}
+                {isHovering && <Tooltip position={[0, 0.13, 0]}>{message}</Tooltip>}
             </group>
         </Select>
     );

@@ -2,6 +2,7 @@ import { Select } from "@react-three/postprocessing";
 import { GameFlow, useGameStore } from "../../store";
 import { Interactions } from "../types/interactions";
 import Tooltip from "./tooltip";
+import { BoomboxModel } from "../models/boombox-model";
 
 interface BoomboxProps {
     position: [number, number, number];
@@ -30,16 +31,13 @@ const Boombox = ({ position, rotation, scale }: BoomboxProps) => {
         message = data.description;
     }
 
-    // console.info("Active Selection ", activeSelection, " ID ", boombox.id);
-
     return (
         <Select enabled={isHovering}>
             <group position={position} rotation={rotation} scale={scale}>
                 <group name={boombox.id}>
-                    {/* {boombox.active && <BoomboxActiveModel />}
-                    {!boombox.active && <BoomboxInactiveModel />} */}
+                    <BoomboxModel />
                 </group>
-                {isHovering && <Tooltip position={[0, 5, 0]}>{message}</Tooltip>}
+                {isHovering && <Tooltip position={[0, 0.4, 0]}>{message}</Tooltip>}
             </group>
         </Select>
     );

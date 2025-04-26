@@ -213,10 +213,10 @@ export function RoomModel({
         geometry={nodes.shelf_2.geometry}
         material={materials["shelf 2 - brown"]}
       />
-      <mesh
+      {/* <mesh
         geometry={nodes.drawing_empty.geometry}
         material={materials.paper}
-      />
+      /> */}
       <mesh
         geometry={nodes.explore_2_poster.geometry}
         material={materials["explorer poster"]}
@@ -233,12 +233,12 @@ export function RoomModel({
         geometry={nodes.among_us_poster.geometry}
         material={materials["explorer poster.003"]}
       />
-      <mesh
+      {/* <mesh
         geometry={nodes.drawing_S.geometry}
         material={materials["paper - S"]}
         position={[-2.049, -0.427, -0.563]}
-      />
-      <group position={[-2.049, -0.427, -0.563]}>
+      /> */}
+      {/* <group position={[-2.049, -0.427, -0.563]}>
         <mesh
           geometry={nodes.Cube019.geometry}
           material={materials["DS - green.001"]}
@@ -247,16 +247,15 @@ export function RoomModel({
           geometry={nodes.Cube019_1.geometry}
           material={materials["DS - screen.001"]}
         />
-      </group>
-      <group position={[-2.049, -0.427, -0.563]}>
+      </group> */}
+      {/* <group position={[-2.049, -0.427, -0.563]}>
         <mesh geometry={nodes.Cube017.geometry} material={materials.blue} />
         <mesh
           geometry={nodes.Cube017_1.geometry}
           material={materials["book - white"]}
         />
-      </group>
-
-      <group position={[0, -0.095, 0]}>
+      </group> */}
+      {/* <group position={[0, -0.095, 0]}>
         <mesh
           geometry={nodes.Cube003.geometry}
           material={materials["tv.001"]}
@@ -265,7 +264,7 @@ export function RoomModel({
           geometry={nodes.Cube003_1.geometry}
           material={materials["tv screen"]}
         />
-      </group>
+      </group> */}
       <mesh
         geometry={nodes.Cube.geometry}
         material={materials["room - blue"]}
@@ -303,15 +302,15 @@ export function RoomModel({
         geometry={nodes.Cube013_4.geometry}
         material={materials["lamp - red"]}
       />
-      <mesh
+      {/* <mesh
         geometry={nodes.Cube022.geometry}
         material={materials["DS - green"]}
       />
       <mesh
         geometry={nodes.Cube022_1.geometry}
         material={materials["DS - screen"]}
-      />
-      <mesh
+      /> */}
+      {/* <mesh
         geometry={nodes.Cylinder005.geometry}
         material={materials["boombox - silver"]}
       />
@@ -342,7 +341,7 @@ export function RoomModel({
       <mesh
         geometry={nodes.Cylinder005_7.geometry}
         material={materials["boombox dark"]}
-      />
+      /> */}
       <mesh geometry={nodes.Cube011.geometry} material={materials.red} />
       <mesh geometry={nodes.Cube011_1.geometry} material={materials.white} />
       <mesh

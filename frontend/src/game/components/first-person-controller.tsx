@@ -287,7 +287,7 @@ export default function FirstPersonController({
       const targetPosition = new THREE.Vector3(...interaction.position);
       const distance = currentPosition.distanceTo(targetPosition);
       if (distance <= INTERACT_THRESHOLD) {
-        console.info("Active interaction is ", result.interaction);
+        // console.info("Active interaction is ", result.interaction);
         setActiveSelection(result.interaction);
         hasSelection = true;
       }
