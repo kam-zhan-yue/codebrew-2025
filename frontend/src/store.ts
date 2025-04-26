@@ -50,6 +50,11 @@ export const useGameStore = create<GameStore>()((set, get) => ({
         set({ flow: GameFlow.Game });
       }
 
+      // If there is a winner, and we were in Game previously, we go into GameOver
+      if (state.flow === GameFlow.Game && state.gameState.winnerId) {
+        set({ flow: GameFlow.GameOver });
+      }
+
       // If at any point, a player goes missing, go back to Lobby
       if (!state.gameState.playerOne || !state.gameState.playerTwo) {
         set({ flow: GameFlow.Lobby });

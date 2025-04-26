@@ -16,6 +16,7 @@ const Flow = () => {
       {flow === GameFlow.Countdown && <Countdown />}
       {flow === GameFlow.Game && <Tasks />}
       {flow === GameFlow.GameOver && <GameOver />}
+      <GameOver />
       {!PRODUCTION && <Debug />}
     </>
   );

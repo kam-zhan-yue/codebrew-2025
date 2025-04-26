@@ -1,3 +1,4 @@
+import { PLAYER_ONE, PLAYER_TWO } from "../game/constants";
 import { useGameStore } from "../store";
 import Overlay from "./overlay";
 
@@ -5,11 +6,11 @@ const PlayerSelection = () => {
   const setPlayerId = useGameStore((s) => s.setPlayerId);
 
   const handlePlayerOne = () => {
-    setPlayerId("1");
+    setPlayerId(PLAYER_ONE);
   };
 
   const handlePlayerTwo = () => {
-    setPlayerId("2");
+    setPlayerId(PLAYER_TWO);
   };
 
   return (
