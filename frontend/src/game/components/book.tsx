@@ -21,7 +21,6 @@ const Book = ({ position, rotation, scale }: BookProps) => {
     (s) => s.uiState.selection.activeSelection,
   );
 
-  console.log(interaction);
   if (!interaction) {
     return <></>;
   }

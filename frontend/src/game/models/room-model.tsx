@@ -6,7 +6,6 @@ Command: npx gltfjsx@6.5.3 ./public/models/room.glb -t
 import * as THREE from "three";
 import { useGLTF } from "@react-three/drei";
 import { GLTF } from "three-stdlib";
-import Phone from "../components/phone";
 
 type GLTFResult = GLTF & {
   nodes: {
@@ -256,33 +255,6 @@ export function RoomModel({
           material={materials["book - white"]}
         />
       </group>
-
-      <Phone
-        active={
-          <group position={[-2.049, -0.427, -0.563]}>
-            <mesh
-              geometry={nodes.Cube038.geometry}
-              material={materials["phone - red.001"]}
-            />
-            <mesh
-              geometry={nodes.Cube038_1.geometry}
-              material={materials["phone - red"]}
-            />
-          </group>
-        }
-        inactive={
-          <>
-            <mesh
-              geometry={nodes.Cube016.geometry}
-              material={materials["phone - red.002"]}
-            />
-            <mesh
-              geometry={nodes.Cube016_1.geometry}
-              material={materials["phone - red.003"]}
-            />
-          </>
-        }
-      />
 
       <group position={[0, -0.095, 0]}>
         <mesh

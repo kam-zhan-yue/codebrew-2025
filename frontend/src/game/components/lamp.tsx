@@ -2,14 +2,15 @@ import { Select } from "@react-three/postprocessing";
 import { GameFlow, useGameStore } from "../../store";
 import { Interactions } from "../types/interactions";
 import Tooltip from "./tooltip";
-import { Vector3 } from "three";
+import { LampModel } from "../models/lamp-model";
 
 interface LampProps {
-  position: Vector3;
+  position: [number, number, number];
   rotation: [number, number, number];
+  scale: number;
 }
 
-const Lamp = ({ position, rotation }: LampProps) => {
+const Lamp = ({ position, rotation, scale }: LampProps) => {
   const interactions = useGameStore((s) => s.gameState.interactions);
   const flow = useGameStore((s) => s.flow);
   const interaction = interactions?.find(
@@ -34,14 +35,11 @@ const Lamp = ({ position, rotation }: LampProps) => {
     message = data.description;
   }
 
-  // console.info("Active Selection ", activeSelection, " ID ", phone.id);
-
   return (
     <Select enabled={isHovering}>
-      <group position={position} rotation={rotation}>
+      <group position={position} rotation={rotation} scale={scale}>
         <group name={interaction.id}>
-          {interaction.active && <LampActiveModel />}
-          {!interaction.active && <LampInactiveModel />}
+          <LampModel />
         </group>
         {isHovering && <Tooltip position={[0, 5, 0]}>{message}</Tooltip>}
       </group>
