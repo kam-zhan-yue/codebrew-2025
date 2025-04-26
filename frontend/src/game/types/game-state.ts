@@ -18,13 +18,13 @@ export const GameStateSchema = z
     player_one: RawPlayerSchema.optional(),
     player_two: RawPlayerSchema.optional(),
     interactions: InteractionsSchema,
-    countdown: z.number().optional(),
+    countdown: z.number().nullable().optional(),
   })
   .transform((raw) => ({
     playerOne: raw.player_one ? PlayerSchema.parse(raw.player_one) : undefined,
     playerTwo: raw.player_two ? PlayerSchema.parse(raw.player_two) : undefined,
     interactions: raw.interactions,
-    countdown: raw.countdown,
+    countdown: raw.countdown ? raw.countdown : undefined,
   }));
 
 export const defaultGameState: GameState = {

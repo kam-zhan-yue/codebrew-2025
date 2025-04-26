@@ -33,14 +33,20 @@ export const useGameStore = create<GameStore>()((set, get) => ({
   uiState: defaultUIState,
   setGameState: (newState) => {
     set((state) => {
-      const prevCountdown = state.gameState.countdown;
       const newCountdown = newState.countdown;
 
-      if ((prevCountdown ?? null) === null && (newCountdown ?? null) !== null && (newCountdown || 0) > 0) {
+      // Only go into countdown if there is a new countdown that is not 0
+      if (newCountdown && newCountdown > 0 && state.flow === GameFlow.Lobby) {
+        console.info("Going to countdown ", newCountdown);
         set({ flow: GameFlow.Countdown });
       }
-
-      if (newCountdown && newCountdown <= 0) {
+      // Only go into game if we were previously at countdown and the new countdown has finished
+      if (
+        newCountdown &&
+        newCountdown <= 0 &&
+        state.flow === GameFlow.Countdown
+      ) {
+        console.info("Coundown is ", newCountdown);
         set({ flow: GameFlow.Game });
       }
 
