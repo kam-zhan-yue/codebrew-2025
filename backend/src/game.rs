@@ -1,3 +1,4 @@
+use rand::random_bool;
 use rocket::serde::{Deserialize, Serialize};
 
 pub const TICKS_PER_SECOND: f64 = 120_f64;
@@ -6,6 +7,9 @@ pub struct Game {
     pub game_state: GameState,
     pub player_one_connected: bool,
     pub player_two_connected: bool,
+    pub player_one_tasks: Option<Vec<InteractionTarget>>,
+    pub player_two_tasks: Option<Vec<InteractionTarget>>,
+    started: bool,
 }
 
 impl Default for Game {
@@ -14,6 +18,9 @@ impl Default for Game {
             game_state: GameState::default(),
             player_one_connected: false,
             player_two_connected: false,
+            player_one_tasks: None,
+            player_two_tasks: None,
+            started: false,
         }
     }
 }
@@ -21,6 +28,38 @@ impl Default for Game {
 impl Game {
     pub fn update(&mut self) {
         self.game_state.update();
+
+        if let Some(countdown) = &self.game_state.countdown {
+            if *countdown < 0_f64 && !self.started {
+                let player_one_tasks = self.get_randomised_tasks();
+                let mut player_two_tasks = self.get_randomised_tasks();
+
+                while player_one_tasks
+                    .clone()
+                    .into_iter()
+                    .zip(player_two_tasks.clone())
+                    .all(|(task1, task2)| task1 == task2)
+                {
+                    player_two_tasks = self.get_randomised_tasks();
+                }
+
+                self.player_one_tasks = Some(player_one_tasks);
+                self.player_two_tasks = Some(player_two_tasks);
+                self.started = true;
+            }
+        }
+    }
+
+    fn get_randomised_tasks(&self) -> Vec<InteractionTarget> {
+        self.game_state
+            .interactions
+            .clone()
+            .into_iter()
+            .map(|interaction| InteractionTarget {
+                id: interaction.id,
+                target_state: random_bool(0.5),
+            })
+            .collect()
     }
 
     pub fn client_update(&mut self, payload: UpdatePayload) {
@@ -56,12 +95,23 @@ impl Game {
     }
 
     pub fn disconnect(&mut self, player_id: String) {
-        if player_id == "1" {
+        let player_disconnected = if player_id == "1" {
             self.player_one_connected = false;
             self.game_state.player_one = None;
-        } else {
+            true
+        } else if player_id == "2" {
             self.player_two_connected = false;
             self.game_state.player_two = None;
+            true
+        } else {
+            false
+        };
+
+        if player_disconnected {
+            self.started = false;
+            self.game_state.countdown = None;
+            self.player_one_tasks = None;
+            self.player_two_tasks = None;
         }
     }
 }
@@ -153,6 +203,13 @@ pub enum InteractionType {
 struct Interaction {
     id: InteractionType,
     active: bool,
+}
+
+#[derive(Serialize, Clone, PartialEq)]
+#[serde(crate = "rocket::serde")]
+pub struct InteractionTarget {
+    id: InteractionType,
+    target_state: bool,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug)]
