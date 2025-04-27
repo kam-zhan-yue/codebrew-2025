@@ -29,7 +29,6 @@ const ORBIT_MAX_DISTANCE = 20;
 const INTERACT_THRESHOLD = 3;
 const SPEED = 3;
 const INTERPOLATION_SPEED = 10;
-const DISTANCE_THRESHOLD = 0.01;
 const CAMERA_OFFSET = new THREE.Vector3(0, 1, 0);
 
 interface FirstPersonControllerProps {
