@@ -4,7 +4,7 @@ import { useFrame } from "@react-three/fiber";
 import { useGameStore } from "../../store";
 import { RedPlayerModel } from "../models/red-player-model";
 import { PLAYER_ONE, PlayerAnimation } from "../constants";
-import { BluePlayerModel } from "../models/Blue";
+import { BluePlayerModel } from "../models/blue-player-model";
 
 const MODEL_ROTATE_OFFSET = Math.PI;
 

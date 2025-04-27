@@ -9,12 +9,15 @@ import { GameState, GameStateSchema } from "./types/game-state";
 import {
   EffectComposer,
   Outline,
+  Scanline,
   Selection,
+  Vignette,
 } from "@react-three/postprocessing";
 import FirstPersonController from "./components/first-person-controller";
 import Level from "./components/level";
 import { Physics } from "@react-three/rapier";
 import { Controls } from "./types/controls";
+import { BlendFunction } from "postprocessing";
 
 const Game = () => {
   const setGameState = useGameStore((state) => state.setGameState);
@@ -86,12 +89,6 @@ const Game = () => {
             color="#ffda8b"
             castShadow
           />
-          {/* <directionalLight
-            position={[0, 3, 3]}
-            intensity={1}
-            color="#ffda8b"
-            castShadow
-          /> */}
           <Suspense>
             <Physics debug={debug}>
               <FirstPersonController sendJsonMessage={sendJsonMessage} />
@@ -102,6 +99,16 @@ const Game = () => {
                     visibleEdgeColor={0xffffff}
                     edgeStrength={100}
                     width={500}
+                  />
+                  <Vignette
+                    offset={0.5} // vignette offset
+                    darkness={0.5} // vignette darkness
+                    eskil={false} // Eskil's vignette technique
+                    blendFunction={BlendFunction.NORMAL} // blend mode
+                  />
+                  <Scanline
+                    blendFunction={BlendFunction.OVERLAY} // blend mode
+                    density={1.25} // scanline density
                   />
                 </EffectComposer>
                 <Level />
